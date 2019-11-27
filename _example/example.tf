@@ -15,6 +15,6 @@ module "secure_baseline" {
   cloudwatch_logs_group_name        = "cloudtrail-log-group"
   alarm_namespace                   = "Alert_Alarm"
 
-  s3_bucket_name                    = "cloudtrail-bucket"
-  config_s3_bucket_name             = "config-bucket"
+  s3_bucket_name        = "cloudtrail-bucket"
+  config_s3_bucket_name = "config-bucket"
 }

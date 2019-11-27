@@ -1,6 +1,6 @@
 output "cloudtrail_arn" {
   value       = module.secure_baseline.*.cloudtrail_arn
-  description = "The Amazon Resource Name of the trail"
+  description = "The Amazon Resource Name of the trail."
 }
 
 output "tags" {
