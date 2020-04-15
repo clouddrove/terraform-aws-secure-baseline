@@ -7,7 +7,7 @@
     Terraform AWS Secure Baseline
 </h1>
 
-<p align="center" style="font-size: 1.2rem;"> 
+<p align="center" style="font-size: 1.2rem;">
     Terraform module to create an Secure Basline, inclued module is alarm baseline, config baseline, and clouddtrail baseline.
      </p>
 
@@ -38,7 +38,7 @@
 <hr>
 
 
-We eat, drink, sleep and most importantly love **DevOps**. We are working towards stratergies for standardizing architecture while ensuring security for the infrastructure. We are strong believer of the philosophy <b>Bigger problems are always solved by breaking them into smaller manageable problems</b>. Resonating with microservices architecture, it is considered best-practice to run database, cluster, storage in smaller <b>connected yet manageable pieces</b> within the infrastructure. 
+We eat, drink, sleep and most importantly love **DevOps**. We are working towards strategies for standardizing architecture while ensuring security for the infrastructure. We are strong believer of the philosophy <b>Bigger problems are always solved by breaking them into smaller manageable problems</b>. Resonating with microservices architecture, it is considered best-practice to run database, cluster, storage in smaller <b>connected yet manageable pieces</b> within the infrastructure.
 
 This module is basically combination of [Terraform open source](https://www.terraform.io/) and includes automatation tests and examples. It also helps to create and improve your infrastructure with minimalistic code instead of maintaining the whole infrastructure code yourself.
 
@@ -49,7 +49,7 @@ We have [*fifty plus terraform modules*][terraform_modules]. A few of them are c
 
 ## Prerequisites
 
-This module has a few dependencies: 
+This module has a few dependencies:
 
 - [Terraform 0.12](https://learn.hashicorp.com/terraform/getting-started/install.html)
 - [Go](https://golang.org/doc/install)
@@ -72,7 +72,7 @@ This module has a few dependencies:
 Here is an example of how you can use this module in your inventory structure:
 ```hcl
 module "secure_baseline" {
-  source = "git::https://github.com/clouddrove/terraform-aws-secure-baseline.git?ref=tags/0.12.0"
+  source = "git::https://github.com/clouddrove/terraform-aws-secure-baseline.git?ref=tags/0.12.1"
   application = "clouddrove"
   environment = "test"
   label_order = ["environment", "application", "name"]
@@ -83,6 +83,54 @@ module "secure_baseline" {
   alarm_namespace                   = "Alert_Alarm"
   s3_bucket_name                    = "cloudtrail-bucket"
   config_s3_bucket_name             = "config-bucket"
+  slack_webhook                     = "https://hooks.slack.com/services/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uEG4TW"
+  slack_channel                     = "testing"
+  s3_policy                         = data.aws_iam_policy_document.default.json
+}
+
+data "aws_iam_policy_document" "default" {
+  statement {
+    sid = "AWSCloudTrailAclCheck"
+
+    principals {
+      type        = "Service"
+      identifiers = ["cloudtrail.amazonaws.com"]
+    }
+
+    actions = [
+      "s3:GetBucketAcl",
+    ]
+
+    resources = ["arn:aws:s3:::cloudtrail-bucket-logs"]
+  }
+
+  statement {
+    sid = "AWSCloudTrailWrite"
+
+    principals {
+      type        = "Service"
+      identifiers = ["cloudtrail.amazonaws.com"]
+    }
+
+    actions = [
+      "s3:PutObject",
+    ]
+
+    resources = compact(
+      concat(
+        [format("arn:aws:s3:::cloudtrail-bucket-logs/AWSLogs/%s/*", data.aws_caller_identity.current.account_id)]
+      )
+    )
+
+    condition {
+      test     = "StringEquals"
+      variable = "s3:x-amz-acl"
+
+      values = [
+        "bucket-owner-full-control",
+      ]
+    }
+  }
 }
 
 ```
@@ -96,33 +144,39 @@ module "secure_baseline" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| alarm_namespace | The namespace in which all alarms are set up. | string | `CISBenchmark` | no |
-| application | Application (e.g. `cd` or `clouddrove`). | string | `` | no |
-| attributes | Additional attributes (e.g. `1`). | list | `<list>` | no |
-| cloudwatch_logs_group_name | The name of CloudWatch Logs group to which CloudTrail events are delivered. | string | `iam_role_name` | no |
-| cloudwatch_logs_retention_in_days | Number of days to retain logs for. CIS recommends 365 days.  Possible values are: 0, 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653. Set to 0 to keep logs indefinitely. | number | `365` | no |
-| config_s3_bucket_name | The name of the S3 bucket which will store logs for aws  config. | string | - | yes |
-| delimiter | Delimiter to be used between `organization`, `environment`, `name` and `attributes`. | string | `-` | no |
-| enabled | The boolean flag whether this module is enabled or not. No resources are created when set to false. | string | `true` | no |
-| environment | Environment (e.g. `prod`, `dev`, `staging`). | string | `` | no |
-| key_deletion_window_in_days | Duration in days after which the key is deleted after destruction of the resource, must be between 7 and 30 days. Defaults to 30 days. | number | `10` | no |
-| label_order | Label order, e.g. `name`,`application`. | list | `<list>` | no |
-| name | Name  (e.g. `app` or `cluster`). | string | `` | no |
-| s3_bucket_name | The name of the S3 bucket which will store configuration snapshots. | string | - | yes |
-| tags | Additional tags (e.g. map(`BusinessUnit`,`XYZ`). | map | `<map>` | no |
+| alarm\_enabled | The boolean flag whether alarm module is enabled or not. No resources are created when set to false. | string | `"true"` | no |
+| alarm\_namespace | The namespace in which all alarms are set up. | string | `"CISBenchmark"` | no |
+| application | Application \(e.g. `cd` or `clouddrove`\). | string | `""` | no |
+| attributes | Additional attributes \(e.g. `1`\). | list | `<list>` | no |
+| cloudtrail\_enabled | The boolean flag whether cloudtrail module is enabled or not. No resources are created when set to false. | string | `"true"` | no |
+| cloudwatch\_logs\_group\_name | The name of CloudWatch Logs group to which CloudTrail events are delivered. | string | `"iam_role_name"` | no |
+| cloudwatch\_logs\_retention\_in\_days | Number of days to retain logs for. CIS recommends 365 days.  Possible values are: 0, 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653. Set to 0 to keep logs indefinitely. | number | `"365"` | no |
+| config\_enabled | The boolean flag whether config module is enabled or not. No resources are created when set to false. | string | `"true"` | no |
+| config\_s3\_bucket\_name | The name of the S3 bucket which will store logs for aws  config. | string | n/a | yes |
+| delimiter | Delimiter to be used between `organization`, `environment`, `name` and `attributes`. | string | `"-"` | no |
+| enabled | The boolean flag whether this module is enabled or not. No resources are created when set to false. | string | `"true"` | no |
+| environment | Environment \(e.g. `prod`, `dev`, `staging`\). | string | `""` | no |
+| key\_deletion\_window\_in\_days | Duration in days after which the key is deleted after destruction of the resource, must be between 7 and 30 days. Defaults to 30 days. | number | `"10"` | no |
+| label\_order | Label order, e.g. `name`,`application`. | list | `<list>` | no |
+| name | Name  \(e.g. `app` or `cluster`\). | string | `""` | no |
+| s3\_bucket\_name | The name of the S3 bucket which will store configuration snapshots. | string | n/a | yes |
+| s3\_policy | policy for s3. | string | n/a | yes |
+| slack\_channel | The channel of slack. | string | n/a | yes |
+| slack\_webhook | The webhook of slack. | string | n/a | yes |
+| tags | Additional tags \(e.g. map\(`BusinessUnit`,`XYZ`\). | map | `<map>` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| cloudtrail_arn | The Amazon Resource Name of the trail |
+| cloudtrail\_arn | The Amazon Resource Name of the trail |
 | tags | A mapping of tags to assign to the Cloudtrail. |
 
 
 
 
 ## Testing
-In this module testing is performed with [terratest](https://github.com/gruntwork-io/terratest) and it creates a small piece of infrastructure, matches the output like ARN, ID and Tags name etc and destroy infrastructure in your AWS account. This testing is written in GO, so you need a [GO environment](https://golang.org/doc/install) in your system. 
+In this module testing is performed with [terratest](https://github.com/gruntwork-io/terratest) and it creates a small piece of infrastructure, matches the output like ARN, ID and Tags name etc and destroy infrastructure in your AWS account. This testing is written in GO, so you need a [GO environment](https://golang.org/doc/install) in your system.
 
 You need to run the following command in the testing folder:
 ```hcl
@@ -131,7 +185,7 @@ You need to run the following command in the testing folder:
 
 
 
-## Feedback 
+## Feedback
 If you come accross a bug or have any feedback, please log it in our [issue tracker](https://github.com/clouddrove/terraform-aws-secure-baseline/issues), or feel free to drop us an email at [hello@clouddrove.com](mailto:hello@clouddrove.com).
 
 If you have found it worth your time, go ahead and give us a ★ on [our GitHub](https://github.com/clouddrove/terraform-aws-secure-baseline)!
