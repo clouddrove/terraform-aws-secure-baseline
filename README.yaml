@@ -36,7 +36,7 @@ usage : |-
   Here is an example of how you can use this module in your inventory structure:
   ```hcl
   module "secure_baseline" {
-    source = "git::https://github.com/clouddrove/terraform-aws-secure-baseline.git?ref=tags/0.12.0"
+    source = "git::https://github.com/clouddrove/terraform-aws-secure-baseline.git?ref=tags/0.12.1"
     application = "clouddrove"
     environment = "test"
     label_order = ["environment", "application", "name"]
@@ -47,6 +47,54 @@ usage : |-
     alarm_namespace                   = "Alert_Alarm"
     s3_bucket_name                    = "cloudtrail-bucket"
     config_s3_bucket_name             = "config-bucket"
+    slack_webhook                     = "https://hooks.slack.com/services/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uEG4TW"
+    slack_channel                     = "testing"
+    s3_policy                         = data.aws_iam_policy_document.default.json
+  }
+
+  data "aws_iam_policy_document" "default" {
+    statement {
+      sid = "AWSCloudTrailAclCheck"
+
+      principals {
+        type        = "Service"
+        identifiers = ["cloudtrail.amazonaws.com"]
+      }
+
+      actions = [
+        "s3:GetBucketAcl",
+      ]
+
+      resources = ["arn:aws:s3:::cloudtrail-bucket-logs"]
+    }
+
+    statement {
+      sid = "AWSCloudTrailWrite"
+
+      principals {
+        type        = "Service"
+        identifiers = ["cloudtrail.amazonaws.com"]
+      }
+
+      actions = [
+        "s3:PutObject",
+      ]
+
+      resources = compact(
+        concat(
+          [format("arn:aws:s3:::cloudtrail-bucket-logs/AWSLogs/%s/*", data.aws_caller_identity.current.account_id)]
+        )
+      )
+
+      condition {
+        test     = "StringEquals"
+        variable = "s3:x-amz-acl"
+
+        values = [
+          "bucket-owner-full-control",
+        ]
+      }
+    }
   }
 
   ```

@@ -47,6 +47,21 @@ variable "enabled" {
   default     = true
 }
 
+variable "cloudtrail_enabled" {
+  description = "The boolean flag whether cloudtrail module is enabled or not. No resources are created when set to false."
+  default     = true
+}
+
+variable "alarm_enabled" {
+  description = "The boolean flag whether alarm module is enabled or not. No resources are created when set to false."
+  default     = true
+}
+
+variable "config_enabled" {
+  description = "The boolean flag whether config module is enabled or not. No resources are created when set to false."
+  default     = true
+}
+
 variable "alarm_namespace" {
   description = "The namespace in which all alarms are set up."
   default     = "CISBenchmark"
@@ -78,4 +93,22 @@ variable "s3_bucket_name" {
 variable "config_s3_bucket_name" {
   type        = string
   description = "The name of the S3 bucket which will store logs for aws  config."
+}
+
+
+variable "slack_webhook" {
+  type        = string
+  description = "The webhook of slack."
+}
+
+
+variable "slack_channel" {
+  type        = string
+  description = "The channel of slack."
+}
+
+
+variable "s3_policy" {
+  type        = string
+  description = "policy for s3."
 }
