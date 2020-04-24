@@ -36,7 +36,7 @@ usage : |-
   Here is an example of how you can use this module in your inventory structure:
   ```hcl
   module "secure_baseline" {
-    source = "git::https://github.com/clouddrove/terraform-aws-secure-baseline.git?ref=tags/0.12.1"
+    source = "git::https://github.com/clouddrove/terraform-aws-secure-baseline.git?ref=tags/0.12.2"
     application = "clouddrove"
     environment = "test"
     label_order = ["environment", "application", "name"]
@@ -50,6 +50,16 @@ usage : |-
     slack_webhook                     = "https://hooks.slack.com/services/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uEG4TW"
     slack_channel                     = "testing"
     s3_policy                         = data.aws_iam_policy_document.default.json
+    guardduty_enable = true
+    ipset_iplist = ["10.10.0.0/16", "172.16.0.0/16",]
+    threatintelset_activate = true
+    threatintelset_iplist = ["192.168.2.0/32", "4.4.4.4",]
+    is_guardduty_member = false
+     member_list = [{
+      account_id = "xxxxxxxxxxxxxx"
+      email      = "xxxxxxxxxxxxxx"
+      invite     = true
+  }]
   }
 
   data "aws_iam_policy_document" "default" {

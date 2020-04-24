@@ -112,3 +112,44 @@ variable "s3_policy" {
   type        = string
   description = "policy for s3."
 }
+
+variable "guardduty_enable" {
+  type        = bool
+  default     = true
+  description = "Enable monitoring and feedback reporting. Setting to false is equivalent to `suspending` GuardDuty. Defaults to true"
+}
+
+
+variable "ipset_iplist" {
+  type        = list
+  description = "IPSet list of trusted IP addresses"
+  default     = []
+}
+
+variable "threatintelset_iplist" {
+  type        = list
+  description = "ThreatIntelSet list of known malicious IP addresses"
+  default     = []
+}
+
+variable "threatintelset_activate" {
+  type        = bool
+  description = "Specifies whether GuardDuty is to start using the uploaded ThreatIntelSet"
+  default     = true
+}
+
+variable "member_list" {
+  type = list(object({
+    account_id = string
+    email      = string
+    invite     = bool
+  }))
+  default     = []
+  description = "The list of member accounts to be added. Each member list need to have values of account_id, member_email and invite boolean"
+}
+
+variable "is_guardduty_member" {
+  type        = bool
+  default     = false
+  description = "Whether the account is a member account"
+}

@@ -58,3 +58,21 @@ module "config-baseline" {
     SLACK_CHANNEL = var.slack_channel
   }
 }
+
+#Module      :  GUARD DUTY
+module "guardduty" {
+  source                  = "git::https://github.com/clouddrove/terraform-aws-guardduty.git?ref=tags/0.12.0"
+  name                    = "guardduty"
+  application             = var.application
+  environment             = var.environment
+  label_order             = var.label_order
+  guardduty_enable        = var.enabled && var.guardduty_enable
+  ipset_format            = "TXT"
+  ipset_iplist            = var.ipset_iplist
+  threatintelset_activate = var.threatintelset_activate
+  threatintelset_format   = "TXT"
+  threatintelset_iplist   = var.threatintelset_iplist
+
+  is_guardduty_member = var.is_guardduty_member
+  member_list         = var.member_list
+}
