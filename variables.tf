@@ -24,6 +24,12 @@ variable "label_order" {
   description = "Label order, e.g. `name`,`application`."
 }
 
+variable "managedby" {
+  type        = string
+  default     = "AnmolNagpal"
+  description = "ManagedBy, eg 'CloudDrove' or 'AnmolNagpal'."
+}
+
 variable "attributes" {
   type        = list
   default     = []

@@ -171,6 +171,7 @@ data "aws_iam_policy_document" "default" {
 | is_guardduty_member | Whether the account is a member account | bool | `false` | no |
 | key_deletion_window_in_days | Duration in days after which the key is deleted after destruction of the resource, must be between 7 and 30 days. Defaults to 30 days. | number | `10` | no |
 | label_order | Label order, e.g. `name`,`application`. | list | `<list>` | no |
+| managedby | ManagedBy, eg 'CloudDrove' or 'AnmolNagpal'. | string | `AnmolNagpal` | no |
 | member_list | The list of member accounts to be added. Each member list need to have values of account_id, member_email and invite boolean | object | `<list>` | no |
 | name | Name  (e.g. `app` or `cluster`). | string | `` | no |
 | s3_bucket_name | The name of the S3 bucket which will store configuration snapshots. | string | - | yes |

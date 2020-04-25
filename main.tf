@@ -3,10 +3,11 @@
 #Description : Terraform module to provision an AWS CloudTrail with encrypted S3 bucket.
 #              This bucket is used to store CloudTrail logs.
 module "cloudtrail" {
-  source                            = "git::https://github.com/clouddrove/terraform-aws-cloudtrail-baseline.git?ref=tags/0.12.6"
+  source                            = "git::https://github.com/clouddrove/terraform-aws-cloudtrail-baseline.git?ref=tags/0.12.10"
   name                              = "trails"
   application                       = var.application
   environment                       = var.environment
+  managedby                         = var.managedby
   label_order                       = var.label_order
   enabled                           = var.enabled && var.cloudtrail_enabled
   iam_role_name                     = "CloudTrail-CloudWatch-Delivery-Role"
@@ -28,10 +29,11 @@ module "cloudtrail" {
 #Module      : ALARM BASELINE
 #Description : Provides a CloudWatch Metric Alarm resource.
 module "alarm_baseline" {
-  source      = "git::https://github.com/clouddrove/terraform-aws-alarm-baseline.git?ref=tags/0.12.1"
+  source      = "git::https://github.com/clouddrove/terraform-aws-alarm-baseline.git?ref=tags/0.12.2"
   name        = "alarm"
   application = var.application
   environment = var.environment
+  managedby   = var.managedby
   label_order = var.label_order
 
   enabled                   = var.enabled && var.alarm_enabled
@@ -46,11 +48,12 @@ module "alarm_baseline" {
 #Module      : CONFIG BASELINE
 #Description : Manages status (recording / stopped) of an AWS Config Configuration Recorder.
 module "config-baseline" {
-  source                = "git::https://github.com/clouddrove/terraform-aws-config-baseline.git?ref=tags/0.12.1"
+  source                = "git::https://github.com/clouddrove/terraform-aws-config-baseline.git?ref=tags/0.12.2"
   name                  = "config"
   application           = var.application
   environment           = var.environment
   label_order           = var.label_order
+  managedby             = var.managedby
   enabled               = var.enabled && var.config_enabled
   config_s3_bucket_name = var.config_s3_bucket_name
   variables = {
@@ -65,6 +68,7 @@ module "guardduty" {
   name                    = "guardduty"
   application             = var.application
   environment             = var.environment
+  managedby               = var.managedby
   label_order             = var.label_order
   guardduty_enable        = var.enabled && var.guardduty_enable
   ipset_format            = "TXT"
