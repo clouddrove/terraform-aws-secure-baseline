@@ -64,13 +64,14 @@ module "config-baseline" {
 
 #Module      :  GUARD DUTY
 module "guardduty" {
-  source                  = "git::https://github.com/clouddrove/terraform-aws-guardduty.git?ref=tags/0.12.0"
+  source                  = "git::https://github.com/clouddrove/terraform-aws-guardduty.git?ref=tags/0.12.1"
   name                    = "guardduty"
   application             = var.application
   environment             = var.environment
   managedby               = var.managedby
   label_order             = var.label_order
   guardduty_enable        = var.enabled && var.guardduty_enable
+  bucket_name             = var.guardduty_s3_bucket_name
   ipset_format            = "TXT"
   ipset_iplist            = var.ipset_iplist
   threatintelset_activate = var.threatintelset_activate

@@ -18,11 +18,12 @@ module "secure_baseline" {
   cloudwatch_logs_group_name        = "cloudtrail-log-group"
   alarm_namespace                   = "Alert_Alarm"
 
-  s3_bucket_name        = "cloudtrail-bucket-logs"
-  config_s3_bucket_name = "config-bucket"
-  slack_webhook         = "https://hooks.slack.com/services/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uEG4TW"
-  slack_channel         = "testing"
-  s3_policy             = data.aws_iam_policy_document.default.json
+  s3_bucket_name           = "cloudtrail-bucket-logs"
+  config_s3_bucket_name    = "config-bucket"
+  guardduty_s3_bucket_name = "guardduty-files"
+  slack_webhook            = "https://hooks.slack.com/services/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uEG4TW"
+  slack_channel            = "testing"
+  s3_policy                = data.aws_iam_policy_document.default.json
 
   guardduty_enable        = true
   ipset_iplist            = ["10.10.0.0/16", "172.16.0.0/16", ]

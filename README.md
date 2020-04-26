@@ -82,6 +82,7 @@ module "secure_baseline" {
   cloudwatch_logs_group_name        = "cloudtrail-log-group"
   alarm_namespace                   = "Alert_Alarm"
   s3_bucket_name                    = "cloudtrail-bucket"
+  guardduty_s3_bucket_name          = "guardduty-files"
   config_s3_bucket_name             = "config-bucket"
   slack_webhook                     = "https://hooks.slack.com/services/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uEG4TW"
   slack_channel                     = "testing"
@@ -167,6 +168,7 @@ data "aws_iam_policy_document" "default" {
 | enabled | The boolean flag whether this module is enabled or not. No resources are created when set to false. | string | `true` | no |
 | environment | Environment (e.g. `prod`, `dev`, `staging`). | string | `` | no |
 | guardduty_enable | Enable monitoring and feedback reporting. Setting to false is equivalent to `suspending` GuardDuty. Defaults to true | bool | `true` | no |
+| guardduty_s3_bucket_name | The name of the S3 bucket which will store guardduty files. | string | - | yes |
 | ipset_iplist | IPSet list of trusted IP addresses | list | `<list>` | no |
 | is_guardduty_member | Whether the account is a member account | bool | `false` | no |
 | key_deletion_window_in_days | Duration in days after which the key is deleted after destruction of the resource, must be between 7 and 30 days. Defaults to 30 days. | number | `10` | no |

@@ -96,6 +96,11 @@ variable "s3_bucket_name" {
   description = "The name of the S3 bucket which will store configuration snapshots."
 }
 
+variable "guardduty_s3_bucket_name" {
+  type        = string
+  description = "The name of the S3 bucket which will store guardduty files."
+}
+
 variable "config_s3_bucket_name" {
   type        = string
   description = "The name of the S3 bucket which will store logs for aws  config."
