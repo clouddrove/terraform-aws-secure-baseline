@@ -27,14 +27,8 @@ module "secure_baseline" {
 
   guardduty_enable        = true
   ipset_iplist            = ["10.10.0.0/16", "172.16.0.0/16", ]
-  threatintelset_activate = true
+  threatintelset_activate = false
   threatintelset_iplist   = ["192.168.2.0/32", "4.4.4.4", ]
-  is_guardduty_member     = false
-  member_list = [{
-    account_id = "xxxxxxxxxxxxxx"
-    email      = "xxxxxxxxxxxxxx"
-    invite     = true
-  }]
 }
 
 data "aws_iam_policy_document" "default" {
