@@ -72,7 +72,7 @@ This module has a few dependencies:
 Here is an example of how you can use this module in your inventory structure:
 ```hcl
 module "secure_baseline" {
-  source = "git::https://github.com/clouddrove/terraform-aws-secure-baseline.git?ref=tags/0.12.2"
+  source = "git::https://github.com/clouddrove/terraform-aws-secure-baseline.git?ref=tags/0.12.4"
   application = "clouddrove"
   environment = "test"
   label_order = ["environment", "application", "name"]
