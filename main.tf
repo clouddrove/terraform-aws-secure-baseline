@@ -29,7 +29,7 @@ module "cloudtrail" {
 #Module      : ALARM BASELINE
 #Description : Provides a CloudWatch Metric Alarm resource.
 module "alarm_baseline" {
-  source      = "git::https://github.com/clouddrove/terraform-aws-alarm-baseline.git?ref=tags/0.12.3"
+  source      = "git::https://github.com/clouddrove/terraform-aws-alarm.git?ref=tags/0.12.3"
   name        = "alarm"
   application = var.application
   environment = var.environment
