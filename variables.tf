@@ -164,3 +164,15 @@ variable "is_guardduty_member" {
   default     = false
   description = "Whether the account is a member account"
 }
+
+variable "schedule_expression" {
+  type        = string
+  default     = "cron(0 14 ? * THU *)" # Run every Thursday at 2PM UTC/9AM EST/10AM EDT
+  description = "AWS Schedule Expression: https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html"
+}
+
+variable "rules_package_arns" {
+  type        = list(string)
+  default     = []
+  description = "The rules to be used during the run."
+}

@@ -29,6 +29,13 @@ module "secure_baseline" {
   ipset_iplist            = ["10.10.0.0/16", "172.16.0.0/16", ]
   threatintelset_activate = false
   threatintelset_iplist   = ["192.168.2.0/32", "4.4.4.4", ]
+  rules_package_arns = [
+    "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-ubA5XvBh",
+    "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-sJBhCr0F",
+    "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-SPzU33xe",
+    "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-SnojL3Z6",
+  ]
+  schedule_expression = "cron(0/10 * ? * * *)"
 }
 
 data "aws_iam_policy_document" "default" {

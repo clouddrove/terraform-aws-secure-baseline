@@ -60,7 +60,14 @@ usage : |-
       account_id = "xxxxxxxxxxxxxx"
       email      = "xxxxxxxxxxxxxx"
       invite     = true
-  }]
+    }]
+    rules_package_arns = [
+      "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-ubA5XvBh",
+      "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-sJBhCr0F",
+      "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-SPzU33xe",
+      "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-SnojL3Z6",
+    ]
+    schedule_expression = "cron(0/10 * ? * * *)"
   }
 
   data "aws_iam_policy_document" "default" {

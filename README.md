@@ -38,7 +38,7 @@
 <hr>
 
 
-We eat, drink, sleep and most importantly love **DevOps**. We are working towards stratergies for standardizing architecture while ensuring security for the infrastructure. We are strong believer of the philosophy <b>Bigger problems are always solved by breaking them into smaller manageable problems</b>. Resonating with microservices architecture, it is considered best-practice to run database, cluster, storage in smaller <b>connected yet manageable pieces</b> within the infrastructure.
+We eat, drink, sleep and most importantly love **DevOps**. We are working towards strategies for standardizing architecture while ensuring security for the infrastructure. We are strong believer of the philosophy <b>Bigger problems are always solved by breaking them into smaller manageable problems</b>. Resonating with microservices architecture, it is considered best-practice to run database, cluster, storage in smaller <b>connected yet manageable pieces</b> within the infrastructure.
 
 This module is basically combination of [Terraform open source](https://www.terraform.io/) and includes automatation tests and examples. It also helps to create and improve your infrastructure with minimalistic code instead of maintaining the whole infrastructure code yourself.
 
@@ -96,7 +96,14 @@ module "secure_baseline" {
     account_id = "xxxxxxxxxxxxxx"
     email      = "xxxxxxxxxxxxxx"
     invite     = true
-}]
+  }]
+  rules_package_arns = [
+    "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-ubA5XvBh",
+    "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-sJBhCr0F",
+    "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-SPzU33xe",
+    "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-SnojL3Z6",
+  ]
+  schedule_expression = "cron(0/10 * ? * * *)"
 }
 
 data "aws_iam_policy_document" "default" {
@@ -155,40 +162,41 @@ data "aws_iam_policy_document" "default" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| alarm_enabled | The boolean flag whether alarm module is enabled or not. No resources are created when set to false. | string | `true` | no |
-| alarm_namespace | The namespace in which all alarms are set up. | string | `CISBenchmark` | no |
-| application | Application (e.g. `cd` or `clouddrove`). | string | `` | no |
-| attributes | Additional attributes (e.g. `1`). | list | `<list>` | no |
-| cloudtrail_enabled | The boolean flag whether cloudtrail module is enabled or not. No resources are created when set to false. | string | `true` | no |
-| cloudwatch_logs_group_name | The name of CloudWatch Logs group to which CloudTrail events are delivered. | string | `iam_role_name` | no |
-| cloudwatch_logs_retention_in_days | Number of days to retain logs for. CIS recommends 365 days.  Possible values are: 0, 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653. Set to 0 to keep logs indefinitely. | number | `365` | no |
-| config_enabled | The boolean flag whether config module is enabled or not. No resources are created when set to false. | string | `true` | no |
-| config_s3_bucket_name | The name of the S3 bucket which will store logs for aws  config. | string | - | yes |
-| delimiter | Delimiter to be used between `organization`, `environment`, `name` and `attributes`. | string | `-` | no |
-| enabled | The boolean flag whether this module is enabled or not. No resources are created when set to false. | string | `true` | no |
-| environment | Environment (e.g. `prod`, `dev`, `staging`). | string | `` | no |
-| guardduty_enable | Enable monitoring and feedback reporting. Setting to false is equivalent to `suspending` GuardDuty. Defaults to true | bool | `true` | no |
-| guardduty_s3_bucket_name | The name of the S3 bucket which will store guardduty files. | string | - | yes |
-| ipset_iplist | IPSet list of trusted IP addresses | list | `<list>` | no |
-| is_guardduty_member | Whether the account is a member account | bool | `false` | no |
-| key_deletion_window_in_days | Duration in days after which the key is deleted after destruction of the resource, must be between 7 and 30 days. Defaults to 30 days. | number | `10` | no |
-| label_order | Label order, e.g. `name`,`application`. | list | `<list>` | no |
-| managedby | ManagedBy, eg 'CloudDrove' or 'AnmolNagpal'. | string | `AnmolNagpal` | no |
-| member_list | The list of member accounts to be added. Each member list need to have values of account_id, member_email and invite boolean | object | `<list>` | no |
-| name | Name  (e.g. `app` or `cluster`). | string | `` | no |
-| s3_bucket_name | The name of the S3 bucket which will store configuration snapshots. | string | - | yes |
-| s3_policy | policy for s3. | string | - | yes |
-| slack_channel | The channel of slack. | string | - | yes |
-| slack_webhook | The webhook of slack. | string | - | yes |
-| tags | Additional tags (e.g. map(`BusinessUnit`,`XYZ`). | map | `<map>` | no |
-| threatintelset_activate | Specifies whether GuardDuty is to start using the uploaded ThreatIntelSet | bool | `true` | no |
-| threatintelset_iplist | ThreatIntelSet list of known malicious IP addresses | list | `<list>` | no |
+| alarm\_enabled | The boolean flag whether alarm module is enabled or not. No resources are created when set to false. | string | `"true"` | no |
+| alarm\_namespace | The namespace in which all alarms are set up. | string | `"CISBenchmark"` | no |
+| application | Application \(e.g. `cd` or `clouddrove`\). | string | `""` | no |
+| attributes | Additional attributes \(e.g. `1`\). | list | `<list>` | no |
+| cloudtrail\_enabled | The boolean flag whether cloudtrail module is enabled or not. No resources are created when set to false. | string | `"true"` | no |
+| cloudwatch\_logs\_group\_name | The name of CloudWatch Logs group to which CloudTrail events are delivered. | string | `"iam_role_name"` | no |
+| cloudwatch\_logs\_retention\_in\_days | Number of days to retain logs for. CIS recommends 365 days.  Possible values are: 0, 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653. Set to 0 to keep logs indefinitely. | number | `"365"` | no |
+| config\_enabled | The boolean flag whether config module is enabled or not. No resources are created when set to false. | string | `"true"` | no |
+| config\_s3\_bucket\_name | The name of the S3 bucket which will store logs for aws  config. | string | n/a | yes |
+| delimiter | Delimiter to be used between `organization`, `environment`, `name` and `attributes`. | string | `"-"` | no |
+| enabled | The boolean flag whether this module is enabled or not. No resources are created when set to false. | string | `"true"` | no |
+| environment | Environment \(e.g. `prod`, `dev`, `staging`\). | string | `""` | no |
+| guardduty\_enable | Enable monitoring and feedback reporting. Setting to false is equivalent to `suspending` GuardDuty. Defaults to true | bool | `"true"` | no |
+| guardduty\_s3\_bucket\_name | The name of the S3 bucket which will store guardduty files. | string | n/a | yes |
+| ipset\_iplist | IPSet list of trusted IP addresses | list | `<list>` | no |
+| is\_guardduty\_member | Whether the account is a member account | bool | `"false"` | no |
+| key\_deletion\_window\_in\_days | Duration in days after which the key is deleted after destruction of the resource, must be between 7 and 30 days. Defaults to 30 days. | number | `"10"` | no |
+| label\_order | Label order, e.g. `name`,`application`. | list | `<list>` | no |
+| managedby | ManagedBy, eg 'CloudDrove' or 'AnmolNagpal'. | string | `"AnmolNagpal"` | no |
+| member\_list | The list of member accounts to be added. Each member list need to have values of account\_id, member\_email and invite boolean | object | `<list>` | no |
+| name | Name  \(e.g. `app` or `cluster`\). | string | `""` | no |
+| rules\_package\_arns | The rules to be used during the run. | list(string) | `<list>` | no |
+| s3\_bucket\_name | The name of the S3 bucket which will store configuration snapshots. | string | n/a | yes |
+| s3\_policy | policy for s3. | string | n/a | yes |
+| schedule\_expression | AWS Schedule Expression: https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html | string | `"cron(0 14 ? * THU *)"` | no |
+| slack\_channel | The channel of slack. | string | n/a | yes |
+| slack\_webhook | The webhook of slack. | string | n/a | yes |
+| tags | Additional tags \(e.g. map\(`BusinessUnit`,`XYZ`\). | map | `<map>` | no |
+| threatintelset\_activate | Specifies whether GuardDuty is to start using the uploaded ThreatIntelSet | bool | `"true"` | no |
+| threatintelset\_iplist | ThreatIntelSet list of known malicious IP addresses | list | `<list>` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| cloudtrail_arn | The Amazon Resource Name of the trail |
 | tags | A mapping of tags to assign to the Cloudtrail. |
 
 

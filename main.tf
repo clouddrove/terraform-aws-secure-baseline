@@ -29,7 +29,7 @@ module "cloudtrail" {
 #Module      : ALARM BASELINE
 #Description : Provides a CloudWatch Metric Alarm resource.
 module "alarm_baseline" {
-  source      = "git::https://github.com/clouddrove/terraform-aws-alarm-baseline.git?ref=tags/0.12.2"
+  source      = "git::https://github.com/clouddrove/terraform-aws-alarm-baseline.git?ref=tags/0.12.3"
   name        = "alarm"
   application = var.application
   environment = var.environment
@@ -64,7 +64,7 @@ module "config-baseline" {
 
 #Module      :  GUARD DUTY
 module "guardduty" {
-  source                  = "git::https://github.com/clouddrove/terraform-aws-guardduty.git?ref=tags/0.12.2"
+  source                  = "git::https://github.com/clouddrove/terraform-aws-guardduty.git?ref=tags/0.12.3"
   name                    = "guardduty"
   application             = var.application
   environment             = var.environment
@@ -80,4 +80,66 @@ module "guardduty" {
 
   is_guardduty_member = var.is_guardduty_member
   member_list         = var.member_list
+  variables = {
+    minSeverityLevel = "LOW"
+    webHookUrl       = var.slack_webhook
+    slackChannel     = var.slack_channel
+  }
+}
+
+module "aws-inspector" {
+  source = "git::https://github.com/clouddrove/terraform-aws-inspector.git?ref=tags/0.12.0"
+
+  ## Tags
+  name        = "aws-inspector"
+  application = var.application
+  environment = var.environment
+  managedby   = var.managedby
+  label_order = var.label_order
+  enabled     = true
+
+  instance_tags = {
+    "Inspector" = true
+  }
+
+  ## Inspector
+  inspector_enabled  = true
+  duration           = 300
+  rules_package_arns = var.rules_package_arns
+
+  ## Lambda
+  lambda_enabled      = true
+  schedule_expression = var.schedule_expression
+  handler             = "index.handler"
+  runtime             = "nodejs12.x"
+  statement_ids       = ["AllowExecutionFromEvents"]
+  actions             = ["lambda:InvokeFunction"]
+  principals          = ["events.amazonaws.com"]
+
+  iam_actions = [
+    "inspector:StartAssessmentRun",
+    "logs:CreateLogGroup",
+    "logs:CreateLogStream",
+    "logs:PutLogEvents"
+  ]
+}
+
+module "iam_access_analyzer" {
+  source = "git::https://github.com/clouddrove/terraform-aws-iam-access-analyzer.git?ref=tags/0.12.0"
+
+  name        = "iam-access-analyzer"
+  application = var.application
+  environment = var.environment
+  managedby   = var.managedby
+  label_order = var.label_order
+  enabled     = true
+
+  ## IAM Access Analyzer
+  analyzer_enabled = true
+  type             = "ACCOUNT"
+
+  variables = {
+    SLACK_WEBHOOK = var.slack_webhook
+    SLACK_CHANNEL = var.slack_channel
+  }
 }
