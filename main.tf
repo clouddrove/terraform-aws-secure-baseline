@@ -48,7 +48,7 @@ module "alarm_baseline" {
 #Module      : CONFIG BASELINE
 #Description : Manages status (recording / stopped) of an AWS Config Configuration Recorder.
 module "config-baseline" {
-  source                = "git::https://github.com/clouddrove/terraform-aws-config-baseline.git?ref=tags/0.12.3"
+  source                = "git::https://github.com/clouddrove/terraform-aws-config-baseline.git?ref=tags/0.12.4"
   name                  = "config"
   application           = var.application
   environment           = var.environment
