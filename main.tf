@@ -3,7 +3,7 @@
 #Description : Terraform module to provision an AWS CloudTrail with encrypted S3 bucket.
 #              This bucket is used to store CloudTrail logs.
 module "cloudtrail" {
-  source                            = "git::https://github.com/clouddrove/terraform-aws-cloudtrail-baseline.git?ref=tags/0.12.11"
+  source                            = "./modules/cloudtrail"
   name                              = "trails"
   application                       = var.application
   environment                       = var.environment
@@ -29,7 +29,7 @@ module "cloudtrail" {
 #Module      : ALARM BASELINE
 #Description : Provides a CloudWatch Metric Alarm resource.
 module "alarm_baseline" {
-  source      = "git::https://github.com/clouddrove/terraform-aws-alarm.git?ref=tags/0.12.3"
+  source      = "./modules/alarm"
   name        = "alarm"
   application = var.application
   environment = var.environment
@@ -48,7 +48,7 @@ module "alarm_baseline" {
 #Module      : CONFIG BASELINE
 #Description : Manages status (recording / stopped) of an AWS Config Configuration Recorder.
 module "config-baseline" {
-  source                = "git::https://github.com/clouddrove/terraform-aws-config-baseline.git?ref=tags/0.12.3"
+  source                = "./modules/config"
   name                  = "config"
   application           = var.application
   environment           = var.environment
@@ -64,7 +64,7 @@ module "config-baseline" {
 
 #Module      :  GUARD DUTY
 module "guardduty" {
-  source                  = "git::https://github.com/clouddrove/terraform-aws-guardduty.git?ref=tags/0.12.3"
+  source                  = "./modules/guardduty"
   name                    = "guardduty"
   application             = var.application
   environment             = var.environment
@@ -88,7 +88,7 @@ module "guardduty" {
 }
 
 module "aws-inspector" {
-  source = "git::https://github.com/clouddrove/terraform-aws-inspector.git?ref=tags/0.12.0"
+  source = "./modules/inspector"
 
   ## Tags
   name        = "aws-inspector"
@@ -125,7 +125,7 @@ module "aws-inspector" {
 }
 
 module "iam_access_analyzer" {
-  source = "git::https://github.com/clouddrove/terraform-aws-iam-access-analyzer.git?ref=tags/0.12.0"
+  source = "./modules/access-analyzer"
 
   name        = "iam-access-analyzer"
   application = var.application
