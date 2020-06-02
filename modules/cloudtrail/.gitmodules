@@ -1,0 +1,3 @@
+[submodule "cloudtrail_slack_notification"]
+	path = cloudtrail_slack_notification
+	url = git@github.com:clouddrove/cloudtrail-slack-notification.git

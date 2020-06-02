@@ -1,0 +1,72 @@
+---
+#
+# This is the canonical configuration for the `README.md`
+# Run `make readme` to rebuild the `README.md`
+#
+
+
+# Name of this project
+name : Terraform AWS Inspector
+
+# License of this project
+license: "MIT"
+
+# Canonical GitHub repo
+github_repo: clouddrove/clouddrove/terraform-aws-secure-baseline/modules/inspector
+
+# Badges to display
+badges:
+  - name: "Terraform"
+    image: "https://img.shields.io/badge/Terraform-v0.12-green"
+    url: "https://www.terraform.io"
+  - name: "Licence"
+    image: "https://img.shields.io/badge/License-MIT-blue.svg"
+    url: "LICENSE.md"
+
+#  description of this project
+description: |-
+  Terraform module to create Inspector on AWS for monitoring instances.
+
+# extra content
+include:
+  - "terraform.md"
+
+# How to use this project
+usage : |-
+  ### Simple Example
+  Here is an example of how you can use this module in your inventory structure:
+    ```hcl
+    module "aws-inspector" {
+      source              = "./../"
+      name                = "aws-inspector"
+      application         = "clouddrove"
+      environment         = "test"
+      label_order         = ["environment", "application", "name"]
+      enabled             = true
+      instance_tags       = {
+          "Inspector" = true
+      }
+      inspector_enabled   = true
+      duration            = 300
+      rules_package_arns  = [
+        "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-ubA5XvBh",
+        "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-sJBhCr0F",
+        "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-SPzU33xe",
+        "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-SnojL3Z6",
+      ]
+      lambda_enabled      = true
+      schedule_expression = "cron(0/10 * ? * MON-FRI *)"
+      handler             = "index.handler"
+      runtime             = "nodejs12.x"
+      statement_ids       = ["AllowExecutionFromEvents"]
+      actions             = ["lambda:InvokeFunction"]
+      principals          = ["events.amazonaws.com"]
+      iam_actions = [
+        "inspector:StartAssessmentRun",
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ]
+    }
+    ```
+  **Note:** We have to install agent in every instances which need to be inspect by AWS Inspector.
