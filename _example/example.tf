@@ -76,6 +76,7 @@ module "secure_baseline" {
   threatintelset_iplist    = ["192.168.2.0/32", "4.4.4.4", ]
 
   ## Inspector
+  inspector_enabled   = true
   rules_package_arns = [
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-ubA5XvBh",
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-sJBhCr0F",
@@ -84,4 +85,7 @@ module "secure_baseline" {
   ]
   schedule_expression = "cron(0/10 * ? * * *)"
 }
+# analyzer
+analyzer_enable = true
+type = "ACCOUNT"
 
