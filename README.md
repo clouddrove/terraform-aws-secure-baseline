@@ -24,13 +24,13 @@
 </p>
 <p align="center">
 
-<a href='https://facebook.com/sharer/sharer.php?u=https://github.com/clouddrove/terraform-aws-secure-baseline'>
+<a href='https://facebook.com/sharer/sharer.php?u=https://github.com/clouddrove/clouddrove/terraform-aws-secure-baseline/modules/'>
   <img title="Share on Facebook" src="https://user-images.githubusercontent.com/50652676/62817743-4f64cb80-bb59-11e9-90c7-b057252ded50.png" />
 </a>
-<a href='https://www.linkedin.com/shareArticle?mini=true&title=Terraform+AWS+Secure+Baseline&url=https://github.com/clouddrove/terraform-aws-secure-baseline'>
+<a href='https://www.linkedin.com/shareArticle?mini=true&title=Terraform+AWS+Secure+Baseline&url=https://github.com/clouddrove/clouddrove/terraform-aws-secure-baseline/modules/'>
   <img title="Share on LinkedIn" src="https://user-images.githubusercontent.com/50652676/62817742-4e339e80-bb59-11e9-87b9-a1f68cae1049.png" />
 </a>
-<a href='https://twitter.com/intent/tweet/?text=Terraform+AWS+Secure+Baseline&url=https://github.com/clouddrove/terraform-aws-secure-baseline'>
+<a href='https://twitter.com/intent/tweet/?text=Terraform+AWS+Secure+Baseline&url=https://github.com/clouddrove/clouddrove/terraform-aws-secure-baseline/modules/'>
   <img title="Share on Twitter" src="https://user-images.githubusercontent.com/50652676/62817740-4c69db00-bb59-11e9-8a79-3580fbbf6d5c.png" />
 </a>
 
@@ -57,15 +57,20 @@ This module has a few dependencies:
 - [github.com/gruntwork-io/terratest/modules/terraform](https://github.com/gruntwork-io/terratest)
 
 
+## What Includes
 
-
-
+- [Alarm](modules/alarm/README.md)
+- [Analyzer](modules/analyzer/README.md)
+- [Cloudtrail](modules/cloudtrail/README.md)
+- [config](modules/config/README.md)
+- [guardduty](modules/guardduty/README.md)
+- [inspector](modules/inspector/README.md)
 
 
 ## Examples
 
 
-**IMPORTANT:** Since the `master` branch used in `source` varies based on new modifications, we suggest that you use the release versions [here](https://github.com/clouddrove/terraform-aws-secure-baseline/releases).
+**IMPORTANT:** Since the `master` branch used in `source` varies based on new modifications, we suggest that you use the release versions [here](https://github.com/clouddrove/clouddrove/terraform-aws-secure-baseline/modules//releases).
 
 
 ### Simple Example
@@ -76,81 +81,78 @@ module "secure_baseline" {
   application = "clouddrove"
   environment = "test"
   label_order = ["environment", "application", "name"]
-  enabled                           = true
+
+  enabled       = true
+  slack_webhook = "https://hooks.slack.com/services/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uEG4TW"
+  slack_channel = "testing"
+
+  # cloudtrail
+  cloudtrail_enabled                = true
   key_deletion_window_in_days       = 10
   cloudwatch_logs_retention_in_days = 365
   cloudwatch_logs_group_name        = "cloudtrail-log-group"
-  alarm_namespace                   = "Alert_Alarm"
-  s3_bucket_name                    = "cloudtrail-bucket"
-  guardduty_s3_bucket_name          = "guardduty-files"
-  config_s3_bucket_name             = "config-bucket"
-  slack_webhook                     = "https://hooks.slack.com/services/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uEG4TW"
-  slack_channel                     = "testing"
-  s3_policy                         = data.aws_iam_policy_document.default.json
-  guardduty_enable = true
-  ipset_iplist = ["10.10.0.0/16", "172.16.0.0/16",]
-  threatintelset_activate = true
-  threatintelset_iplist = ["192.168.2.0/32", "4.4.4.4",]
-  is_guardduty_member = false
-   member_list = [{
-    account_id = "xxxxxxxxxxxxxx"
-    email      = "xxxxxxxxxxxxxx"
-    invite     = true
-  }]
+  cloudtrail_bucket_name            = "cloudtrail-bucket-logs"
+
+
+  # Alarm
+  alarm_enabled            = true
+  alarm_namespace          = "Alert_Alarm"
+  unauthorized_api_calls   = true
+  no_mfa_console_signin    = true
+  root_usage               = true
+  iam_changes              = true
+  cloudtrail_cfg_changes   = true
+  console_signin_failures  = true
+  disable_or_delete_cmk    = true
+  s3_bucket_policy_changes = true
+  security_group_changes   = true
+  nacl_changes             = true
+  network_gw_changes       = true
+  route_table_changes      = true
+  vpc_changes              = true
+
+
+  ## Config
+  config_enabled                     = true
+  config_s3_bucket_name              = "config-bucket"
+  restricted_ports                   = true
+  iam_mfa                            = true
+  unused_credentials                 = true
+  user_no_policies                   = true
+  no_policies_with_full_admin_access = true
+  acm_certificate_expiration_check   = true
+  ec2_volume_inuse_check             = true
+  ebs_snapshot_public_restorable     = true
+  rds_instance_public_access_check   = true
+  rds_snapshots_public_prohibited    = true
+  guardduty_enabled_centralized      = true
+  s3_bucket_public_write_prohibited  = true
+  eip_attached                       = false
+  ec2_encrypted_volumes              = true
+  iam_root_access_key                = true
+  vpc_default_security_group_closed  = false
+  s3_bucket_ssl_requests_only        = false
+  multi_region_cloudtrail_enabled    = true
+  instances_in_vpc                   = true
+  cloudwatch_log_group_encrypted     = false
+  rds_storage_encrypted              = true
+  restricted_ports_list              = "{\"blockedPort1\": \"22\", \"blockedPort2\": \"3306\",\"blockedPort3\": \"6379\", \"blockedPort4\": \"5432\"}"
+
+  # guardduty
+  guardduty_enable         = true
+  guardduty_s3_bucket_name = "guardduty-files"
+  ipset_iplist             = ["10.10.0.0/16", "172.16.0.0/16", ]
+  threatintelset_activate  = false
+  threatintelset_iplist    = ["192.168.2.0/32", "4.4.4.4", ]
+
+  ## Inspector
   rules_package_arns = [
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-ubA5XvBh",
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-sJBhCr0F",
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-SPzU33xe",
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-SnojL3Z6",
   ]
-  schedule_expression = "cron(0/10 * ? * * *)"
 }
-
-data "aws_iam_policy_document" "default" {
-  statement {
-    sid = "AWSCloudTrailAclCheck"
-
-    principals {
-      type        = "Service"
-      identifiers = ["cloudtrail.amazonaws.com"]
-    }
-
-    actions = [
-      "s3:GetBucketAcl",
-    ]
-
-    resources = ["arn:aws:s3:::cloudtrail-bucket-logs"]
-  }
-
-  statement {
-    sid = "AWSCloudTrailWrite"
-
-    principals {
-      type        = "Service"
-      identifiers = ["cloudtrail.amazonaws.com"]
-    }
-
-    actions = [
-      "s3:PutObject",
-    ]
-
-    resources = compact(
-      concat(
-        [format("arn:aws:s3:::cloudtrail-bucket-logs/AWSLogs/%s/*", data.aws_caller_identity.current.account_id)]
-      )
-    )
-
-    condition {
-      test     = "StringEquals"
-      variable = "s3:x-amz-acl"
-
-      values = [
-        "bucket-owner-full-control",
-      ]
-    }
-  }
-}
-
 ```
 
 
@@ -162,41 +164,89 @@ data "aws_iam_policy_document" "default" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| alarm\_enabled | The boolean flag whether alarm module is enabled or not. No resources are created when set to false. | string | `"true"` | no |
-| alarm\_namespace | The namespace in which all alarms are set up. | string | `"CISBenchmark"` | no |
-| application | Application \(e.g. `cd` or `clouddrove`\). | string | `""` | no |
-| attributes | Additional attributes \(e.g. `1`\). | list | `<list>` | no |
-| cloudtrail\_enabled | The boolean flag whether cloudtrail module is enabled or not. No resources are created when set to false. | string | `"true"` | no |
-| cloudwatch\_logs\_group\_name | The name of CloudWatch Logs group to which CloudTrail events are delivered. | string | `"iam_role_name"` | no |
-| cloudwatch\_logs\_retention\_in\_days | Number of days to retain logs for. CIS recommends 365 days.  Possible values are: 0, 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653. Set to 0 to keep logs indefinitely. | number | `"365"` | no |
-| config\_enabled | The boolean flag whether config module is enabled or not. No resources are created when set to false. | string | `"true"` | no |
-| config\_s3\_bucket\_name | The name of the S3 bucket which will store logs for aws  config. | string | n/a | yes |
-| delimiter | Delimiter to be used between `organization`, `environment`, `name` and `attributes`. | string | `"-"` | no |
-| enabled | The boolean flag whether this module is enabled or not. No resources are created when set to false. | string | `"true"` | no |
-| environment | Environment \(e.g. `prod`, `dev`, `staging`\). | string | `""` | no |
-| guardduty\_enable | Enable monitoring and feedback reporting. Setting to false is equivalent to `suspending` GuardDuty. Defaults to true | bool | `"true"` | no |
-| guardduty\_s3\_bucket\_name | The name of the S3 bucket which will store guardduty files. | string | n/a | yes |
-| ipset\_iplist | IPSet list of trusted IP addresses | list | `<list>` | no |
-| is\_guardduty\_member | Whether the account is a member account | bool | `"false"` | no |
-| key\_deletion\_window\_in\_days | Duration in days after which the key is deleted after destruction of the resource, must be between 7 and 30 days. Defaults to 30 days. | number | `"10"` | no |
-| label\_order | Label order, e.g. `name`,`application`. | list | `<list>` | no |
-| managedby | ManagedBy, eg 'CloudDrove' or 'AnmolNagpal'. | string | `"AnmolNagpal"` | no |
-| member\_list | The list of member accounts to be added. Each member list need to have values of account\_id, member\_email and invite boolean | object | `<list>` | no |
-| name | Name  \(e.g. `app` or `cluster`\). | string | `""` | no |
-| rules\_package\_arns | The rules to be used during the run. | list(string) | `<list>` | no |
-| s3\_bucket\_name | The name of the S3 bucket which will store configuration snapshots. | string | n/a | yes |
-| s3\_policy | policy for s3. | string | n/a | yes |
-| schedule\_expression | AWS Schedule Expression: https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html | string | `"cron(0 14 ? * THU *)"` | no |
-| slack\_channel | The channel of slack. | string | n/a | yes |
-| slack\_webhook | The webhook of slack. | string | n/a | yes |
-| tags | Additional tags \(e.g. map\(`BusinessUnit`,`XYZ`\). | map | `<map>` | no |
-| threatintelset\_activate | Specifies whether GuardDuty is to start using the uploaded ThreatIntelSet | bool | `"true"` | no |
-| threatintelset\_iplist | ThreatIntelSet list of known malicious IP addresses | list | `<list>` | no |
+| acm_certificate_expiration_check | Check ACM Certificates in your account are marked for expiration within the specified number of days. | bool | `false` | no |
+| acm_days_to_expiration | Specify the number of days before the rule flags the ACM Certificate as noncompliant. | number | `14` | no |
+| alarm_enabled | The boolean flag whether alarm module is enabled or not. No resources are created when set to false. | string | `true` | no |
+| alarm_namespace | The namespace in which all alarms are set up. | string | `CISBenchmark` | no |
+| analyzer_enable | The boolean flag whether alarm module is enabled or not. No resources are created when set to false. | string | `true` | no |
+| application | Application (e.g. `cd` or `clouddrove`). | string | `` | no |
+| attributes | Additional attributes (e.g. `1`). | list | `<list>` | no |
+| cloudtrail_bucket_name | The name of the S3 bucket which will store configuration snapshots. | string | - | yes |
+| cloudtrail_cfg_changes | If you want to create alarm when any changes in cloudtrail cfg. | bool | `true` | no |
+| cloudtrail_enabled | The boolean flag whether cloudtrail module is enabled or not. No resources are created when set to false. | string | `true` | no |
+| cloudwatch_log_group_encrypted | Ensuring that log group is encrypted | bool | `false` | no |
+| cloudwatch_logs_group_name | The name of CloudWatch Logs group to which CloudTrail events are delivered. | string | `iam_role_name` | no |
+| cloudwatch_logs_retention_in_days | Number of days to retain logs for. CIS recommends 365 days.  Possible values are: 0, 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653. Set to 0 to keep logs indefinitely. | number | `365` | no |
+| config_cloudtrail_enabled | Ensuring that the cloudtrail is enabled. | bool | `false` | no |
+| config_enabled | The boolean flag whether config module is enabled or not. No resources are created when set to false. | string | `true` | no |
+| config_s3_bucket_name | The name of the S3 bucket which will store logs for aws  config. | string | - | yes |
+| console_signin_failures | If you want to create alarm when any changes in cloudtrail cfg. | bool | `true` | no |
+| delimiter | Delimiter to be used between `organization`, `environment`, `name` and `attributes`. | string | `-` | no |
+| disable_or_delete_cmk | If you want to create alarm when disable or delete in cmk. | bool | `true` | no |
+| ebs_snapshot_public_restorable | Checks whether Amazon Elastic Block Store snapshots are not publicly restorable. | bool | `false` | no |
+| ec2_encrypted_volumes | Evaluates whether EBS volumes that are in an attached state are encrypted. Optionally, you can specify the ID of a KMS key to use to encrypt the volume. | bool | `false` | no |
+| ec2_volume_inuse_check | Checks whether EBS volumes are attached to EC2 instances. | bool | `false` | no |
+| eip_attached | Checks whether all Elastic IP addresses that are allocated to a VPC are attached to EC2 instances or in-use elastic network interfaces (ENIs). | bool | `false` | no |
+| enabled | The boolean flag whether this module is enabled or not. No resources are created when set to false. | string | `true` | no |
+| environment | Environment (e.g. `prod`, `dev`, `staging`). | string | `` | no |
+| guardduty_enable | Enable monitoring and feedback reporting. Setting to false is equivalent to `suspending` GuardDuty. Defaults to true | bool | `true` | no |
+| guardduty_enabled_centralized | Checks whether Amazon GuardDuty is enabled in your AWS account and region. | bool | `false` | no |
+| guardduty_s3_bucket_name | The name of the S3 bucket which will store guardduty files. | string | - | yes |
+| iam_changes | If you want to create alarm when any changes in IAM. | bool | `true` | no |
+| iam_mfa | Check MFA is enabled. | bool | `false` | no |
+| iam_password_policy | Ensuring that log group is encrypted | bool | `false` | no |
+| iam_root_access_key | Checks whether the root user access key is available. The rule is COMPLIANT if the user access key does not exist. | bool | `false` | no |
+| inspector_enabled | Whether Inspector is enabled or not. | bool | `true` | no |
+| instances_in_vpc | Ensuring that all the instances in VPC | bool | `false` | no |
+| ipset_iplist | IPSet list of trusted IP addresses | list | `<list>` | no |
+| is_guardduty_member | Whether the account is a member account | bool | `false` | no |
+| key_deletion_window_in_days | Duration in days after which the key is deleted after destruction of the resource, must be between 7 and 30 days. Defaults to 30 days. | number | `10` | no |
+| label_order | Label order, e.g. `name`,`application`. | list | `<list>` | no |
+| managedby | ManagedBy, eg 'CloudDrove' or 'AnmolNagpal'. | string | `AnmolNagpal` | no |
+| member_list | The list of member accounts to be added. Each member list need to have values of account_id, member_email and invite boolean | object | `<list>` | no |
+| multi_region_cloudtrail_enabled | Ensuring that the multi-region-cloud-trail is enabled | bool | `false` | no |
+| nacl_changes | If you want to create alarm when any changes in nacl. | bool | `true` | no |
+| name | Name  (e.g. `app` or `cluster`). | string | `` | no |
+| network_gw_changes | If you want to create alarm when any changes in network gateway. | bool | `true` | no |
+| no_mfa_console_signin | If you want to create alarm when MFA not enabled on root user. | bool | `true` | no |
+| no_policies_with_full_admin_access | Check user no policies with full admin access. | bool | `false` | no |
+| password_max_age | Number of days before password expiration. | number | `90` | no |
+| password_min_length | Password minimum length. | number | `16` | no |
+| password_require_lowercase | Require at least one lowercase character in password. | bool | `true` | no |
+| password_require_numbers | Require at least one number in password. | bool | `true` | no |
+| password_require_symbols | Require at least one symbol in password. | bool | `true` | no |
+| password_require_uppercase | Require at least one uppercase character in password. | bool | `true` | no |
+| password_reuse_prevention | Number of passwords before allowing reuse. | number | `24` | no |
+| rds_instance_public_access_check | Checks whether the Amazon Relational Database Service (RDS) instances are not publicly accessible. | bool | `false` | no |
+| rds_snapshots_public_prohibited | Checks if Amazon Relational Database Service (Amazon RDS) snapshots are public. | bool | `false` | no |
+| rds_storage_encrypted | Checks whether storage encryption is enabled for your RDS DB instances. | bool | `false` | no |
+| restricted_ports | If you want to enable the restricted incoming port. | bool | `false` | no |
+| restricted_ports_list | This list of blocked ports. | string | `{"blockedPort1": "22", "blockedPort2": "3306","blockedPort3": "6379", "blockedPort4": "5432"}` | no |
+| root_usage | If you want to create alarm when sign in with root user. | bool | `true` | no |
+| route_table_changes | If you want to create alarm when any changes in network gateway. | bool | `true` | no |
+| rules_package_arns | The rules to be used during the run. | list(string) | `<list>` | no |
+| s3_bucket_policy_changes | If you want to create alarm when any changes in S3 policy. | bool | `true` | no |
+| s3_bucket_public_write_prohibited | Checks that your S3 buckets do not allow public write access. | bool | `false` | no |
+| s3_bucket_ssl_requests_only | Checks whether S3 buckets have policies that require requests to use Secure Socket Layer (SSL). | bool | `false` | no |
+| schedule_expression | AWS Schedule Expression: https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html | string | `cron(0 14 ? * THU *)` | no |
+| security_group_changes | If you want to create alarm when any changes on security groups. | bool | `true` | no |
+| slack_channel | The channel of slack. | string | - | yes |
+| slack_webhook | The webhook of slack. | string | - | yes |
+| tags | Additional tags (e.g. map(`BusinessUnit`,`XYZ`). | map | `<map>` | no |
+| threatintelset_activate | Specifies whether GuardDuty is to start using the uploaded ThreatIntelSet | bool | `true` | no |
+| threatintelset_iplist | ThreatIntelSet list of known malicious IP addresses | list | `<list>` | no |
+| type | Type of Analyzer. Valid value is currently only ACCOUNT. Defaults to ACCOUNT. | string | `ACCOUNT` | no |
+| unauthorized_api_calls | If you want to create alarm for unauthorized api calls. | bool | `true` | no |
+| unused_credentials | Check unused credentials in AWS account. | bool | `false` | no |
+| user_no_policies | Check user no policies. | bool | `false` | no |
+| vpc_changes | If you want to create alarm when any changes in vpc. | bool | `true` | no |
+| vpc_default_security_group_closed | Checks that the default security group of any Amazon Virtual Private Cloud (VPC) does not allow inbound or outbound traffic. | bool | `false` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
+| cloudtrail_arn | The Amazon Resource Name of the trail |
 | tags | A mapping of tags to assign to the Cloudtrail. |
 
 
@@ -213,9 +263,9 @@ You need to run the following command in the testing folder:
 
 
 ## Feedback
-If you come accross a bug or have any feedback, please log it in our [issue tracker](https://github.com/clouddrove/terraform-aws-secure-baseline/issues), or feel free to drop us an email at [hello@clouddrove.com](mailto:hello@clouddrove.com).
+If you come accross a bug or have any feedback, please log it in our [issue tracker](https://github.com/clouddrove/clouddrove/terraform-aws-secure-baseline/modules//issues), or feel free to drop us an email at [hello@clouddrove.com](mailto:hello@clouddrove.com).
 
-If you have found it worth your time, go ahead and give us a ★ on [our GitHub](https://github.com/clouddrove/terraform-aws-secure-baseline)!
+If you have found it worth your time, go ahead and give us a ★ on [our GitHub](https://github.com/clouddrove/clouddrove/terraform-aws-secure-baseline/modules/)!
 
 ## About us
 
