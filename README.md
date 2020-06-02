@@ -62,9 +62,9 @@ This module has a few dependencies:
 - [Alarm](modules/alarm/README.md)
 - [Analyzer](modules/analyzer/README.md)
 - [Cloudtrail](modules/cloudtrail/README.md)
-- [config](modules/config/README.md)
-- [guardduty](modules/guardduty/README.md)
-- [inspector](modules/inspector/README.md)
+- [Config](modules/config/README.md)
+- [Guardduty](modules/guardduty/README.md)
+- [Inspector](modules/inspector/README.md)
 
 
 ## Examples
