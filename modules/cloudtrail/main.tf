@@ -43,7 +43,7 @@ resource "aws_s3_bucket_policy" "this" {
   count = var.enabled ? 1 : 0
 
   bucket = module.s3_bucket.id
-  policy = data.aws_iam_policy_document.default.json
+  policy = var.s3_policy == "" ? data.aws_iam_policy_document.default.json : var.s3_policy
 }
 data "aws_iam_policy_document" "default" {
   statement {

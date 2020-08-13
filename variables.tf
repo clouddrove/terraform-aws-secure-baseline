@@ -42,6 +42,12 @@ variable "delimiter" {
   description = "Delimiter to be used between `organization`, `environment`, `name` and `attributes`."
 }
 
+variable "cloudtrail_s3_policy" {
+  type        = string
+  default     = ""
+  description = "Policy for S3."
+}
+
 variable "tags" {
   type        = map
   default     = {}

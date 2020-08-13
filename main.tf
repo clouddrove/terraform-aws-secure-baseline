@@ -23,6 +23,7 @@ module "cloudtrail" {
   s3_bucket_name                    = var.cloudtrail_bucket_name
   slack_webhook                     = var.slack_webhook
   slack_channel                     = var.slack_channel
+  s3_policy                         = var.cloudtrail_s3_policy
 }
 
 #Module      : ALARM
