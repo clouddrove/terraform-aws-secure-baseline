@@ -109,7 +109,6 @@ module "s3_bucket" {
   label_order = ["name"]
 
   bucket_enabled          = var.enabled
-  region                  = data.aws_region.current.name
   versioning              = true
   acl                     = "log-delivery-write"
   bucket_policy           = true

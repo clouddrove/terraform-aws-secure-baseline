@@ -33,7 +33,6 @@ module "s3_bucket" {
   managedby      = var.managedby
   create_bucket  = var.enabled
   bucket_enabled = var.enabled
-  region         = data.aws_region.current.name
   versioning     = true
   acl            = "log-delivery-write"
   force_destroy  = true
