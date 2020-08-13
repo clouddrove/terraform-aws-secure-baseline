@@ -36,12 +36,6 @@ variable "delimiter" {
   description = "Delimiter to be used between `organization`, `environment`, `name` and `attributes`."
 }
 
-variable "s3_policy" {
-  type        = string
-  default     = ""
-  description = "Policy for S3."
-}
-
 variable "tags" {
   type        = map
   default     = {}
@@ -200,7 +194,7 @@ variable "SOURCE_LIST" {
 
 variable "s3_policy" {
   default     = []
-  description = "Policy of s3.."
+  description = "Policy of s3."
 }
 
 variable "managedby" {
