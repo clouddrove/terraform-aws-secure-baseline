@@ -100,7 +100,7 @@ module "sns" {
 # Description : Terraform module to create default S3 bucket with logging and encryption
 #               type specific features.
 module "s3_bucket" {
-  source = "git::https://github.com/clouddrove/terraform-aws-s3.git?ref=tags/0.12.6"
+  source = "git::https://github.com/clouddrove/terraform-aws-s3.git?ref=tags/0.12.7"
 
   name        = var.config_s3_bucket_name
   application = var.application
@@ -193,7 +193,7 @@ data "aws_iam_policy_document" "recorder_assume_role_policy" {
 #Module      : AWS_IAM_ROLE
 #Description : Provides an IAM role.
 resource "aws_iam_role" "recorder" {
-  count = var.enabled ? 1 : 0
+  count              = var.enabled ? 1 : 0
   name               = format("%s-recorder", module.labels.id)
   assume_role_policy = data.aws_iam_policy_document.recorder_assume_role_policy.json
 
@@ -262,7 +262,7 @@ resource "aws_config_configuration_recorder" "recorder" {
   count = var.enabled ? 1 : 0
 
   name     = format("%s-recorder", module.labels.id)
-  role_arn = join("",  aws_iam_role.recorder.*.arn)
+  role_arn = join("", aws_iam_role.recorder.*.arn)
 
   recording_group {
     all_supported                 = true
@@ -325,7 +325,7 @@ resource "aws_config_config_rule" "iam_mfa" {
 resource "aws_config_config_rule" "unused_credentials" {
   count = var.enabled && var.unused_credentials ? 1 : 0
 
-  name  = "UnusedCredentialsNotExist"
+  name = "UnusedCredentialsNotExist"
   source {
     owner             = "AWS"
     source_identifier = "IAM_USER_UNUSED_CREDENTIALS_CHECK"
@@ -341,7 +341,7 @@ resource "aws_config_config_rule" "unused_credentials" {
 resource "aws_config_config_rule" "user_no_policies" {
   count = var.enabled && var.user_no_policies ? 1 : 0
 
-  name  = "NoPoliciesAttachedToUser"
+  name = "NoPoliciesAttachedToUser"
   source {
     owner             = "AWS"
     source_identifier = "IAM_USER_NO_POLICIES_CHECK"
@@ -379,9 +379,9 @@ resource "aws_config_config_rule" "no_policies_with_full_admin_access" {
 }
 
 resource "aws_config_config_rule" "acm_certificate_expiration_check" {
-  count            = var.enabled && var.acm_certificate_expiration_check ? 1 : 0
+  count = var.enabled && var.acm_certificate_expiration_check ? 1 : 0
 
-  name             = "AcmCertificateExpirationCheck"
+  name = "AcmCertificateExpirationCheck"
 
   description      = "Ensures ACM Certificates in your account are marked for expiration within the specified number of days"
   input_parameters = data.template_file.aws_config_acm_certificate_expiration.rendered
@@ -400,7 +400,7 @@ resource "aws_config_config_rule" "acm_certificate_expiration_check" {
 }
 
 resource "aws_config_config_rule" "ec2_volume_inuse_check" {
-  count       = var.enabled && var.ec2_volume_inuse_check ? 1 : 0
+  count = var.enabled && var.ec2_volume_inuse_check ? 1 : 0
 
   name        = "Ec2VolumeInuseCheck"
   description = "Checks whether EBS volumes are attached to EC2 instances."
@@ -433,7 +433,7 @@ resource "aws_config_config_rule" "ebs_snapshot_public_restorable" {
 }
 
 resource "aws_config_config_rule" "rds_storage_encrypted" {
-  count       = var.enabled && var.rds_storage_encrypted? 1 : 0
+  count       = var.enabled && var.rds_storage_encrypted ? 1 : 0
   name        = "RdsStorageEncrypted"
   description = "Checks whether storage encryption is enabled for your RDS DB instances."
 
@@ -449,7 +449,7 @@ resource "aws_config_config_rule" "rds_storage_encrypted" {
 }
 
 resource "aws_config_config_rule" "rds_instance_public_access_check" {
-  count       = var.enabled && var.rds_instance_public_access_check ? 1 : 0
+  count = var.enabled && var.rds_instance_public_access_check ? 1 : 0
 
   name        = "RdsInstancePublicAccessCheck"
   description = "Checks whether the Amazon Relational Database Service (RDS) instances are not publicly accessible. The rule is non-compliant if the publiclyAccessible field is true in the instance configuration item."
@@ -465,7 +465,7 @@ resource "aws_config_config_rule" "rds_instance_public_access_check" {
 }
 
 resource "aws_config_config_rule" "rds_snapshots_public_prohibited" {
-  count       = var.enabled && var.rds_snapshots_public_prohibited ? 1 : 0
+  count = var.enabled && var.rds_snapshots_public_prohibited ? 1 : 0
 
   name        = "RdsSnapshotsPublicProhibited"
   description = "Checks if Amazon Relational Database Service (Amazon RDS) snapshots are public."
@@ -482,7 +482,7 @@ resource "aws_config_config_rule" "rds_snapshots_public_prohibited" {
 }
 
 resource "aws_config_config_rule" "guardduty_enabled_centralized" {
-  count       = var.enabled && var.guardduty_enabled_centralized ? 1 : 0
+  count = var.enabled && var.guardduty_enabled_centralized ? 1 : 0
 
   name        = "GuarddutyEnabledCentralized"
   description = "Checks whether Amazon GuardDuty is enabled in your AWS account and region."
@@ -501,7 +501,7 @@ resource "aws_config_config_rule" "guardduty_enabled_centralized" {
 }
 
 resource "aws_config_config_rule" "s3_bucket_public_write_prohibited" {
-  count       = var.enabled && var.s3_bucket_public_write_prohibited ? 1 : 0
+  count = var.enabled && var.s3_bucket_public_write_prohibited ? 1 : 0
 
   name        = "S3BucketPublicWriteProhibited"
   description = "Checks that your S3 buckets do not allow public write access."
@@ -518,7 +518,7 @@ resource "aws_config_config_rule" "s3_bucket_public_write_prohibited" {
 }
 
 resource "aws_config_config_rule" "eip_attached" {
-  count       = var.enabled && var.eip_attached? 1 : 0
+  count       = var.enabled && var.eip_attached ? 1 : 0
   name        = "EipAttached"
   description = "Checks whether all Elastic IP addresses that are allocated to a VPC are attached to EC2 instances or in-use elastic network interfaces (ENIs)."
 
@@ -600,10 +600,10 @@ resource "aws_config_config_rule" "s3_bucket_ssl_requests_only" {
 }
 
 resource "aws_config_config_rule" "cloudtrail_enabled" {
-  count            = var.enabled && var.config_cloudtrail_enabled ? 1 : 0
+  count = var.enabled && var.config_cloudtrail_enabled ? 1 : 0
 
-  name             = "CloudtrailEnabled"
-  description      = "Ensuring that the cloudtrail is enabled"
+  name        = "CloudtrailEnabled"
+  description = "Ensuring that the cloudtrail is enabled"
 
   source {
 
@@ -616,10 +616,10 @@ resource "aws_config_config_rule" "cloudtrail_enabled" {
 }
 
 resource "aws_config_config_rule" "multi_region_cloudtrail_enabled" {
-  count            = var.enabled && var.multi_region_cloudtrail_enabled ? 1 : 0
+  count = var.enabled && var.multi_region_cloudtrail_enabled ? 1 : 0
 
-  name             = "MultiRegionCloudTrail"
-  description      = "Ensuring that the multi-region-cloud-trail is enabled"
+  name        = "MultiRegionCloudTrail"
+  description = "Ensuring that the multi-region-cloud-trail is enabled"
 
   source {
 
@@ -634,10 +634,10 @@ resource "aws_config_config_rule" "multi_region_cloudtrail_enabled" {
 
 
 resource "aws_config_config_rule" "instances_in_vpc" {
-  count            = var.enabled && var.instances_in_vpc ? 1 : 0
+  count = var.enabled && var.instances_in_vpc ? 1 : 0
 
-  name             = "InstancesInVpc"
-  description      = "Ensuring that all the instances in VPC"
+  name        = "InstancesInVpc"
+  description = "Ensuring that all the instances in VPC"
 
   source {
 
@@ -652,10 +652,10 @@ resource "aws_config_config_rule" "instances_in_vpc" {
 
 
 resource "aws_config_config_rule" "cloudwatch_log_group_encrypted" {
-  count            = var.enabled && var.cloudwatch_log_group_encrypted ? 1 : 0
+  count = var.enabled && var.cloudwatch_log_group_encrypted ? 1 : 0
 
-  name             = "CloudwatchLogGroupEncrypted"
-  description      = "Ensuring that log group is encrypted"
+  name        = "CloudwatchLogGroupEncrypted"
+  description = "Ensuring that log group is encrypted"
 
   source {
 
@@ -664,7 +664,7 @@ resource "aws_config_config_rule" "cloudwatch_log_group_encrypted" {
 
   }
 
-  depends_on =  [aws_config_configuration_recorder.recorder]
+  depends_on = [aws_config_configuration_recorder.recorder]
   tags       = module.labels.tags
 }
 
@@ -688,7 +688,7 @@ data "template_file" "aws_config_iam_password_policy" {
 
 }
 resource "aws_config_config_rule" "iam_password_policy" {
-  count            = var.enabled && var.iam_password_policy ? 1 : 0
+  count = var.enabled && var.iam_password_policy ? 1 : 0
 
   name = "Iam_PasswordPolicy"
 
@@ -697,7 +697,7 @@ resource "aws_config_config_rule" "iam_password_policy" {
     source_identifier = "IAM_PASSWORD_POLICY"
   }
 
-  input_parameters =  data.template_file.aws_config_iam_password_policy.rendered
+  input_parameters = data.template_file.aws_config_iam_password_policy.rendered
 
   depends_on = [aws_config_configuration_recorder.recorder]
 }
