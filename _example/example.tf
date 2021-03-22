@@ -22,6 +22,10 @@ module "secure_baseline" {
   cloudwatch_logs_retention_in_days = 365
   cloudwatch_logs_group_name        = "cloudtrail-log-group"
   cloudtrail_bucket_name            = "cloudtrail-bucket-logs"
+  EVENT_IGNORE_LIST                 = jsonencode(["^Describe*", "^Assume*", "^List*", "^Get*", "^Decrypt*", "^Lookup*", "^BatchGet*", "^CreateLogStream$", "^RenewRole$", "^REST.GET.OBJECT_LOCK_CONFIGURATION$", "TestEventPattern", "TestScheduleExpression", "CreateNetworkInterface", "ValidateTemplate"])
+  EVENT_ALERT_LIST                  = jsonencode(["DetachRolePolicy", "ConsoleLogin"])
+  USER_IGNORE_LIST                  = jsonencode(["^awslambda_*", "^aws-batch$", "^bamboo*", "^i-*", "^[0-9]*$", "^ecs-service-scheduler$", "^AutoScaling$", "^AWSCloudFormation$", "^CloudTrailBot$", "^SLRManagement$"])
+  SOURCE_LIST                       = jsonencode(["aws-sdk-go"])
 
 
   # Alarm
@@ -76,7 +80,7 @@ module "secure_baseline" {
   threatintelset_iplist    = ["192.168.2.0/32", "4.4.4.4", ]
 
   ## Inspector
-  inspector_enabled   = true
+  inspector_enabled = true
   rules_package_arns = [
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-ubA5XvBh",
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-sJBhCr0F",
@@ -87,5 +91,5 @@ module "secure_baseline" {
 }
 # analyzer
 analyzer_enable = true
-type = "ACCOUNT"
+type            = "ACCOUNT"
 
