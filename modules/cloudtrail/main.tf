@@ -362,7 +362,7 @@ resource "aws_cloudtrail" "default" {
   is_multi_region_trail         = true
   is_organization_trail         = var.is_organization_trail
   kms_key_id                    = var.key_arn == "" ? module.kms_key.key_arn : var.key_arn
-  cloud_watch_logs_group_arn    = join("", aws_cloudwatch_log_group.cloudtrail_events.*.arn)
+  cloud_watch_logs_group_arn    = format("%s:*", join("", aws_cloudwatch_log_group.cloudtrail_events.*.arn))
   cloud_watch_logs_role_arn     = join("", aws_iam_role.cloudwatch_delivery.*.arn)
   tags                          = module.labels.tags
   depends_on = [
