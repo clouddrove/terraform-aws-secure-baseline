@@ -49,22 +49,26 @@ variable "cloudtrail_s3_policy" {
 }
 
 variable "EVENT_IGNORE_LIST" {
-  default     = jsonencode(["^Describe*", "^Assume*", "^List*", "^Get*", "^Decrypt*", "^Lookup*", "^BatchGet*", "^CreateLogStream$", "^RenewRole$", "^REST.GET.OBJECT_LOCK_CONFIGURATION$", "TestEventPattern", "TestScheduleExpression", "CreateNetworkInterface", "ValidateTemplate"])
+  type        = string
+  default     = ""
   description = "Event List which event is ignore."
 }
 
 variable "EVENT_ALERT_LIST" {
-  default     = jsonencode(["DetachRolePolicy", "ConsoleLogin"])
+  type        = string
+  default     = ""
   description = "Event List which event is not ignore."
 }
 
 variable "USER_IGNORE_LIST" {
-  default     = jsonencode(["^awslambda_*", "^aws-batch$", "^bamboo*", "^i-*", "^[0-9]*$", "^ecs-service-scheduler$", "^AutoScaling$", "^AWSCloudFormation$", "^CloudTrailBot$", "^SLRManagement$"])
+  type        = string
+  default     = ""
   description = "User List which event is ignore."
 }
 
 variable "SOURCE_LIST" {
-  default     = jsonencode(["aws-sdk-go"])
+  type        = string
+  default     = ""
   description = "Event Source List which event is ignore."
 }
 
