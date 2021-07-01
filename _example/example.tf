@@ -8,9 +8,8 @@ data "aws_region" "current" {}
 module "secure_baseline" {
   source = "./../"
 
-  application = "clouddrove"
   environment = "test"
-  label_order = ["environment", "application", "name"]
+  label_order = ["environment", "name"]
 
   enabled       = true
   slack_webhook = "https://hooks.slack.com/services/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uEG4TW"
@@ -89,7 +88,3 @@ module "secure_baseline" {
   ]
   schedule_expression = "cron(0/10 * ? * * *)"
 }
-# analyzer
-analyzer_enable = true
-type            = "ACCOUNT"
-

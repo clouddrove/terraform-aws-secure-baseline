@@ -19,7 +19,7 @@ variable "environment" {
 }
 
 variable "label_order" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Label order, e.g. `name`,`application`."
 }
@@ -31,7 +31,7 @@ variable "managedby" {
 }
 
 variable "attributes" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Additional attributes (e.g. `1`)."
 }
@@ -73,7 +73,7 @@ variable "SOURCE_LIST" {
 }
 
 variable "tags" {
-  type        = map
+  type        = map(any)
   default     = {}
   description = "Additional tags (e.g. map(`BusinessUnit`,`XYZ`)."
 }
@@ -237,13 +237,13 @@ variable "guardduty_s3_bucket_name" {
 }
 
 variable "ipset_iplist" {
-  type        = list
+  type        = list(any)
   description = "IPSet list of trusted IP addresses"
   default     = []
 }
 
 variable "threatintelset_iplist" {
-  type        = list
+  type        = list(any)
   description = "ThreatIntelSet list of known malicious IP addresses"
   default     = []
 }
