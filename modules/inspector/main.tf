@@ -92,4 +92,3 @@ module "lambda" {
     assessmentTemplateArn = join("", aws_inspector_assessment_template.default.*.arn)
   }
 }
-

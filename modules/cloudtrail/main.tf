@@ -371,7 +371,7 @@ resource "aws_cloudtrail" "default" {
 }
 
 module "cloudtrail-slack-notification" {
-  source  = "clouddrove/slack-notification/aws"
+  source  = "clouddrove/cloudtrail-slack-notification/aws"
   version = "0.15.0"
 
   name        = "cloudtrail-slack-notification"
