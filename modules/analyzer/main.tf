@@ -4,10 +4,10 @@
 #Module      : labels
 #Description : Terraform module to create consistent naming for multiple names.
 module "labels" {
-  source = "git::https://github.com/clouddrove/terraform-labels.git?ref=tags/0.12.0"
+  source  = "clouddrove/labels/aws"
+  version = "0.15.0"
 
   name        = var.name
-  application = var.application
   environment = var.environment
   tags        = var.tags
   enabled     = var.enabled
@@ -55,10 +55,10 @@ resource "null_resource" "cluster" {
 }
 
 module "slack-lambda" {
-  source = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=tags/0.12.5"
+  source  = "clouddrove/labels/aws"
+  version = "0.15.0"
 
   name        = format("%s-slack-lambda", module.labels.id)
-  application = var.application
   environment = var.environment
   label_order = ["name"]
   managedby   = var.managedby
