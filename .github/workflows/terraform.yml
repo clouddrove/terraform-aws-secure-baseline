@@ -17,64 +17,6 @@ jobs:
         with:
           actions_subcommand: 'fmt'
 
-  validate:
-    name: 'terraform validate'
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'Checkout'
-        uses: actions/checkout@v2.3.4
-
-      - name: 'Configure AWS Credentials'
-        uses: clouddrove/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.TEST_AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.TEST_AWS_ACCESS_SECRET_KEY }}
-          aws-region: us-east-2
-
-      - name: 'terraform init'
-        uses: 'clouddrove/github-actions@v9.0'
-        with:
-          actions_subcommand: 'init'
-          tf_actions_working_dir: ./_example
-
-      - name: 'terraform validate'
-        uses: 'clouddrove/github-actions@v9.0'
-        with:
-          actions_subcommand: 'validate'
-          tf_actions_working_dir: ./_example
-          github_token: '${{ secrets.GITHUB}}'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
-
-  plan:
-    name: 'terraform plan'
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'Checkout'
-        uses: actions/checkout@v2.3.4
-
-      - name: 'terraform init'
-        uses: 'clouddrove/github-actions@v9.0'
-        with:
-          actions_subcommand: 'init'
-          tf_actions_working_dir: ./_example
-
-      - name: 'Configure AWS Credentials'
-        uses: clouddrove/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.TEST_AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.TEST_AWS_ACCESS_SECRET_KEY }}
-          aws-region: us-east-2
-
-      - name: 'terraform plan'
-        uses: 'clouddrove/github-actions@v9.0'
-        with:
-          actions_subcommand: 'plan'
-          tf_actions_working_dir: ./_example
-          github_token: '${{ secrets.GITHUB}}'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
-
   pre-commit:
     name: 'Pre-Commit'
     needs:
