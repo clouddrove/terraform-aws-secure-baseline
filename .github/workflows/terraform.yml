@@ -42,9 +42,9 @@ jobs:
         with:
           actions_subcommand: 'validate'
           tf_actions_working_dir: ./_example
-           github_token: '${{ secrets.GITHUB}}'
+          github_token: '${{ secrets.GITHUB}}'
         env:
-           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
 
   plan:
     name: 'terraform plan'
