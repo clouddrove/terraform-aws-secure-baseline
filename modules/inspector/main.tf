@@ -4,12 +4,11 @@
 #Module      : labels
 #Description : Terraform module to create consistent naming for multiple names.
 module "labels" {
-  source = "git::https://github.com/clouddrove/terraform-labels.git?ref=tags/0.12.0"
+  source  = "clouddrove/labels/aws"
+  version = "0.15.0"
 
   name        = var.name
-  application = var.application
   environment = var.environment
-  tags        = var.tags
   enabled     = var.enabled
   managedby   = var.managedby
   label_order = var.label_order
@@ -70,9 +69,10 @@ resource "aws_cloudwatch_event_target" "default" {
 #Module      : LAMBDA
 #Description : Creating a lambda function for assessment run.
 module "lambda" {
-  source        = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=tags/0.12.5"
+  source  = "clouddrove/lambda/aws"
+  version = "0.15.0"
+
   name          = var.name
-  application   = var.application
   environment   = var.environment
   label_order   = var.label_order
   enabled       = var.enabled

@@ -10,10 +10,10 @@ data "aws_region" "current" {}
 #              tags for resources. You can use terraform-labels to implement a strict
 #              naming convention
 module "labels" {
-  source = "git::https://github.com/clouddrove/terraform-labels.git?ref=tags/0.12.0"
+  source  = "clouddrove/labels/aws"
+  version = "0.15.0"
 
   name        = var.name
-  application = var.application
   environment = var.environment
   label_order = var.label_order
   managedby   = var.managedby
@@ -24,18 +24,17 @@ module "labels" {
 # Description : Terraform module to create default S3 bucket with logging and encryption
 #               type specific features.
 module "s3_bucket" {
-  source = "git::https://github.com/clouddrove/terraform-aws-s3.git?ref=tags/0.12.7"
+  source  = "clouddrove/s3/aws"
+  version = "0.15.0"
 
-  name           = var.s3_bucket_name
-  application    = var.application
-  environment    = var.environment
-  label_order    = ["name"]
-  managedby      = var.managedby
-  create_bucket  = var.enabled
-  bucket_enabled = var.enabled
-  versioning     = true
-  acl            = "log-delivery-write"
-  force_destroy  = true
+  name          = var.s3_bucket_name
+  environment   = var.environment
+  label_order   = ["name"]
+  managedby     = var.managedby
+  create_bucket = var.enabled
+  versioning    = true
+  acl           = "log-delivery-write"
+  force_destroy = true
 
 }
 
@@ -146,10 +145,10 @@ data "aws_iam_policy_document" "cloudwatch_delivery_policy" {
 }
 
 module "kms_key" {
-  source = "git::https://github.com/clouddrove/terraform-aws-kms.git?ref=tags/0.12.4"
+  source  = "clouddrove/kms/aws"
+  version = "0.15.0"
 
   name                    = var.name
-  application             = var.application
   environment             = var.environment
   label_order             = var.label_order
   managedby               = var.managedby
@@ -371,10 +370,9 @@ resource "aws_cloudtrail" "default" {
 }
 
 module "cloudtrail-slack-notification" {
-  source = "git::https://github.com/clouddrove/terraform-aws-cloudtrail-slack-notification.git?ref=tags/0.12.4"
+  source = "git::https://github.com/clouddrove/terraform-aws-cloudtrail-slack-notification.git?ref=tags/0.15.0"
 
   name        = "cloudtrail-slack-notification"
-  application = var.application
   environment = var.environment
   managedby   = var.managedby
   label_order = var.label_order

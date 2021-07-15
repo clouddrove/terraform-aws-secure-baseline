@@ -6,11 +6,6 @@ variable "name" {
   description = "Name  (e.g. `app` or `cluster`)."
 }
 
-variable "application" {
-  type        = string
-  default     = ""
-  description = "Application (e.g. `cd` or `clouddrove`)."
-}
 
 variable "environment" {
   type        = string
@@ -18,11 +13,6 @@ variable "environment" {
   description = "Environment (e.g. `prod`, `dev`, `staging`)."
 }
 
-variable "tags" {
-  type        = map
-  default     = {}
-  description = "Additional tags (e.g. map(`BusinessUnit`,`XYZ`)."
-}
 
 variable "enabled" {
   type        = bool
@@ -37,7 +27,7 @@ variable "managedby" {
 }
 
 variable "label_order" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Label order, e.g. `name`,`application`."
 }
@@ -49,7 +39,7 @@ variable "kms_key_id" {
 }
 
 variable "instance_tags" {
-  type        = map
+  type        = map(any)
   default     = {}
   description = "Instance tags."
 }
@@ -101,7 +91,7 @@ variable "target_iam_role_arn" {
 }
 
 variable "iam_actions" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "The actions for Iam Role Policy."
 }
