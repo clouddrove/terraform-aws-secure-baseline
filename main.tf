@@ -23,7 +23,7 @@ module "cloudtrail" {
   slack_channel                     = var.slack_channel
   s3_policy                         = var.cloudtrail_s3_policy
   sns_topic_name                    = var.sns_topic_name
-  event_selector = var.event_selector
+  event_selector                    = var.event_selector
 }
 
 #Module      : ALARM
