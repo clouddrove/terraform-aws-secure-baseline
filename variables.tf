@@ -117,6 +117,21 @@ variable "cloudtrail_bucket_name" {
   description = "The name of the S3 bucket which will store configuration snapshots."
 }
 
+variable "event_selector" {
+  type = list(object({
+    include_management_events = bool
+    read_write_type           = string
+
+  }))
+  description = "Specifies an event selector for enabling data event logging. See: https://www.terraform.io/docs/providers/aws/r/cloudtrail.html for details on this variable"
+  default     = []
+}
+variable "sns_topic_name" {
+  type        = string
+  description = "Specifies the name of the Amazon SNS topic defined for notification of log file delivery"
+  default     = null
+}
+
 # analyzer
 variable "analyzer_enable" {
   description = "The boolean flag whether alarm module is enabled or not. No resources are created when set to false."

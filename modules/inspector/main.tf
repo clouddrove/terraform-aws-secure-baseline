@@ -65,7 +65,6 @@ resource "aws_cloudwatch_event_target" "default" {
     module.lambda
   ]
 }
-
 #Module      : LAMBDA
 #Description : Creating a lambda function for assessment run.
 module "lambda" {

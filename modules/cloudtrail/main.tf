@@ -359,6 +359,7 @@ resource "aws_cloudtrail" "default" {
   enable_log_file_validation    = true
   include_global_service_events = true
   is_multi_region_trail         = true
+  sns_topic_name                = var.sns_topic_name
   is_organization_trail         = var.is_organization_trail
   kms_key_id                    = var.key_arn == "" ? module.kms_key.key_arn : var.key_arn
   cloud_watch_logs_group_arn    = format("%s:*", join("", aws_cloudwatch_log_group.cloudtrail_events.*.arn))
@@ -367,7 +368,25 @@ resource "aws_cloudtrail" "default" {
   depends_on = [
     aws_s3_bucket_policy.this
   ]
+
+  dynamic "event_selector" {
+    for_each = var.event_selector
+    content {
+      include_management_events = lookup(event_selector.value, "include_management_events", null)
+      read_write_type           = lookup(event_selector.value, "read_write_type", null)
+
+
+      dynamic "data_resource" {
+        for_each = lookup(event_selector.value, "data_resource", [])
+        content {
+          type   = data_resource.value.type
+          values = data_resource.value.values
+        }
+      }
+    }
+  }
 }
+
 
 module "cloudtrail-slack-notification" {
   source = "git::https://github.com/clouddrove/terraform-aws-cloudtrail-slack-notification.git?ref=tags/0.15.0"

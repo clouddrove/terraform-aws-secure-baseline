@@ -492,7 +492,7 @@ resource "aws_cloudwatch_metric_alarm" "network_gw_changes" {
 }
 
 #Module      : AWS_CLOUDWATCH_LOG_METRIC_FILTER
-#Description : Provides a CloudWatch Log Metric Filter resource.
+#Description : Provides a CloudWatchLog Metric Filter resource.
 resource "aws_cloudwatch_log_metric_filter" "route_table_changes" {
   count = var.enabled && var.route_table_changes ? 1 : 0
 

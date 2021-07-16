@@ -46,8 +46,6 @@ variable "instance_tags" {
 
 ## Inspector
 
-
-
 variable "duration" {
   type        = number
   default     = 3600

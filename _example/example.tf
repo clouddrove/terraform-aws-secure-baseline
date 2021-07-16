@@ -18,7 +18,7 @@ module "secure_baseline" {
   slack_channel = "testing"
 
   # cloudtrail
-  cloudtrail_enabled                = true
+  cloudtrail_enabled                = false
   key_deletion_window_in_days       = 10
   cloudwatch_logs_retention_in_days = 365
   cloudwatch_logs_group_name        = "cloudtrail-log-group"
@@ -57,7 +57,7 @@ module "secure_baseline" {
 
 
   # Alarm
-  alarm_enabled            = true
+  alarm_enabled            = false
   alarm_namespace          = "Alert_Alarm"
   unauthorized_api_calls   = true
   no_mfa_console_signin    = true
@@ -75,7 +75,7 @@ module "secure_baseline" {
 
 
   ## Config
-  config_enabled                     = true
+  config_enabled                     = false
   config_s3_bucket_name              = "config-bucket123"
   restricted_ports                   = true
   iam_mfa                            = true
@@ -112,7 +112,7 @@ module "secure_baseline" {
   "4.4.4.4", ]
 
   ## Inspector
-  inspector_enabled = true
+  inspector_enabled = false
   rules_package_arns = [
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-ubA5XvBh",
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-sJBhCr0F",
