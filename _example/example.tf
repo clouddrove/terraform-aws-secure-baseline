@@ -14,11 +14,11 @@ module "secure_baseline" {
   "name"]
 
   enabled       = true
-  slack_webhook = "https://hooks.slack.com/services/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uEG4TW"
+  slack_webhook = "https://hooks.slack.com/services/TEE0GF0QZ/BSDT97PJB/vMt86BHwUUrUxpzdgdxrTW"
   slack_channel = "testing"
 
   # cloudtrail
-  cloudtrail_enabled                = false
+  cloudtrail_enabled                = true
   key_deletion_window_in_days       = 10
   cloudwatch_logs_retention_in_days = 365
   cloudwatch_logs_group_name        = "cloudtrail-log-group"
@@ -57,7 +57,7 @@ module "secure_baseline" {
 
 
   # Alarm
-  alarm_enabled            = false
+  alarm_enabled            = true
   alarm_namespace          = "Alert_Alarm"
   unauthorized_api_calls   = true
   no_mfa_console_signin    = true
@@ -75,8 +75,8 @@ module "secure_baseline" {
 
 
   ## Config
-  config_enabled                     = false
-  config_s3_bucket_name              = "config-bucket123"
+  config_enabled                     = true
+  config_s3_bucket_name              = "config-bucket"
   restricted_ports                   = true
   iam_mfa                            = true
   unused_credentials                 = true
@@ -102,7 +102,7 @@ module "secure_baseline" {
 
   # guardduty
   guardduty_enable         = true
-  guardduty_s3_bucket_name = "guardduty-files123"
+  guardduty_s3_bucket_name = "guardduty-files"
   ipset_iplist = [
     "10.10.0.0/16",
   "172.16.0.0/16", ]

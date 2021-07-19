@@ -21,8 +21,8 @@ variable "label_order" {
 
 variable "managedby" {
   type        = string
-  default     = "AnmolNagpal"
-  description = "ManagedBy, eg 'CloudDrove' or 'AnmolNagpal'."
+  default     = "hello@clouddrove.com"
+  description = "ManagedBy, eg 'CloudDrove'"
 }
 
 variable "attributes" {
