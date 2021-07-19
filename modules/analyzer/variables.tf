@@ -6,11 +6,6 @@ variable "name" {
   description = "Name  (e.g. `app` or `cluster`)."
 }
 
-variable "application" {
-  type        = string
-  default     = ""
-  description = "Application (e.g. `cd` or `clouddrove`)."
-}
 
 variable "environment" {
   type        = string
@@ -18,11 +13,6 @@ variable "environment" {
   description = "Environment (e.g. `prod`, `dev`, `staging`)."
 }
 
-variable "tags" {
-  type        = map
-  default     = {}
-  description = "Additional tags (e.g. map(`BusinessUnit`,`XYZ`)."
-}
 
 variable "enabled" {
   type        = bool
@@ -32,12 +22,12 @@ variable "enabled" {
 
 variable "managedby" {
   type        = string
-  default     = "anmol@clouddrove.com"
-  description = "ManagedBy, eg 'CloudDrove' or 'AnmolNagpal'."
+  default     = "hello@clouddrove.com"
+  description = "ManagedBy, eg 'CloudDrove'"
 }
 
 variable "label_order" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Label order, e.g. `name`,`application`."
 }

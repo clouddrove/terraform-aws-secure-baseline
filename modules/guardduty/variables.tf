@@ -6,11 +6,6 @@ variable "name" {
   description = "Name  (e.g. `app` or `cluster`)."
 }
 
-variable "application" {
-  type        = string
-  default     = ""
-  description = "Application (e.g. `cd` or `clouddrove`)."
-}
 
 variable "environment" {
   type        = string
@@ -19,15 +14,15 @@ variable "environment" {
 }
 
 variable "label_order" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Label order, e.g. `name`,`application`."
 }
 
 variable "managedby" {
   type        = string
-  default     = "anmol@clouddrove.com"
-  description = "ManagedBy, eg 'CloudDrove' or 'AnmolNagpal'."
+  default     = "hello@clouddrove.com"
+  description = "ManagedBy, eg 'CloudDrove'"
 }
 
 variable "guardduty_enable" {
@@ -37,13 +32,13 @@ variable "guardduty_enable" {
 }
 
 variable "ipset_iplist" {
-  type        = list
+  type        = list(any)
   description = "IPSet list of trusted IP addresses"
   default     = []
 }
 
 variable "threatintelset_iplist" {
-  type        = list
+  type        = list(any)
   description = "ThreatIntelSet list of known malicious IP addresses"
   default     = []
 }

@@ -5,11 +5,9 @@
 module "cloudtrail" {
   source                            = "./modules/cloudtrail"
   name                              = "trails"
-  application                       = var.application
   environment                       = var.environment
   managedby                         = var.managedby
   label_order                       = var.label_order
-  enabled                           = var.enabled && var.cloudtrail_enabled
   iam_role_name                     = "CloudTrail-CloudWatch-Delivery-Role"
   iam_role_policy_name              = "CloudTrail-CloudWatch-Delivery-Policy"
   account_type                      = "individual"
@@ -24,6 +22,8 @@ module "cloudtrail" {
   slack_webhook                     = var.slack_webhook
   slack_channel                     = var.slack_channel
   s3_policy                         = var.cloudtrail_s3_policy
+  sns_topic_name                    = var.sns_topic_name
+  event_selector                    = var.event_selector
 }
 
 #Module      : ALARM
@@ -31,7 +31,6 @@ module "cloudtrail" {
 module "alarm" {
   source      = "./modules/alarm"
   name        = "alarm"
-  application = var.application
   environment = var.environment
   managedby   = var.managedby
   label_order = var.label_order
@@ -64,11 +63,9 @@ module "alarm" {
 module "config" {
   source                = "./modules/config"
   name                  = "config"
-  application           = var.application
   environment           = var.environment
   label_order           = var.label_order
   managedby             = var.managedby
-  enabled               = var.enabled && var.config_enabled
   config_s3_bucket_name = var.config_s3_bucket_name
 
   # roles
@@ -114,7 +111,6 @@ module "config" {
 module "guardduty" {
   source                  = "./modules/guardduty"
   name                    = "guardduty"
-  application             = var.application
   environment             = var.environment
   managedby               = var.managedby
   label_order             = var.label_order
@@ -142,7 +138,6 @@ module "inspector" {
 
   ## Tags
   name        = "inspector"
-  application = var.application
   environment = var.environment
   managedby   = var.managedby
   label_order = var.label_order
@@ -176,7 +171,6 @@ module "iam_access_analyzer" {
   source = "./modules/analyzer"
 
   name        = "analyzer"
-  application = var.application
   environment = var.environment
   managedby   = var.managedby
   label_order = var.label_order

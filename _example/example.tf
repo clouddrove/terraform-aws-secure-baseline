@@ -8,12 +8,13 @@ data "aws_region" "current" {}
 module "secure_baseline" {
   source = "./../"
 
-  application = "clouddrove"
   environment = "test"
-  label_order = ["environment", "application", "name"]
+  label_order = [
+    "environment",
+  "name"]
 
   enabled       = true
-  slack_webhook = "https://hooks.slack.com/services/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uEG4TW"
+  slack_webhook = "https://hooks.slack.com/services/TEE0GF0QZ/BSDT97PJB/vMt86BHwUUrUxpzdgdxrTW"
   slack_channel = "testing"
 
   # cloudtrail
@@ -21,11 +22,38 @@ module "secure_baseline" {
   key_deletion_window_in_days       = 10
   cloudwatch_logs_retention_in_days = 365
   cloudwatch_logs_group_name        = "cloudtrail-log-group"
-  cloudtrail_bucket_name            = "cloudtrail-bucket-logs"
-  EVENT_IGNORE_LIST                 = jsonencode(["^Describe*", "^Assume*", "^List*", "^Get*", "^Decrypt*", "^Lookup*", "^BatchGet*", "^CreateLogStream$", "^RenewRole$", "^REST.GET.OBJECT_LOCK_CONFIGURATION$", "TestEventPattern", "TestScheduleExpression", "CreateNetworkInterface", "ValidateTemplate"])
-  EVENT_ALERT_LIST                  = jsonencode(["DetachRolePolicy", "ConsoleLogin"])
-  USER_IGNORE_LIST                  = jsonencode(["^awslambda_*", "^aws-batch$", "^bamboo*", "^i-*", "^[0-9]*$", "^ecs-service-scheduler$", "^AutoScaling$", "^AWSCloudFormation$", "^CloudTrailBot$", "^SLRManagement$"])
-  SOURCE_LIST                       = jsonencode(["aws-sdk-go"])
+  cloudtrail_bucket_name            = "cloudtrail-bucket-logs123"
+  EVENT_IGNORE_LIST = jsonencode([
+    "^Describe*",
+    "^Assume*",
+    "^List*",
+    "^Get*",
+    "^Decrypt*",
+    "^Lookup*",
+    "^BatchGet*",
+    "^CreateLogStream$",
+    "^RenewRole$",
+    "^REST.GET.OBJECT_LOCK_CONFIGURATION$",
+    "TestEventPattern",
+    "TestScheduleExpression",
+    "CreateNetworkInterface",
+  "ValidateTemplate"])
+  EVENT_ALERT_LIST = jsonencode([
+    "DetachRolePolicy",
+  "ConsoleLogin"])
+  USER_IGNORE_LIST = jsonencode([
+    "^awslambda_*",
+    "^aws-batch$",
+    "^bamboo*",
+    "^i-*",
+    "^[0-9]*$",
+    "^ecs-service-scheduler$",
+    "^AutoScaling$",
+    "^AWSCloudFormation$",
+    "^CloudTrailBot$",
+  "^SLRManagement$"])
+  SOURCE_LIST = jsonencode([
+  "aws-sdk-go"])
 
 
   # Alarm
@@ -75,12 +103,16 @@ module "secure_baseline" {
   # guardduty
   guardduty_enable         = true
   guardduty_s3_bucket_name = "guardduty-files"
-  ipset_iplist             = ["10.10.0.0/16", "172.16.0.0/16", ]
-  threatintelset_activate  = false
-  threatintelset_iplist    = ["192.168.2.0/32", "4.4.4.4", ]
+  ipset_iplist = [
+    "10.10.0.0/16",
+  "172.16.0.0/16", ]
+  threatintelset_activate = false
+  threatintelset_iplist = [
+    "192.168.2.0/32",
+  "4.4.4.4", ]
 
   ## Inspector
-  inspector_enabled = true
+  inspector_enabled = false
   rules_package_arns = [
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-ubA5XvBh",
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-sJBhCr0F",
@@ -88,8 +120,9 @@ module "secure_baseline" {
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-SnojL3Z6",
   ]
   schedule_expression = "cron(0/10 * ? * * *)"
-}
-# analyzer
-analyzer_enable = true
-type            = "ACCOUNT"
 
+  # analyzer
+  analyzer_enable = false
+  type            = "ACCOUNT"
+
+}

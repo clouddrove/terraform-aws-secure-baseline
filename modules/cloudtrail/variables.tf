@@ -6,11 +6,6 @@ variable "name" {
   description = "Name  (e.g. `app` or `cluster`)."
 }
 
-variable "application" {
-  type        = string
-  default     = ""
-  description = "Application (e.g. `cd` or `clouddrove`)."
-}
 
 variable "environment" {
   type        = string
@@ -19,13 +14,13 @@ variable "environment" {
 }
 
 variable "label_order" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Label order, e.g. `name`,`application`."
 }
 
 variable "attributes" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Additional attributes (e.g. `1`)."
 }
@@ -37,7 +32,7 @@ variable "delimiter" {
 }
 
 variable "tags" {
-  type        = map
+  type        = map(any)
   default     = {}
   description = "Additional tags (e.g. map(`BusinessUnit`,`XYZ`)."
 }
@@ -73,25 +68,25 @@ variable "slack_channel" {
 }
 
 variable "additional_member_root_arn" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Additional member root user arn."
 }
 
 variable "additional_member_trail" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Additional member trails."
 }
 
 variable "additional_member_account_id" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Additional member account id."
 }
 
 variable "additional_s3_account_path_arn" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Additional path of s3 account."
 }
@@ -199,6 +194,24 @@ variable "s3_policy" {
 
 variable "managedby" {
   type        = string
-  default     = "anmol@clouddrove.com"
-  description = "ManagedBy, eg 'CloudDrove' or 'AnmolNagpal'."
+  default     = "hello@clouddrove.com"
+  description = "ManagedBy, eg 'CloudDrove'"
+}
+
+variable "event_selector" {
+  type = list(object({
+    include_management_events = bool
+    read_write_type           = string
+
+
+  }))
+
+  description = "Specifies an event selector for enabling data event logging. See: https://www.terraform.io/docs/providers/aws/r/cloudtrail.html for details on this variable"
+  default     = []
+}
+
+variable "sns_topic_name" {
+  type        = string
+  default     = null
+  description = "Specifies the name of the Amazon SNS topic defined for notification of log file delivery"
 }

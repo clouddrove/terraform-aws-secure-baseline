@@ -6,10 +6,10 @@ variable "name" {
   description = "Name  (e.g. `app` or `cluster`)."
 }
 
-variable "application" {
+variable "managedby" {
   type        = string
-  default     = ""
-  description = "Application (e.g. `cd` or `clouddrove`)."
+  default     = "hello@clouddrove.com"
+  description = "ManagedBy, eg 'CloudDrove'"
 }
 
 variable "environment" {
@@ -19,13 +19,13 @@ variable "environment" {
 }
 
 variable "label_order" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Label order, e.g. `name`,`application`."
 }
 
 variable "attributes" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Additional attributes (e.g. `1`)."
 }
@@ -37,7 +37,7 @@ variable "delimiter" {
 }
 
 variable "tags" {
-  type        = map
+  type        = map(any)
   default     = {}
   description = "Additional tags (e.g. map(`BusinessUnit`,`XYZ`)."
 }
@@ -142,11 +142,5 @@ variable "cloudtrail_log_group_name" {
 variable "variables" {
   default     = {}
   description = "The environment variables for lambda function."
-}
-
-variable "managedby" {
-  type        = string
-  default     = "anmol@clouddrove.com"
-  description = "ManagedBy, eg 'CloudDrove' or 'AnmolNagpal'."
 }
 

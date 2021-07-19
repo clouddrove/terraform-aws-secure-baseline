@@ -16,7 +16,7 @@ github_repo: clouddrove/clouddrove/terraform-aws-secure-baseline/modules/
 # Badges to display
 badges:
   - name: "Terraform"
-    image: "https://img.shields.io/badge/Terraform-v0.12-green"
+    image: "https://img.shields.io/badge/Terraform-v0.15-green"
     url: "https://www.terraform.io"
   - name: "Licence"
     image: "https://img.shields.io/badge/License-MIT-blue.svg"
@@ -36,10 +36,9 @@ usage : |-
   Here is an example of how you can use this module in your inventory structure:
   ```hcl
   module "secure_baseline" {
-    source = "git::https://github.com/clouddrove/terraform-aws-secure-baseline.git?ref=tags/0.12.4"
-    application = "clouddrove"
+    source        = "clouddrove/secure-baseline/aws"
     environment = "test"
-    label_order = ["environment", "application", "name"]
+    label_order = ["environment", "name"]
 
     enabled       = true
     slack_webhook = "https://hooks.slack.com/services/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uEG4TW"
