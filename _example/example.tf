@@ -129,7 +129,7 @@ module "secure_baseline" {
   shield_enable = false
 
   # EBS
-  default_ebs_enable = false
+  default_ebs_enable = true
 
   # Security Hub
   security_hub_enable = false
