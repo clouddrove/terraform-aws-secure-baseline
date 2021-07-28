@@ -125,4 +125,12 @@ module "secure_baseline" {
   analyzer_enable = false
   type            = "ACCOUNT"
 
+  # Shield 
+  shield_enable = false
+
+  # EBS
+  default_ebs_enable = false
+
+  # Security Hub
+  security_hub_enable = false
 }

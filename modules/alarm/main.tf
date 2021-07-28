@@ -563,3 +563,40 @@ resource "aws_cloudwatch_metric_alarm" "vpc_changes" {
   insufficient_data_actions = []
   tags                      = module.labels.tags
 }
+
+#Module      : AWS_CLOUDWATCH_LOG_METRIC_FILTER
+#Description : Provides a CloudWatch Log Metric Filter resource.
+resource "aws_cloudwatch_log_metric_filter" "aws_config_changes" {
+  count = var.enabled && var.aws_config_changes_enabled ? 1 : 0
+
+  name           = "AWSConfigChanges"
+  pattern        = "{ ($.eventSource = config.amazonaws.com) && (($.eventName=StopConfigurationRecorder)||($.eventName=DeleteDeliveryChannel)||($.eventName=PutDeliveryChannel)||($.eventName=PutConfigurationRecorder)) }"
+  log_group_name = var.cloudtrail_log_group_name
+
+  metric_transformation {
+    name      = "AWSConfigChanges"
+    namespace = var.alarm_namespace
+    value     = "1"
+  }
+}
+
+#Module      : AWS_CLOUDWATCH_LOG_METRIC_ALARM
+#Description : Provides a CloudWatch Metric Alarm resource.
+resource "aws_cloudwatch_metric_alarm" "aws_config_changes" {
+  count = var.enabled && var.aws_config_changes_enabled ? 1 : 0
+
+  alarm_name                = "AWSConfigChanges"
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
+  evaluation_periods        = "1"
+  metric_name               = join("", aws_cloudwatch_log_metric_filter.vpc_changes.*.id)
+  namespace                 = var.alarm_namespace
+  period                    = "300"
+  statistic                 = "Sum"
+  threshold                 = "1"
+  alarm_description         = "Monitoring changes to AWS Config configuration will help ensure sustained visibility of configuration items within the AWS account."
+  alarm_actions             = [aws_sns_topic.alarms[0].arn]
+  treat_missing_data        = "notBreaching"
+  insufficient_data_actions = []
+  tags                      = module.labels.tags
+
+}

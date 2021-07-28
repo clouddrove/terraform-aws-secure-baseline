@@ -501,3 +501,49 @@ variable "schedule_expression" {
   default     = "cron(0 14 ? * THU *)" # Run every Thursday at 2PM UTC/9AM EST/10AM EDT
   description = "AWS Schedule Expression: https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html"
 }
+
+#shield
+variable "shield_enable" {
+  description = "The boolean flag whether shield module is enabled or not. No resources are created when set to false."
+  default     = false
+}
+
+variable "resource_arn" {
+  type        = string
+  description = "The ARN (Amazon Resource Name) of the resource to be protected."
+}
+
+#ebs
+variable "default_ebs_enable" {
+  description = "The boolean flag whether Default EBS  module is enabled or not. No resources are created when set to false."
+  default     = false
+}
+
+#Security Hub
+variable "member_accounts" {
+  description = "A list of IDs and emails of AWS accounts which associated as member accounts."
+  type = list(object({
+    account_id = string
+    email      = string
+  }))
+  default = []
+}
+variable "security_hub_enable" {
+  description = "The boolean flag whether this module is enabled or not. No resources are created when set to false."
+  default     = true
+}
+
+variable "enable_cis_standard" {
+  description = "Boolean whether CIS standard is enabled."
+  default     = true
+}
+
+variable "enable_pci_dss_standard" {
+  description = "Boolean whether PCI DSS standard is enabled."
+  default     = true
+}
+
+variable "enable_aws_foundational_standard" {
+  description = "Boolean whether AWS Foundations standard is enabled."
+  default     = true
+}
