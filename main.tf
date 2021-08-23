@@ -183,3 +183,38 @@ module "iam_access_analyzer" {
     SLACK_CHANNEL = var.slack_channel
   }
 }
+
+## Shield
+module "aws_shield" {
+  source = "./modules/shield"
+
+  name        = "shield"
+  environment = var.environment
+  managedby   = var.managedby
+  label_order = var.label_order
+  enabled     = var.enabled && var.shield_enable
+
+  ## AWS SHIELD
+  resource_arn = var.resource_arn
+
+}
+
+
+## EBS
+module "aws_ebs" {
+  source = "./modules/ebs"
+
+  enabled = var.enabled && var.default_ebs_enable
+}
+
+## AWS Security Hub
+module "security_hub" {
+  source = "./module/security_hub"
+
+  enabled                          = var.enabled && var.security_hub_enable
+  enable_ccis_standard             = var.enable_ccis_standard
+  enable_aws_foundational_standard = var.enable_aws_foundational_standard
+  enable_pci_dss_standard          = var.enable_pci_dss_standard
+
+
+}
