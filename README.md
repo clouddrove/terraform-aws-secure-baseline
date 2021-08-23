@@ -51,7 +51,7 @@ We have [*fifty plus terraform modules*][terraform_modules]. A few of them are c
 
 This module has a few dependencies: 
 
-- [Terraform 0.13](https://learn.hashicorp.com/terraform/getting-started/install.html)
+- [Terraform 0.15](https://learn.hashicorp.com/terraform/getting-started/install.html)
 - [Go](https://golang.org/doc/install)
 - [github.com/stretchr/testify/assert](https://github.com/stretchr/testify)
 - [github.com/gruntwork-io/terratest/modules/terraform](https://github.com/gruntwork-io/terratest)
@@ -179,12 +179,16 @@ module "secure_baseline" {
 | config\_enabled | The boolean flag whether config module is enabled or not. No resources are created when set to false. | `bool` | `true` | no |
 | config\_s3\_bucket\_name | The name of the S3 bucket which will store logs for aws  config. | `string` | n/a | yes |
 | console\_signin\_failures | If you want to create alarm when any changes in cloudtrail cfg. | `bool` | `true` | no |
+| default\_ebs\_enable | The boolean flag whether Default EBS  module is enabled or not. No resources are created when set to false. | `bool` | `false` | no |
 | delimiter | Delimiter to be used between `organization`, `environment`, `name` and `attributes`. | `string` | `"-"` | no |
 | disable\_or\_delete\_cmk | If you want to create alarm when disable or delete in cmk. | `bool` | `true` | no |
 | ebs\_snapshot\_public\_restorable | Checks whether Amazon Elastic Block Store snapshots are not publicly restorable. | `bool` | `false` | no |
 | ec2\_encrypted\_volumes | Evaluates whether EBS volumes that are in an attached state are encrypted. Optionally, you can specify the ID of a KMS key to use to encrypt the volume. | `bool` | `false` | no |
 | ec2\_volume\_inuse\_check | Checks whether EBS volumes are attached to EC2 instances. | `bool` | `false` | no |
 | eip\_attached | Checks whether all Elastic IP addresses that are allocated to a VPC are attached to EC2 instances or in-use elastic network interfaces (ENIs). | `bool` | `false` | no |
+| enable\_aws\_foundational\_standard | Boolean whether AWS Foundations standard is enabled. | `bool` | `true` | no |
+| enable\_cis\_standard | Boolean whether CIS standard is enabled. | `bool` | `true` | no |
+| enable\_pci\_dss\_standard | Boolean whether PCI DSS standard is enabled. | `bool` | `true` | no |
 | enabled | The boolean flag whether this module is enabled or not. No resources are created when set to false. | `bool` | `true` | no |
 | environment | Environment (e.g. `prod`, `dev`, `staging`). | `string` | `""` | no |
 | event\_selector | Specifies an event selector for enabling data event logging. See: https://www.terraform.io/docs/providers/aws/r/cloudtrail.html for details on this variable | <pre>list(object({<br>    include_management_events = bool<br>    read_write_type           = string<br><br>  }))</pre> | `[]` | no |
@@ -202,6 +206,7 @@ module "secure_baseline" {
 | key\_deletion\_window\_in\_days | Duration in days after which the key is deleted after destruction of the resource, must be between 7 and 30 days. Defaults to 30 days. | `number` | `10` | no |
 | label\_order | Label order, e.g. `name`,`application`. | `list(any)` | `[]` | no |
 | managedby | ManagedBy, eg 'CloudDrove' | `string` | `"hello@clouddrove.com"` | no |
+| member\_accounts | A list of IDs and emails of AWS accounts which associated as member accounts. | <pre>list(object({<br>    account_id = string<br>    email      = string<br>  }))</pre> | `[]` | no |
 | member\_list | The list of member accounts to be added. Each member list need to have values of account\_id, member\_email and invite boolean | <pre>list(object({<br>    account_id = string<br>    email      = string<br>    invite     = bool<br>  }))</pre> | `[]` | no |
 | multi\_region\_cloudtrail\_enabled | Ensuring that the multi-region-cloud-trail is enabled | `bool` | `false` | no |
 | nacl\_changes | If you want to create alarm when any changes in nacl. | `bool` | `true` | no |
@@ -219,6 +224,7 @@ module "secure_baseline" {
 | rds\_instance\_public\_access\_check | Checks whether the Amazon Relational Database Service (RDS) instances are not publicly accessible. | `bool` | `false` | no |
 | rds\_snapshots\_public\_prohibited | Checks if Amazon Relational Database Service (Amazon RDS) snapshots are public. | `bool` | `false` | no |
 | rds\_storage\_encrypted | Checks whether storage encryption is enabled for your RDS DB instances. | `bool` | `false` | no |
+| resource\_arn | The ARN (Amazon Resource Name) of the resource to be protected. | `string` | n/a | yes |
 | restricted\_ports | If you want to enable the restricted incoming port. | `bool` | `false` | no |
 | restricted\_ports\_list | This list of blocked ports. | `string` | `"{\"blockedPort1\": \"22\", \"blockedPort2\": \"3306\",\"blockedPort3\": \"6379\", \"blockedPort4\": \"5432\"}"` | no |
 | root\_usage | If you want to create alarm when sign in with root user. | `bool` | `true` | no |
@@ -229,6 +235,8 @@ module "secure_baseline" {
 | s3\_bucket\_ssl\_requests\_only | Checks whether S3 buckets have policies that require requests to use Secure Socket Layer (SSL). | `bool` | `false` | no |
 | schedule\_expression | AWS Schedule Expression: https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html | `string` | `"cron(0 14 ? * THU *)"` | no |
 | security\_group\_changes | If you want to create alarm when any changes on security groups. | `bool` | `true` | no |
+| security\_hub\_enable | The boolean flag whether this module is enabled or not. No resources are created when set to false. | `bool` | `true` | no |
+| shield\_enable | The boolean flag whether shield module is enabled or not. No resources are created when set to false. | `bool` | `false` | no |
 | slack\_channel | The channel of slack. | `string` | n/a | yes |
 | slack\_webhook | The webhook of slack. | `string` | n/a | yes |
 | sns\_topic\_name | Specifies the name of the Amazon SNS topic defined for notification of log file delivery | `string` | `null` | no |
