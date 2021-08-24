@@ -110,6 +110,7 @@ resource "aws_cloudwatch_metric_alarm" "unauthorized_api_calls" {
   metric_name               = join("", aws_cloudwatch_log_metric_filter.unauthorized_api_calls.*.id)
   namespace                 = var.alarm_namespace
   period                    = "300"
+  unit                      = var.unit
   statistic                 = "Sum"
   threshold                 = "1"
   alarm_description         = "Monitoring unauthorized API calls will help reveal application errors and may reduce time to detect malicious activity."
@@ -147,6 +148,7 @@ resource "aws_cloudwatch_metric_alarm" "no_mfa_console_signin" {
   metric_name               = join("", aws_cloudwatch_log_metric_filter.no_mfa_console_signin.*.id)
   namespace                 = var.alarm_namespace
   period                    = "300"
+  unit                      = var.unit
   statistic                 = "Sum"
   threshold                 = "1"
   alarm_description         = "Monitoring for single-factor console logins will increase visibility into accounts that are not protected by MFA."
@@ -184,6 +186,7 @@ resource "aws_cloudwatch_metric_alarm" "root_usage" {
   metric_name               = join("", aws_cloudwatch_log_metric_filter.root_usage.*.id)
   namespace                 = var.alarm_namespace
   period                    = "300"
+  unit                      = var.unit
   statistic                 = "Sum"
   threshold                 = "1"
   alarm_description         = "Monitoring for root account logins will provide visibility into the use of a fully privileged account and an opportunity to reduce the use of it."
@@ -221,6 +224,7 @@ resource "aws_cloudwatch_metric_alarm" "iam_changes" {
   metric_name               = join("", aws_cloudwatch_log_metric_filter.iam_changes.*.id)
   namespace                 = var.alarm_namespace
   period                    = "300"
+  unit                      = var.unit
   statistic                 = "Sum"
   threshold                 = "1"
   alarm_description         = "Monitoring changes to IAM policies will help ensure authentication and authorization controls remain intact."
@@ -258,6 +262,7 @@ resource "aws_cloudwatch_metric_alarm" "cloudtrail_cfg_changes" {
   metric_name               = join("", aws_cloudwatch_log_metric_filter.cloudtrail_cfg_changes.*.id)
   namespace                 = var.alarm_namespace
   period                    = "300"
+  unit                      = var.unit
   statistic                 = "Sum"
   threshold                 = "1"
   alarm_description         = "Monitoring changes to CloudTrail's configuration will help ensure sustained visibility to activities performed in the AWS account."
@@ -296,6 +301,7 @@ resource "aws_cloudwatch_metric_alarm" "console_signin_failures" {
   metric_name               = join("", aws_cloudwatch_log_metric_filter.console_signin_failures.*.id)
   namespace                 = var.alarm_namespace
   period                    = "300"
+  unit                      = var.unit
   statistic                 = "Sum"
   threshold                 = "1"
   alarm_description         = "Monitoring failed console logins may decrease lead time to detect an attempt to brute force a credential, which may provide an indicator, such as source IP, that can be used in other event correlation."
@@ -333,6 +339,7 @@ resource "aws_cloudwatch_metric_alarm" "disable_or_delete_cmk" {
   metric_name               = join("", aws_cloudwatch_log_metric_filter.disable_or_delete_cmk.*.id)
   namespace                 = var.alarm_namespace
   period                    = "300"
+  unit                      = var.unit
   statistic                 = "Sum"
   threshold                 = "1"
   alarm_description         = "Monitoring failed console logins may decrease lead time to detect an attempt to brute force a credential, which may provide an indicator, such as source IP, that can be used in other event correlation."
@@ -370,6 +377,7 @@ resource "aws_cloudwatch_metric_alarm" "s3_bucket_policy_changes" {
   metric_name               = join("", aws_cloudwatch_log_metric_filter.s3_bucket_policy_changes.*.id)
   namespace                 = var.alarm_namespace
   period                    = "300"
+  unit                      = var.unit
   statistic                 = "Sum"
   threshold                 = "1"
   alarm_description         = "Monitoring changes to S3 bucket policies may reduce time to detect and correct permissive policies on sensitive S3 buckets."
@@ -407,6 +415,7 @@ resource "aws_cloudwatch_metric_alarm" "security_group_changes" {
   metric_name               = join("", aws_cloudwatch_log_metric_filter.security_group_changes.*.id)
   namespace                 = var.alarm_namespace
   period                    = "300"
+  unit                      = var.unit
   statistic                 = "Sum"
   threshold                 = "1"
   alarm_description         = "Monitoring changes to security group will help ensure that resources and services are not unintentionally exposed."
@@ -443,6 +452,7 @@ resource "aws_cloudwatch_metric_alarm" "nacl_changes" {
   metric_name               = join("", aws_cloudwatch_log_metric_filter.nacl_changes.*.id)
   namespace                 = var.alarm_namespace
   period                    = "300"
+  unit                      = var.unit
   statistic                 = "Sum"
   threshold                 = "1"
   alarm_description         = "Monitoring changes to NACLs will help ensure that AWS resources and services are not unintentionally exposed."
@@ -481,6 +491,7 @@ resource "aws_cloudwatch_metric_alarm" "network_gw_changes" {
   metric_name               = join("", aws_cloudwatch_log_metric_filter.network_gw_changes.*.id)
   namespace                 = var.alarm_namespace
   period                    = "300"
+  unit                      = var.unit
   statistic                 = "Sum"
   threshold                 = "1"
   alarm_description         = "Monitoring changes to network gateways will help ensure that all ingress/egress traffic traverses the VPC border via a controlled path."
@@ -518,6 +529,7 @@ resource "aws_cloudwatch_metric_alarm" "route_table_changes" {
   metric_name               = join("", aws_cloudwatch_log_metric_filter.route_table_changes.*.id)
   namespace                 = var.alarm_namespace
   period                    = "300"
+  unit                      = var.unit
   statistic                 = "Sum"
   threshold                 = "1"
   alarm_description         = "Monitoring changes to route tables will help ensure that all VPC traffic flows through an expected path."
@@ -555,6 +567,7 @@ resource "aws_cloudwatch_metric_alarm" "vpc_changes" {
   metric_name               = join("", aws_cloudwatch_log_metric_filter.vpc_changes.*.id)
   namespace                 = var.alarm_namespace
   period                    = "300"
+  unit                      = var.unit
   statistic                 = "Sum"
   threshold                 = "1"
   alarm_description         = "Monitoring changes to VPC will help ensure that all VPC traffic flows through an expected path."

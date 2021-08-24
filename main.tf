@@ -51,6 +51,7 @@ module "alarm" {
   route_table_changes      = var.route_table_changes
   vpc_changes              = var.vpc_changes
   alarm_namespace          = var.alarm_namespace
+  unit                     = var.unit
 
   cloudtrail_log_group_name = module.cloudtrail.log_group_name
   variables = {

@@ -19,13 +19,13 @@ variable "environment" {
 }
 
 variable "label_order" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Label order, e.g. `name`,`application`."
 }
 
 variable "attributes" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Additional attributes (e.g. `1`)."
 }
@@ -37,7 +37,7 @@ variable "delimiter" {
 }
 
 variable "tags" {
-  type        = map
+  type        = map(any)
   default     = {}
   description = "Additional tags (e.g. map(`BusinessUnit`,`XYZ`)."
 }
@@ -58,6 +58,11 @@ variable "no_mfa_console_signin" {
   type        = bool
   default     = true
   description = "If you want to create alarm when MFA not enabled on root user."
+}
+
+variable "unit" {
+  type    = string
+  default = "None"
 }
 
 variable "root_usage" {
