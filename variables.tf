@@ -467,3 +467,27 @@ variable "schedule_expression" {
   default     = "cron(0 14 ? * THU *)" # Run every Thursday at 2PM UTC/9AM EST/10AM EDT
   description = "AWS Schedule Expression: https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html"
 }
+
+variable "event_ignore_list" {
+  type        = string
+  default     = ["^Describe*", "^Assume*", "^List*", "^Get*", "^Decrypt*", "^Lookup*", "^BatchGet*", "^CreateLogStream$", "^RenewRole$", "^REST.GET.OBJECT_LOCK_CONFIGURATION$", "TestEventPattern", "TestScheduleExpression", "CreateNetworkInterface", "ValidateTemplate"]
+  description = ""
+}
+
+variable "event_alert_list" {
+  type        = string
+  default     = ["DetachRolePolicy", "ConsoleLogin"]
+  description = ""
+}
+
+variable "user_ignore_list" {
+  type        = string
+  default     = ["^awslambda_*", "^aws-batch$", "^bamboo*", "^i-*", "^[0-9]*$", "^ecs-service-scheduler$", "^AutoScaling$", "^AWSCloudFormation$", "^CloudTrailBot$", "^SLRManagement$"]
+  description = ""
+}
+
+variable "source_list" {
+  type = string
+  default = ["aws-sdk-go"]
+  description = ""
+}
