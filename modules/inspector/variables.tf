@@ -19,7 +19,7 @@ variable "environment" {
 }
 
 variable "tags" {
-  type        = map
+  type        = map(any)
   default     = {}
   description = "Additional tags (e.g. map(`BusinessUnit`,`XYZ`)."
 }
@@ -37,7 +37,7 @@ variable "managedby" {
 }
 
 variable "label_order" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Label order, e.g. `name`,`application`."
 }
@@ -49,7 +49,7 @@ variable "kms_key_id" {
 }
 
 variable "instance_tags" {
-  type        = map
+  type        = map(any)
   default     = {}
   description = "Instance tags."
 }
@@ -101,7 +101,7 @@ variable "target_iam_role_arn" {
 }
 
 variable "iam_actions" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "The actions for Iam Role Policy."
 }
