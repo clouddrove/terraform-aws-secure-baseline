@@ -125,6 +125,9 @@ module "guardduty" {
   threatintelset_activate = var.threatintelset_activate
   threatintelset_format   = "TXT"
   threatintelset_iplist   = var.threatintelset_iplist
+  target_bucket           = var.target_bucket
+  target_prefix           = var.target_prefix
+  sse_algorithm           = var.sse_algorithm
 
   is_guardduty_member = var.is_guardduty_member
   member_list         = var.member_list
