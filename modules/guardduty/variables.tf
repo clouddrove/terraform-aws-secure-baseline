@@ -42,6 +42,24 @@ variable "ipset_iplist" {
   default     = []
 }
 
+variable "target_bucket" {
+  type        = string
+  default     = ""
+  description = "The name of the bucket that will receive the log objects."
+}
+
+variable "target_prefix" {
+  type        = string
+  default     = ""
+  description = "To specify a key prefix for log objects."
+}
+
+variable "sse_algorithm" {
+  type        = string
+  default     = "AES256"
+  description = "The server-side encryption algorithm to use. Valid values are AES256 and aws:kms."
+}
+
 variable "threatintelset_iplist" {
   type        = list
   description = "ThreatIntelSet list of known malicious IP addresses"

@@ -20,6 +20,18 @@ resource "aws_s3_bucket" "bucket" {
   bucket        = var.bucket_name
   acl           = "private"
   force_destroy = true
+  logging {
+    target_bucket = var.target_bucket
+    target_prefix = var.target_prefix
+  }
+  server_side_encryption_configuration {
+    rule {
+      bucket_key_enabled = false
+      apply_server_side_encryption_by_default {
+        sse_algorithm     = var.sse_algorithm
+      }
+    }
+  }
 }
 resource "aws_guardduty_detector" "detector" {
   count                        = var.enabled ? 1 : 0
