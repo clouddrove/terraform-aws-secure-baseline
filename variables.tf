@@ -470,19 +470,19 @@ variable "schedule_expression" {
 
 variable "event_ignore_list" {
   type        = string
-  default     = ["^Describe*", "^Assume*", "^List*", "^Get*", "^Decrypt*", "^Lookup*", "^BatchGet*", "^CreateLogStream$", "^RenewRole$", "^REST.GET.OBJECT_LOCK_CONFIGURATION$", "TestEventPattern", "TestScheduleExpression", "CreateNetworkInterface", "ValidateTemplate"]
+  default     = jsonencode(["^Describe*", "^Assume*", "^List*", "^Get*", "^Decrypt*", "^Lookup*", "^BatchGet*", "^CreateLogStream$", "^RenewRole$", "^REST.GET.OBJECT_LOCK_CONFIGURATION$", "TestEventPattern", "TestScheduleExpression", "CreateNetworkInterface", "ValidateTemplate", "GitPull", "PutInventory", "BatchCheckLayerAvailability", "UploadLayerPart", "DeregisterImage", "DeleteSnapshot", "DeleteDBSnapshot", "ModifyDBInstance", "StartBuild", "RetireGrant", "InitiateLayerUpload", "CompleteLayerUpload", "PutImage", "PolicyExecutionEvent", "GetDownloadUrlForLayer", "CreateRepository", ])
   description = ""
 }
 
 variable "event_alert_list" {
   type        = string
-  default     = ["DetachRolePolicy", "ConsoleLogin"]
+  default     = jsonencode(["DetachRolePolicy", "ConsoleLogin"])
   description = ""
 }
 
 variable "user_ignore_list" {
   type        = string
-  default     = ["^awslambda_*", "^aws-batch$", "^bamboo*", "^i-*", "^[0-9]*$", "^ecs-service-scheduler$", "^AutoScaling$", "^AWSCloudFormation$", "^CloudTrailBot$", "^SLRManagement$"]
+  default     = jsonencode(["^awslambda_*", "^aws-batch$", "^bamboo*", "^i-*", "^[0-9]*$", "^ecs-service-scheduler$", "^AutoScaling$", "^AWSCloudFormation$", "^CloudTrailBot$", "^SLRManagement$"])
   description = ""
 }
 
