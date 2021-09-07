@@ -16,10 +16,10 @@ module "cloudtrail" {
   key_deletion_window_in_days       = var.key_deletion_window_in_days
   cloudwatch_logs_retention_in_days = var.cloudwatch_logs_retention_in_days
   cloudwatch_logs_group_name        = var.cloudwatch_logs_group_name
-  EVENT_IGNORE_LIST                 = var.event_ignore_list
-  EVENT_ALERT_LIST                  = var.event_alert_list
-  USER_IGNORE_LIST                  = var.user_ignore_list
-  SOURCE_LIST                       = var.source_list
+  EVENT_IGNORE_LIST                 = var.EVENT_IGNORE_LIST
+  EVENT_ALERT_LIST                  = var.EVENT_ALERT_LIST
+  USER_IGNORE_LIST                  = var.USER_IGNORE_LIST
+  SOURCE_LIST                       = var.SOURCE_LIST
   s3_bucket_name                    = var.cloudtrail_bucket_name
   slack_webhook                     = var.slack_webhook
   slack_channel                     = var.slack_channel

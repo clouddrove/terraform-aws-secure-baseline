@@ -468,26 +468,26 @@ variable "schedule_expression" {
   description = "AWS Schedule Expression: https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html"
 }
 
-variable "event_ignore_list" {
+variable "EVENT_IGNORE_LIST" {
   type        = string
-  default     = jsonencode(["^Describe*", "^Assume*", "^List*", "^Get*", "^Decrypt*", "^Lookup*", "^BatchGet*", "^CreateLogStream$", "^RenewRole$", "^REST.GET.OBJECT_LOCK_CONFIGURATION$", "TestEventPattern", "TestScheduleExpression", "CreateNetworkInterface", "ValidateTemplate", "GitPull", "PutInventory", "BatchCheckLayerAvailability", "UploadLayerPart", "DeregisterImage", "DeleteSnapshot", "DeleteDBSnapshot", "ModifyDBInstance", "StartBuild", "RetireGrant", "InitiateLayerUpload", "CompleteLayerUpload", "PutImage", "PolicyExecutionEvent", "GetDownloadUrlForLayer", "CreateRepository", ])
-  description = ""
+  default     = ""
+  description = "Event List which event is ignore."
 }
 
-variable "event_alert_list" {
+variable "EVENT_ALERT_LIST" {
   type        = string
-  default     = jsonencode(["DetachRolePolicy", "ConsoleLogin"])
-  description = ""
+  default     = ""
+  description = "Event List which event is not ignore."
 }
 
-variable "user_ignore_list" {
+variable "USER_IGNORE_LIST" {
   type        = string
-  default     = jsonencode(["^awslambda_*", "^aws-batch$", "^bamboo*", "^i-*", "^[0-9]*$", "^ecs-service-scheduler$", "^AutoScaling$", "^AWSCloudFormation$", "^CloudTrailBot$", "^SLRManagement$"])
-  description = ""
+  default     = ""
+  description = "User List which event is ignore."
 }
 
-variable "source_list" {
+variable "SOURCE_LIST" {
   type        = string
-  default     = ["aws-sdk-go"]
-  description = ""
+  default     = ""
+  description = "Event Source List which event is ignore."
 }
