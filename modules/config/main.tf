@@ -307,7 +307,7 @@ resource "aws_config_config_rule" "restricted_ports" {
 #Module      : AWS CONFIG RUE
 #Description : Provides an AWS Config Rule.
 resource "aws_config_config_rule" "iam_mfa" {
-  count = var.enabled && var.iam_mfa ? 1 : 0
+  count = var.enabled && (var.iam_mfa || var.security_pillar) ? 1 : 0
 
   name = "IAMAccountMFAEnabled"
   source {
@@ -322,7 +322,7 @@ resource "aws_config_config_rule" "iam_mfa" {
 #Module      : AWS CONFIG RUE
 #Description : Provides an AWS Config Rule.
 resource "aws_config_config_rule" "unused_credentials" {
-  count = var.enabled && var.unused_credentials ? 1 : 0
+  count = var.enabled && (var.unused_credentials || var.security_pillar) ? 1 : 0
 
   name = "UnusedCredentialsNotExist"
   source {
@@ -358,7 +358,7 @@ resource "aws_config_config_rule" "user_no_policies" {
 #Module      : AWS CONFIG RUE
 #Description : Provides an AWS Config Rule.
 resource "aws_config_config_rule" "no_policies_with_full_admin_access" {
-  count = var.enabled && var.no_policies_with_full_admin_access ? 1 : 0
+  count = var.enabled && (var.no_policies_with_full_admin_access || var.security_pillar) ? 1 : 0
   name  = "NoPoliciesWithFullAdminAccess"
 
   source {
@@ -378,7 +378,7 @@ resource "aws_config_config_rule" "no_policies_with_full_admin_access" {
 }
 
 resource "aws_config_config_rule" "acm_certificate_expiration_check" {
-  count = var.enabled && var.acm_certificate_expiration_check ? 1 : 0
+  count = var.enabled && (var.acm_certificate_expiration_check || var.security_pillar) ? 1 : 0
 
   name = "AcmCertificateExpirationCheck"
 
@@ -399,7 +399,7 @@ resource "aws_config_config_rule" "acm_certificate_expiration_check" {
 }
 
 resource "aws_config_config_rule" "ec2_volume_inuse_check" {
-  count = var.enabled && var.ec2_volume_inuse_check ? 1 : 0
+  count = var.enabled && (var.ec2_volume_inuse_check || var.security_pillar) ? 1 : 0
 
   name        = "Ec2VolumeInuseCheck"
   description = "Checks whether EBS volumes are attached to EC2 instances."
@@ -416,7 +416,7 @@ resource "aws_config_config_rule" "ec2_volume_inuse_check" {
 }
 
 resource "aws_config_config_rule" "ebs_snapshot_public_restorable" {
-  count       = var.enabled && var.ebs_snapshot_public_restorable ? 1 : 0
+  count       = var.enabled && (var.ebs_snapshot_public_restorable || var.security_pillar) ? 1 : 0
   name        = "EbsSnapshotPublicRestorable"
   description = "Checks whether Amazon Elastic Block Store snapshots are not publicly restorable"
 
@@ -432,7 +432,7 @@ resource "aws_config_config_rule" "ebs_snapshot_public_restorable" {
 }
 
 resource "aws_config_config_rule" "rds_storage_encrypted" {
-  count       = var.enabled && var.rds_storage_encrypted ? 1 : 0
+  count       = var.enabled && (var.rds_storage_encrypted || var.security_pillar) ? 1 : 0
   name        = "RdsStorageEncrypted"
   description = "Checks whether storage encryption is enabled for your RDS DB instances."
 
@@ -448,7 +448,7 @@ resource "aws_config_config_rule" "rds_storage_encrypted" {
 }
 
 resource "aws_config_config_rule" "rds_instance_public_access_check" {
-  count = var.enabled && var.rds_instance_public_access_check ? 1 : 0
+  count = var.enabled && (var.rds_instance_public_access_check || var.security_pillar) ? 1 : 0
 
   name        = "RdsInstancePublicAccessCheck"
   description = "Checks whether the Amazon Relational Database Service (RDS) instances are not publicly accessible. The rule is non-compliant if the publiclyAccessible field is true in the instance configuration item."
@@ -464,7 +464,7 @@ resource "aws_config_config_rule" "rds_instance_public_access_check" {
 }
 
 resource "aws_config_config_rule" "rds_snapshots_public_prohibited" {
-  count = var.enabled && var.rds_snapshots_public_prohibited ? 1 : 0
+  count = var.enabled && (var.rds_snapshots_public_prohibited || var.security_pillar) ? 1 : 0
 
   name        = "RdsSnapshotsPublicProhibited"
   description = "Checks if Amazon Relational Database Service (Amazon RDS) snapshots are public."
@@ -481,7 +481,7 @@ resource "aws_config_config_rule" "rds_snapshots_public_prohibited" {
 }
 
 resource "aws_config_config_rule" "guardduty_enabled_centralized" {
-  count = var.enabled && var.guardduty_enabled_centralized ? 1 : 0
+  count = var.enabled && (var.guardduty_enabled_centralized || var.reliability_pillar || var.security_pillar) ? 1 : 0
 
   name        = "GuarddutyEnabledCentralized"
   description = "Checks whether Amazon GuardDuty is enabled in your AWS account and region."
@@ -500,7 +500,7 @@ resource "aws_config_config_rule" "guardduty_enabled_centralized" {
 }
 
 resource "aws_config_config_rule" "s3_bucket_public_write_prohibited" {
-  count = var.enabled && var.s3_bucket_public_write_prohibited ? 1 : 0
+  count = var.enabled && (var.s3_bucket_public_write_prohibited || var.security_pillar) ? 1 : 0
 
   name        = "S3BucketPublicWriteProhibited"
   description = "Checks that your S3 buckets do not allow public write access."
@@ -533,7 +533,7 @@ resource "aws_config_config_rule" "eip_attached" {
 }
 
 resource "aws_config_config_rule" "ec2_encrypted_volumes" {
-  count       = var.enabled && var.ec2_encrypted_volumes ? 1 : 0
+  count       = var.enabled && (var.ec2_encrypted_volumes || var.security_pillar) ? 1 : 0
   name        = "Ec2VolumesMustBeEncrypted"
   description = "Evaluates whether EBS volumes that are in an attached state are encrypted. Optionally, you can specify the ID of a KMS key to use to encrypt the volume."
 
@@ -549,7 +549,7 @@ resource "aws_config_config_rule" "ec2_encrypted_volumes" {
 }
 
 resource "aws_config_config_rule" "iam_root_access_key" {
-  count = var.enabled && var.iam_root_access_key ? 1 : 0
+  count = var.enabled && (var.iam_root_access_key || var.security_pillar) ? 1 : 0
 
   name        = "IamRootAccessKey"
   description = "Checks whether the root user access key is available. The rule is COMPLIANT if the user access key does not exist."
@@ -566,7 +566,7 @@ resource "aws_config_config_rule" "iam_root_access_key" {
 }
 
 resource "aws_config_config_rule" "vpc_default_security_group_closed" {
-  count = var.enabled && var.vpc_default_security_group_closed ? 1 : 0
+  count = var.enabled && (var.vpc_default_security_group_closed || var.security_pillar) ? 1 : 0
 
   name        = "VPCDefaultSecurityGroupClosed"
   description = "Checks that the default security group of any Amazon Virtual Private Cloud (VPC) does not allow inbound or outbound traffic."
@@ -582,7 +582,7 @@ resource "aws_config_config_rule" "vpc_default_security_group_closed" {
 }
 
 resource "aws_config_config_rule" "s3_bucket_ssl_requests_only" {
-  count = var.enabled && var.s3_bucket_ssl_requests_only ? 1 : 0
+  count = var.enabled && (var.s3_bucket_ssl_requests_only || var.security_pillar) ? 1 : 0
 
   name        = "S3BucketSSLRequestsOnly"
   description = "Checks whether S3 buckets have policies that require requests to use Secure Socket Layer (SSL)."
@@ -615,7 +615,7 @@ resource "aws_config_config_rule" "cloudtrail_enabled" {
 }
 
 resource "aws_config_config_rule" "multi_region_cloudtrail_enabled" {
-  count = var.enabled && var.multi_region_cloudtrail_enabled ? 1 : 0
+  count = var.enabled && (var.multi_region_cloudtrail_enabled || var.security_pillar) ? 1 : 0
 
   name        = "MultiRegionCloudTrail"
   description = "Ensuring that the multi-region-cloud-trail is enabled"
@@ -633,7 +633,7 @@ resource "aws_config_config_rule" "multi_region_cloudtrail_enabled" {
 
 
 resource "aws_config_config_rule" "instances_in_vpc" {
-  count = var.enabled && var.instances_in_vpc ? 1 : 0
+  count = var.enabled && (var.instances_in_vpc || var.reliability_pillar || var.security_pillar) ? 1 : 0
 
   name        = "InstancesInVpc"
   description = "Ensuring that all the instances in VPC"
@@ -651,7 +651,7 @@ resource "aws_config_config_rule" "instances_in_vpc" {
 
 
 resource "aws_config_config_rule" "cloudwatch_log_group_encrypted" {
-  count = var.enabled && var.cloudwatch_log_group_encrypted ? 1 : 0
+  count = var.enabled && (var.cloudwatch_log_group_encrypted || var.security_pillar) ? 1 : 0
 
   name        = "CloudwatchLogGroupEncrypted"
   description = "Ensuring that log group is encrypted"
@@ -687,7 +687,7 @@ data "template_file" "aws_config_iam_password_policy" {
 
 }
 resource "aws_config_config_rule" "iam_password_policy" {
-  count = var.enabled && var.iam_password_policy ? 1 : 0
+  count = var.enabled && (var.iam_password_policy || var.security_pillar) ? 1 : 0
 
   name = "Iam_PasswordPolicy"
 
