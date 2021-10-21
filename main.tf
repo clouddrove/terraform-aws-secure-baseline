@@ -70,6 +70,9 @@ module "config" {
   managedby             = var.managedby
   enabled               = var.enabled && var.config_enabled
   config_s3_bucket_name = var.config_s3_bucket_name
+  target_config_bucket  = var.target_config_bucket
+  target_config_prefix  = var.target_config_prefix
+  sse_algorithm         = var.sse_algorithm
 
   # roles
   restricted_ports                   = var.restricted_ports

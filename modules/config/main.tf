@@ -100,7 +100,7 @@ module "sns" {
 # Description : Terraform module to create default S3 bucket with logging and encryption
 #               type specific features.
 module "s3_bucket" {
-  source = "git::https://github.com/clouddrove/terraform-aws-s3.git?ref=tags/0.12.7"
+  source = "git::https://github.com/clouddrove/terraform-aws-s3.git?ref=tags/0.12.8.1"
 
   name        = var.config_s3_bucket_name
   application = var.application
@@ -109,6 +109,10 @@ module "s3_bucket" {
   label_order = ["name"]
 
   bucket_enabled          = var.enabled
+  create_bucket           = var.enabled
+  sse_algorithm           = var.sse_algorithm
+  target_log_bucket       = var.target_config_bucket
+  target_log_prefix       = var.target_config_prefix
   versioning              = true
   acl                     = "log-delivery-write"
   bucket_policy           = true
