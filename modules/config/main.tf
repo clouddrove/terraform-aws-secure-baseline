@@ -48,7 +48,7 @@ module "config_lambda" {
 
   filename = format("%s/slack/src", path.module)
   handler  = "index.lambda_handler"
-  runtime  = "python3.8"
+  runtime  = "python3.7"
   iam_actions = [
     "logs:CreateLogStream",
     "logs:CreateLogGroup",
@@ -62,7 +62,7 @@ module "config_lambda" {
   ]
   layer_filenames = [format("%s/slack/packages/Python3-slack.zip", path.module)]
   compatible_runtimes = [
-    ["python3.8"]
+    ["python3.7"]
   ]
 
   statement_ids = [
