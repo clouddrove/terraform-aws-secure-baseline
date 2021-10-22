@@ -991,7 +991,7 @@ resource "aws_config_config_rule" "cloudtrail_s3_dataevents_enabled" {
 
   source {
     owner             = "AWS"
-    source_identifier = "CLOUDTRAIL_S3_SECURITY_TRAIL_ENABLED"
+    source_identifier = "CLOUDTRAIL_SECURITY_TRAIL_ENABLED"
   }
 
   depends_on = [aws_config_configuration_recorder.recorder]
