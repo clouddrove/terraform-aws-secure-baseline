@@ -1793,3 +1793,15 @@ variable "security_pillar" {
   default     = true
   description = "To enable security pillar Group"
 }
+
+variable "target_config_prefix" {
+  type        = string
+  default     = ""
+  description = "To specify a key prefix for log objects."
+}
+
+variable "target_config_bucket" {
+  type        = string
+  default     = ""
+  description = "To specify a bucket for log objects."
+}
