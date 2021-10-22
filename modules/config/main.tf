@@ -57,14 +57,6 @@ module "config_lambda" {
   ]
   timeout = 30
 
-  names = [
-    "python_layer"
-  ]
-  layer_filenames = [format("%s/slack/packages/Python3-slack.zip", path.module)]
-  compatible_runtimes = [
-    ["python3.7"]
-  ]
-
   statement_ids = [
     "AllowExecutionFromSNS"
   ]
