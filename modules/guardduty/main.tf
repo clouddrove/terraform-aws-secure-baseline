@@ -129,7 +129,7 @@ resource "aws_cloudwatch_event_target" "default" {
 
 
 module "slack-lambda" {
-  source = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=MAN-226"
+  source = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=tags/0.12.5.1"
 
   name        = format("%s-slack-lambda", module.labels.id)
   application = var.application

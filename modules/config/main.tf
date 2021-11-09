@@ -37,7 +37,7 @@ data "template_file" "aws_config_acm_certificate_expiration" {
 }
 
 module "config_lambda" {
-  source = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=MAN-226"
+  source = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=tags/0.12.5.1"
 
   name        = "config-lambda"
   application = var.application
