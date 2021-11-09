@@ -68,8 +68,8 @@ module "config_lambda" {
   ]
   source_arns           = [module.sns.topic-arn]
   variables             = var.variables
-  tracing_mode          = "Active"
-  attach_tracing_policy = true
+  tracing_mode          = var.tracing_mode
+  attach_tracing_policy = var.attach_tracing_policy
 }
 
 #Module      : SNS

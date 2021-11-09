@@ -73,6 +73,8 @@ module "config" {
   target_config_bucket  = var.target_config_bucket
   target_config_prefix  = var.target_config_prefix
   sse_algorithm         = var.sse_algorithm
+  tracing_mode          = var.tracing_mode
+  attach_tracing_policy = var.attach_tracing_policy
 
   # roles
   restricted_ports                   = var.restricted_ports
@@ -347,6 +349,8 @@ module "guardduty" {
   target_bucket           = var.target_bucket
   target_prefix           = var.target_prefix
   sse_algorithm           = var.sse_algorithm
+  tracing_mode            = var.tracing_mode
+  attach_tracing_policy   = var.attach_tracing_policy
 
   is_guardduty_member = var.is_guardduty_member
   member_list         = var.member_list

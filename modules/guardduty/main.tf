@@ -168,6 +168,6 @@ module "slack-lambda" {
   ]
   source_arns           = [join("", aws_cloudwatch_event_rule.default.*.arn)]
   variables             = var.variables
-  tracing_mode          = "Active"
-  attach_tracing_policy = true
+  tracing_mode          = var.tracing_mode
+  attach_tracing_policy = var.attach_tracing_policy
 }

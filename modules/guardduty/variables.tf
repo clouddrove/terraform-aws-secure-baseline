@@ -149,5 +149,16 @@ variable "target_iam_role_arn" {
 variable "variables" {
   default     = {}
   description = "The environment variables for lambda function."
+}
 
+variable "tracing_mode" {
+  type        = string
+  default     = null
+  description = "Whether to to sample and trace a subset of incoming requests with AWS X-Ray. Valid values are PassThrough and Active."
+}
+
+variable "attach_tracing_policy" {
+  type        = bool
+  default     = false
+  description = "Controls whether X-Ray tracing policy should be added to IAM role for Lambda Function"
 }

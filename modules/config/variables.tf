@@ -1602,3 +1602,15 @@ variable "sse_algorithm" {
   default     = "AES256"
   description = "The server-side encryption algorithm to use. Valid values are AES256 and aws:kms."
 }
+
+variable "tracing_mode" {
+  type        = string
+  default     = null
+  description = "Whether to to sample and trace a subset of incoming requests with AWS X-Ray. Valid values are PassThrough and Active."
+}
+
+variable "attach_tracing_policy" {
+  type        = bool
+  default     = false
+  description = "Controls whether X-Ray tracing policy should be added to IAM role for Lambda Function"
+}
