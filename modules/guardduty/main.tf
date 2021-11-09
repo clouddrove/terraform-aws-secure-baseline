@@ -28,7 +28,7 @@ resource "aws_s3_bucket" "bucket" {
     rule {
       bucket_key_enabled = false
       apply_server_side_encryption_by_default {
-        sse_algorithm     = var.sse_algorithm
+        sse_algorithm = var.sse_algorithm
       }
     }
   }
@@ -129,7 +129,7 @@ resource "aws_cloudwatch_event_target" "default" {
 
 
 module "slack-lambda" {
-  source = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=tags/0.12.5"
+  source = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=MAN-226"
 
   name        = format("%s-slack-lambda", module.labels.id)
   application = var.application

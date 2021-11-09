@@ -19,7 +19,7 @@ variable "environment" {
 }
 
 variable "label_order" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Label order, e.g. `name`,`application`."
 }
@@ -37,7 +37,7 @@ variable "guardduty_enable" {
 }
 
 variable "ipset_iplist" {
-  type        = list
+  type        = list(any)
   description = "IPSet list of trusted IP addresses"
   default     = []
 }
@@ -61,7 +61,7 @@ variable "sse_algorithm" {
 }
 
 variable "threatintelset_iplist" {
-  type        = list
+  type        = list(any)
   description = "ThreatIntelSet list of known malicious IP addresses"
   default     = []
 }

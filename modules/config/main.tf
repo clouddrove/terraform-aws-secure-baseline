@@ -37,7 +37,7 @@ data "template_file" "aws_config_acm_certificate_expiration" {
 }
 
 module "config_lambda" {
-  source = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=tags/0.12.5"
+  source = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=MAN-226"
 
   name        = "config-lambda"
   application = var.application
@@ -66,8 +66,10 @@ module "config_lambda" {
   principals = [
     "sns.amazonaws.com"
   ]
-  source_arns = [module.sns.topic-arn]
-  variables   = var.variables
+  source_arns           = [module.sns.topic-arn]
+  variables             = var.variables
+  tracing_mode          = "Active"
+  attach_tracing_policy = true
 }
 
 #Module      : SNS
