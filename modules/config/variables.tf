@@ -1624,12 +1624,6 @@ variable "only_config_enabled" {
 
 variable "config_role_arn" {
   type        = string
-  default     = ""
-  description = "config role arn"
-}
-
-variable "s3_key_prefix" {
-  type        = string
-  default     = "AWSLogs/442186832995/Config"
-  description = "s3 key prefix"
+  default     = "config role arn"
+  description = "enable when need only config without alerts"
 }

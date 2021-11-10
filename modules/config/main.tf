@@ -277,7 +277,6 @@ resource "aws_config_delivery_channel" "bucket" {
 
   name           = format("%s-delivery-channel", module.labels.id)
   s3_bucket_name = var.config_s3_bucket_name
-  s3_key_prefix  = var.s3_key_prefix
   sns_topic_arn  = module.sns.topic-arn
 
   snapshot_delivery_properties {
