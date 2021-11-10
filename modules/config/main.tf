@@ -110,7 +110,7 @@ module "s3_bucket" {
   versioning              = true
   acl                     = "log-delivery-write"
   bucket_policy           = true
-  aws_iam_policy_document = data.aws_iam_policy_document.default.*.json
+  aws_iam_policy_document = join("", data.aws_iam_policy_document.default.*.json)
   force_destroy           = true
 }
 
@@ -194,7 +194,7 @@ data "aws_iam_policy_document" "recorder_assume_role_policy" {
 resource "aws_iam_role" "recorder" {
   count              = var.enabled && var.only_config_enabled == false ? 1 : 0
   name               = format("%s-recorder", module.labels.id)
-  assume_role_policy = data.aws_iam_policy_document.recorder_assume_role_policy.*.json
+  assume_role_policy = format("", data.aws_iam_policy_document.recorder_assume_role_policy.*.json)
 
   tags = module.labels.tags
 }
@@ -234,7 +234,7 @@ resource "aws_iam_role_policy" "recorder_publish_policy" {
 
   name   = format("%s-recorder_publish_policy", module.labels.id)
   role   = join("", aws_iam_role.recorder.*.id)
-  policy = data.aws_iam_policy_document.recorder_publish_policy.*.json
+  policy = format("", data.aws_iam_policy_document.recorder_publish_policy.*.json)
 }
 
 #Module      : AWS_IAM_POLICY_ATTACHMENT
