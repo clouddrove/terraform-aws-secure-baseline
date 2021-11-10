@@ -70,6 +70,7 @@ module "config" {
   managedby             = var.managedby
   enabled               = var.enabled && var.config_enabled
   only_config_enabled   = var.only_config_enabled
+  s3_key_prefix         = var.s3_key_prefix
   config_role_arn       = var.config_role_arn
   config_s3_bucket_name = var.config_s3_bucket_name
   target_config_bucket  = var.target_config_bucket
