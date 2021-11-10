@@ -69,6 +69,7 @@ module "config" {
   label_order           = var.label_order
   managedby             = var.managedby
   enabled               = var.enabled && var.config_enabled
+  only_config_enabled   = var.only_config_enabled
   config_s3_bucket_name = var.config_s3_bucket_name
   target_config_bucket  = var.target_config_bucket
   target_config_prefix  = var.target_config_prefix

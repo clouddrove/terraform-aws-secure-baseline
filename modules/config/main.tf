@@ -44,7 +44,7 @@ module "config_lambda" {
   environment = var.environment
   label_order = var.label_order
   managedby   = var.managedby
-  enabled     = var.enabled
+  enabled     = var.enabled && var.only_config_enabled == false ? true : false
 
   filename = format("%s/slack/src", path.module)
   handler  = "index.lambda_handler"
@@ -83,7 +83,7 @@ module "sns" {
   label_order  = var.label_order
   managedby    = var.managedby
   enable_topic = true
-  enabled      = var.enabled
+  enabled      = var.enabled && var.only_config_enabled == false ? true : false
 
   protocol        = "lambda"
   endpoint        = module.config_lambda.arn
@@ -102,20 +102,21 @@ module "s3_bucket" {
   managedby   = var.managedby
   label_order = ["name"]
 
-  bucket_enabled          = var.enabled
-  create_bucket           = var.enabled
+  bucket_enabled          = var.enabled && var.only_config_enabled == false ? true : false
+  create_bucket           = var.enabled && var.only_config_enabled == false ? true : false
   sse_algorithm           = var.sse_algorithm
   target_log_bucket       = var.target_config_bucket
   target_log_prefix       = var.target_config_prefix
   versioning              = true
   acl                     = "log-delivery-write"
   bucket_policy           = true
-  aws_iam_policy_document = data.aws_iam_policy_document.default.json
+  aws_iam_policy_document = data.aws_iam_policy_document.default.*.json
   force_destroy           = true
 }
 
 
 data "aws_iam_policy_document" "default" {
+  count = var.enabled && var.only_config_enabled == false ? 1 : 0
   statement {
     sid = "AWSConfigBucketPermissionsCheck"
 
@@ -178,6 +179,7 @@ data "aws_iam_policy_document" "default" {
 }
 
 data "aws_iam_policy_document" "recorder_assume_role_policy" {
+  count = var.enabled && var.only_config_enabled == false ? 1 : 0
   statement {
     principals {
       type        = "Service"
@@ -190,15 +192,16 @@ data "aws_iam_policy_document" "recorder_assume_role_policy" {
 #Module      : AWS_IAM_ROLE
 #Description : Provides an IAM role.
 resource "aws_iam_role" "recorder" {
-  count              = var.enabled ? 1 : 0
+  count              = var.enabled && var.only_config_enabled == false ? 1 : 0
   name               = format("%s-recorder", module.labels.id)
-  assume_role_policy = data.aws_iam_policy_document.recorder_assume_role_policy.json
+  assume_role_policy = data.aws_iam_policy_document.recorder_assume_role_policy.*.json
 
   tags = module.labels.tags
 }
 
 # See https://docs.aws.amazon.com/config/latest/developerguide/iamrole-permissions.html
 data "aws_iam_policy_document" "recorder_publish_policy" {
+  count = var.enabled && var.only_config_enabled == false ? 1 : 0
   statement {
     actions = ["s3:PutObject"]
     resources = [
@@ -227,17 +230,17 @@ data "aws_iam_policy_document" "recorder_publish_policy" {
 #Module      : AWS_IAM_ROLE
 #Description : Provides an IAM role policy
 resource "aws_iam_role_policy" "recorder_publish_policy" {
-  count = var.enabled ? 1 : 0
+  count = var.enabled && var.only_config_enabled == false ? 1 : 0
 
   name   = format("%s-recorder_publish_policy", module.labels.id)
   role   = join("", aws_iam_role.recorder.*.id)
-  policy = data.aws_iam_policy_document.recorder_publish_policy.json
+  policy = data.aws_iam_policy_document.recorder_publish_policy.*.json
 }
 
 #Module      : AWS_IAM_POLICY_ATTACHMENT
 #Description : Provides an IAM role policy attachment.
 resource "aws_iam_role_policy_attachment" "recorder_read_policy" {
-  count = var.enabled ? 1 : 0
+  count = var.enabled && var.only_config_enabled == false ? 1 : 0
 
   role       = join("", aws_iam_role.recorder.*.id)
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSConfigRole"
@@ -273,7 +276,7 @@ resource "aws_config_delivery_channel" "bucket" {
   count = var.enabled ? 1 : 0
 
   name           = format("%s-delivery-channel", module.labels.id)
-  s3_bucket_name = module.s3_bucket.id
+  s3_bucket_name = var.config_s3_bucket_name
   sns_topic_arn  = module.sns.topic-arn
 
   snapshot_delivery_properties {

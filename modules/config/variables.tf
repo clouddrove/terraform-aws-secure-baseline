@@ -1614,3 +1614,9 @@ variable "attach_tracing_policy" {
   default     = false
   description = "Controls whether X-Ray tracing policy should be added to IAM role for Lambda Function"
 }
+
+variable "only_config_enabled" {
+  type        = bool
+  default     = false
+  description = "enable when need only config without alerts"
+}
