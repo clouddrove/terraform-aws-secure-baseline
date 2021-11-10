@@ -262,7 +262,7 @@ resource "aws_config_configuration_recorder" "recorder" {
   count = var.enabled ? 1 : 0
 
   name     = format("%s-recorder", module.labels.id)
-  role_arn = join("", aws_iam_role.recorder.*.arn)
+  role_arn = var.enabled && var.only_config_enabled == false ? var.config_role_arn : join("", aws_iam_role.recorder.*.arn)
 
   recording_group {
     all_supported                 = true

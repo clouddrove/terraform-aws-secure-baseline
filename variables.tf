@@ -1823,3 +1823,9 @@ variable "only_config_enabled" {
   default     = false
   description = "enable when need only config without alerts"
 }
+
+variable "config_role_arn" {
+  type        = string
+  default     = ""
+  description = "config role arn"
+}
