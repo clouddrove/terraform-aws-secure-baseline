@@ -16,7 +16,7 @@ module "labels" {
 }
 
 resource "aws_s3_bucket" "bucket" {
-  count         = var.enabled && var.only_guardduty_enable ? 1 : 0
+  count         = var.enabled && var.only_guardduty_enable == false ? 1 : 0
   bucket        = var.bucket_name
   acl           = "private"
   force_destroy = true
@@ -46,7 +46,7 @@ resource "aws_guardduty_invite_accepter" "member_accepter" {
 }
 
 resource "aws_s3_bucket_object" "ipset" {
-  count = var.enabled && var.only_guardduty_enable ? 1 : 0
+  count = var.enabled && var.only_guardduty_enable == false ? 1 : 0
   acl   = "private"
   content = templatefile("${path.module}/templates/ipset.txt.tpl",
   { ipset_iplist = var.ipset_iplist })
@@ -66,7 +66,7 @@ resource "aws_guardduty_ipset" "ipset" {
 }
 
 resource "aws_s3_bucket_object" "threatintelset" {
-  count = var.enabled && var.only_guardduty_enable ? 1 : 0
+  count = var.enabled && var.only_guardduty_enable == false ? 1 : 0
   acl   = "private"
   content = templatefile("${path.module}/templates/threatintelset.txt.tpl",
   { threatintelset_iplist = var.threatintelset_iplist })
@@ -98,7 +98,7 @@ resource "aws_guardduty_member" "member" {
 #Module      : CLOUD WATCH EVENT RULE
 #Description : Event rule for cloud watch events.
 resource "aws_cloudwatch_event_rule" "default" {
-  count       = var.enabled && var.only_guardduty_enable ? 1 : 0
+  count       = var.enabled && var.only_guardduty_enable == false ? 1 : 0
   name        = format("%s-er", module.labels.id)
   description = "Event rule for AWS Guarddduty."
   role_arn    = var.rule_iam_role_arn
@@ -120,7 +120,7 @@ resource "aws_cloudwatch_event_rule" "default" {
 #Module      : CLOUD WATCH EVENT TARGET
 #Description : Attaching event rule and lambda function to targets.
 resource "aws_cloudwatch_event_target" "default" {
-  count     = var.enabled && var.only_guardduty_enable ? 1 : 0
+  count     = var.enabled && var.only_guardduty_enable == false ? 1 : 0
   rule      = join("", aws_cloudwatch_event_rule.default.*.name)
   target_id = "Guardduty"
   arn       = module.slack-lambda.arn # ARN of the Lambda Function, write after including lambda function
@@ -136,7 +136,7 @@ module "slack-lambda" {
   environment = var.environment
   label_order = ["name"]
   managedby   = var.managedby
-  enabled     = var.enabled && var.only_guardduty_enable
+  enabled     = var.enabled && var.only_guardduty_enable == false
 
   filename = format("%s/slack", path.module)
   handler  = "index.handler"
