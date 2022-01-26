@@ -335,24 +335,27 @@ module "config" {
 
 #Module      :  GUARD DUTY
 module "guardduty" {
-  source                  = "./modules/guardduty"
-  name                    = "guardduty"
-  application             = var.application
-  environment             = var.environment
-  managedby               = var.managedby
-  label_order             = var.label_order
-  enabled                 = var.enabled && var.guardduty_enable
-  bucket_name             = var.guardduty_s3_bucket_name
-  ipset_format            = "TXT"
-  ipset_iplist            = var.ipset_iplist
-  threatintelset_activate = var.threatintelset_activate
-  threatintelset_format   = "TXT"
-  threatintelset_iplist   = var.threatintelset_iplist
-  target_bucket           = var.target_bucket
-  target_prefix           = var.target_prefix
-  sse_algorithm           = var.sse_algorithm
-  tracing_mode            = var.tracing_mode
-  attach_tracing_policy   = var.attach_tracing_policy
+  source                         = "./modules/guardduty"
+  name                           = "guardduty"
+  application                    = var.application
+  environment                    = var.environment
+  managedby                      = var.managedby
+  label_order                    = var.label_order
+  enabled                        = var.enabled && var.guardduty_enable
+  only_guardduty_enable          = var.only_guardduty_enable
+  ipset_location                 = var.ipset_location
+  threatintelset_iplist_location = var.threatintelset_iplist_location
+  bucket_name                    = var.guardduty_s3_bucket_name
+  ipset_format                   = "TXT"
+  ipset_iplist                   = var.ipset_iplist
+  threatintelset_activate        = var.threatintelset_activate
+  threatintelset_format          = "TXT"
+  threatintelset_iplist          = var.threatintelset_iplist
+  target_bucket                  = var.target_bucket
+  target_prefix                  = var.target_prefix
+  sse_algorithm                  = var.sse_algorithm
+  tracing_mode                   = var.tracing_mode
+  attach_tracing_policy          = var.attach_tracing_policy
 
   is_guardduty_member = var.is_guardduty_member
   member_list         = var.member_list

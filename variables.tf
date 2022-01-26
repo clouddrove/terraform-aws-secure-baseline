@@ -226,6 +226,12 @@ variable "guardduty_enable" {
   description = "Enable monitoring and feedback reporting. Setting to false is equivalent to `suspending` GuardDuty. Defaults to true"
 }
 
+variable "only_guardduty_enable" {
+  type        = bool
+  default     = true
+  description = "Enable monitoring and feedback reporting. Setting to false is equivalent to `suspending` GuardDuty. Defaults to true"
+}
+
 variable "guardduty_s3_bucket_name" {
   type        = string
   description = "The name of the S3 bucket which will store guardduty files."
@@ -1828,4 +1834,16 @@ variable "config_role_arn" {
   type        = string
   default     = ""
   description = "config role arn"
+}
+
+variable "ipset_location" {
+  type        = string
+  default     = ""
+  description = "Location of ipset in s3."
+}
+
+variable "threatintelset_iplist_location" {
+  type        = string
+  default     = ""
+  description = "Location of threatintelset ipset in s3."
 }

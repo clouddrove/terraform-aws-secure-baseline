@@ -36,6 +36,12 @@ variable "guardduty_enable" {
   description = "Enable monitoring and feedback reporting. Setting to false is equivalent to `suspending` GuardDuty. Defaults to true"
 }
 
+variable "only_guardduty_enable" {
+  type        = bool
+  default     = true
+  description = "Enable monitoring and feedback reporting. Setting to false is equivalent to `suspending` GuardDuty. Defaults to true"
+}
+
 variable "ipset_iplist" {
   type        = list(any)
   description = "IPSet list of trusted IP addresses"
@@ -46,6 +52,18 @@ variable "target_bucket" {
   type        = string
   default     = ""
   description = "The name of the bucket that will receive the log objects."
+}
+
+variable "ipset_location" {
+  type        = string
+  default     = ""
+  description = "Location of ipset in s3."
+}
+
+variable "threatintelset_iplist_location" {
+  type        = string
+  default     = ""
+  description = "Location of threatintelset ipset in s3."
 }
 
 variable "target_prefix" {
