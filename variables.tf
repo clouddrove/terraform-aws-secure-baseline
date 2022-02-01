@@ -6,12 +6,6 @@ variable "name" {
   description = "Name  (e.g. `app` or `cluster`)."
 }
 
-variable "application" {
-  type        = string
-  default     = ""
-  description = "Application (e.g. `cd` or `clouddrove`)."
-}
-
 variable "environment" {
   type        = string
   default     = ""
@@ -491,3 +485,118 @@ variable "SOURCE_LIST" {
   default     = ""
   description = "Event Source List which event is ignore."
 }
+
+
+variable "max_password_age" {
+  type        = number
+  description = "The number of days that an user password is valid."
+  default     = 90
+}
+
+variable "minimum_password_length" {
+  type        = number
+  description = "Minimum length to require for user passwords."
+  default     = 14
+}
+
+variable "require_lowercase_characters" {
+  type        = bool
+  description = "Whether to require lowercase characters for user passwords."
+  default     = true
+}
+
+variable "require_numbers" {
+  description = "Whether to require numbers for user passwords."
+  default     = true
+}
+
+variable "require_uppercase_characters" {
+  description = "Whether to require uppercase characters for user passwords."
+  default     = true
+}
+
+variable "require_symbols" {
+  description = "Whether to require symbols for user passwords."
+  default     = true
+}
+
+variable "allow_users_to_change_password" {
+  description = "Whether to allow users to change their own password."
+  default     = true
+}
+
+variable "master_iam_role_policy_name" {
+  description = "The name of the IAM Master role policy."
+  default     = "IAM-Master-Policy"
+}
+
+variable "master_iam_role_name" {
+  description = "The name of the IAM Master role."
+  default     = "IAM-Master"
+}
+
+
+variable "manager_iam_role_name" {
+  description = "The name of the IAM Manager role."
+  default     = "IAM-Manager"
+}
+
+variable "manager_iam_role_policy_name" {
+  description = "The name of the IAM Manager role policy."
+  default     = "IAM-Manager-Policy"
+}
+
+variable "support_iam_role_name" {
+  description = "The name of the the support role."
+  default     = "IAM-Support"
+}
+
+variable "support_iam_role_policy_name" {
+  description = "The name of the support role policy."
+  default     = "IAM-Support-Role"
+}
+
+variable "support_iam_role_principal_arn" {
+  description = "The ARN of the IAM principal element by which the support role could be assumed."
+  default     = ""
+}
+variable "iam_enabled" {
+  description = "iam enable."
+  default     = true
+}
+
+variable "aws_iam_account_password_policy" {
+  description = "iam enable."
+  default     = true
+}
+
+variable "aws_iam_role" {
+  description = "iam enable."
+  default     = true
+}
+
+variable "aws_iam_role_policy" {
+  description = "iam enable."
+  default     = true
+}
+
+variable "aws_iam_role_manager" {
+  description = "iam enable."
+  default     = true
+}
+
+variable "manager_policy" {
+  description = "iam enable."
+  default     = true
+}
+
+variable "support" {
+  description = "iam enable."
+  default     = true
+}
+
+variable "support_policy" {
+  description = "iam enable."
+  default     = true
+}
+

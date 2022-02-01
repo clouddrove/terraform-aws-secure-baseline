@@ -4,7 +4,6 @@
 module "cloudtrail" {
   source                            = "./modules/cloudtrail"
   name                              = "trails"
-  application                       = var.application
   environment                       = var.environment
   managedby                         = var.managedby
   label_order                       = var.label_order
@@ -30,7 +29,6 @@ module "cloudtrail" {
 module "alarm" {
   source      = "./modules/alarm"
   name        = "alarm"
-  application = var.application
   environment = var.environment
   managedby   = var.managedby
   label_order = var.label_order
@@ -63,7 +61,6 @@ module "alarm" {
 module "config" {
   source                = "./modules/config"
   name                  = "config"
-  application           = var.application
   environment           = var.environment
   label_order           = var.label_order
   managedby             = var.managedby
@@ -113,7 +110,6 @@ module "config" {
 module "guardduty" {
   source                  = "./modules/guardduty"
   name                    = "guardduty"
-  application             = var.application
   environment             = var.environment
   managedby               = var.managedby
   label_order             = var.label_order
@@ -141,7 +137,6 @@ module "inspector" {
 
   ## Tags
   name        = "inspector"
-  application = var.application
   environment = var.environment
   managedby   = var.managedby
   label_order = var.label_order
@@ -175,7 +170,6 @@ module "iam_access_analyzer" {
   source = "./modules/analyzer"
 
   name        = "analyzer"
-  application = var.application
   environment = var.environment
   managedby   = var.managedby
   label_order = var.label_order
@@ -187,4 +181,33 @@ module "iam_access_analyzer" {
     SLACK_WEBHOOK = var.slack_webhook
     SLACK_CHANNEL = var.slack_channel
   }
+}
+
+module "aws-iam-baseline" {
+  source = "./modules/iam"
+
+  master_iam_role_name            = var.master_iam_role_name
+  master_iam_role_policy_name     = var.master_iam_role_policy_name
+  manager_iam_role_name           = var.manager_iam_role_name
+  manager_iam_role_policy_name    = var.manager_iam_role_policy_name
+  support_iam_role_name           = var.support_iam_role_name
+  support_iam_role_policy_name    = var.support_iam_role_policy_name
+  support_iam_role_principal_arn  = var.support_iam_role_principal_arn
+  minimum_password_length         = var.minimum_password_length
+  password_reuse_prevention       = var.password_reuse_prevention
+  require_lowercase_characters    = var.require_lowercase_characters
+  require_numbers                 = var.require_numbers
+  require_uppercase_characters    = var.require_uppercase_characters
+  require_symbols                 = var.require_symbols
+  allow_users_to_change_password  = var.allow_users_to_change_password
+  max_password_age                = var.max_password_age
+  enabled                         = var.enabled
+  aws_iam_account_password_policy = var.aws_iam_account_password_policy
+  aws_iam_role                    = var.aws_iam_role
+  aws_iam_role_policy             = var.aws_iam_role_policy
+  aws_iam_role_manager            = var.aws_iam_role_manager
+  manager_policy                  = var.manager_policy
+  support                         = var.support
+  support_policy                  = var.support_policy
+
 }

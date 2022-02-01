@@ -8,13 +8,12 @@ data "aws_region" "current" {}
 module "secure_baseline" {
   source = "./../"
 
-  application = "clouddrove"
   environment = "test"
-  label_order = ["environment", "application", "name"]
+  label_order = ["environment", "name"]
 
   enabled       = true
-  slack_webhook = "https://hooks.slack.com/services/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uEG4TW"
-  slack_channel = "testing"
+  slack_webhook = ""
+  slack_channel = ""
 
   # cloudtrail
   cloudtrail_enabled                = true
@@ -25,7 +24,7 @@ module "secure_baseline" {
 
 
   # Alarm
-  alarm_enabled            = true
+  alarm_enabled            = false
   alarm_namespace          = "Alert_Alarm"
   unauthorized_api_calls   = true
   no_mfa_console_signin    = true
@@ -43,8 +42,8 @@ module "secure_baseline" {
 
 
   ## Config
-  config_enabled                     = true
-  config_s3_bucket_name              = "config-bucket"
+  config_enabled                     = false
+  config_s3_bucket_name              = "config-bucket34568"
   restricted_ports                   = true
   iam_mfa                            = true
   unused_credentials                 = true
@@ -69,14 +68,14 @@ module "secure_baseline" {
   restricted_ports_list              = "{\"blockedPort1\": \"22\", \"blockedPort2\": \"3306\",\"blockedPort3\": \"6379\", \"blockedPort4\": \"5432\"}"
 
   # guardduty
-  guardduty_enable         = true
+  guardduty_enable         = false
   guardduty_s3_bucket_name = "guardduty-files"
   ipset_iplist             = ["10.10.0.0/16", "172.16.0.0/16", ]
   threatintelset_activate  = false
   threatintelset_iplist    = ["192.168.2.0/32", "4.4.4.4", ]
 
   ## Inspector
-  inspector_enabled = true
+  inspector_enabled = false
   rules_package_arns = [
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-ubA5XvBh",
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-sJBhCr0F",
@@ -84,8 +83,32 @@ module "secure_baseline" {
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-SnojL3Z6",
   ]
   schedule_expression = "cron(0/10 * ? * * *)"
-}
-# analyzer
-analyzer_enable = true
-type            = "ACCOUNT"
 
+  # analyzer
+  analyzer_enable = false
+  type            = "ACCOUNT"
+
+  ##IAM
+  master_iam_role_name            = "IAM-Master"
+  master_iam_role_policy_name     = "IAM-master-Policy"
+  manager_iam_role_name           = "IAM-manager"
+  manager_iam_role_policy_name    = "IAM-Manager-Policy"
+  support_iam_role_name           = "IAM-Policy"
+  support_iam_role_policy_name    = "IAM-Support-Role"
+  minimum_password_length         = 24
+  password_reuse_prevention       = 24
+  require_lowercase_characters    = true
+  require_numbers                 = true
+  require_uppercase_characters    = true
+  require_symbols                 = true
+  allow_users_to_change_password  = true
+  max_password_age                = 120
+  aws_iam_account_password_policy = true
+  aws_iam_role                    = false
+  aws_iam_role_policy             = false
+  aws_iam_role_manager            = false
+  manager_policy                  = false
+  support                         = false
+  support_policy                  = false
+
+}

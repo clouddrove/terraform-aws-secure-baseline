@@ -103,13 +103,14 @@ module "s3_bucket" {
   source  = "clouddrove/s3/aws"
   version = "0.15.0"
 
+  create_bucket           = var.enabled
   name                    = var.config_s3_bucket_name
   environment             = var.environment
   managedby               = var.managedby
   label_order             = ["name"]
   versioning              = true
   acl                     = "log-delivery-write"
-  bucket_policy           = true
+  bucket_policy           = var.enabled
   aws_iam_policy_document = data.aws_iam_policy_document.default.json
   force_destroy           = true
 }
