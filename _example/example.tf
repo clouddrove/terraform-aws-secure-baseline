@@ -43,7 +43,7 @@ module "secure_baseline" {
 
   ## Config
   config_enabled                     = false
-  config_s3_bucket_name              = "config-bucket34568"
+  config_s3_bucket_name              = "config-bucket"
   restricted_ports                   = true
   iam_mfa                            = true
   unused_credentials                 = true
