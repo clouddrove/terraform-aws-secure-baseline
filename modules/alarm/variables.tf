@@ -6,10 +6,10 @@ variable "name" {
   description = "Name  (e.g. `app` or `cluster`)."
 }
 
-variable "application" {
+variable "managedby" {
   type        = string
-  default     = ""
-  description = "Application (e.g. `cd` or `clouddrove`)."
+  default     = "hello@clouddrove.com"
+  description = "ManagedBy, eg 'CloudDrove'"
 }
 
 variable "environment" {
@@ -142,11 +142,5 @@ variable "cloudtrail_log_group_name" {
 variable "variables" {
   default     = {}
   description = "The environment variables for lambda function."
-}
-
-variable "managedby" {
-  type        = string
-  default     = "anmol@clouddrove.com"
-  description = "ManagedBy, eg 'CloudDrove' or 'AnmolNagpal'."
 }
 

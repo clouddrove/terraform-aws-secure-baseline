@@ -8,10 +8,10 @@ data "aws_caller_identity" "current" {}
 #              tags for resources. You can use terraform-labels to implement a strict
 #              naming convention
 module "labels" {
-  source = "git::https://github.com/clouddrove/terraform-labels.git?ref=tags/0.12.0"
+  source  = "clouddrove/labels/aws"
+  version = "0.15.0"
 
   name        = var.name
-  application = var.application
   environment = var.environment
   label_order = var.label_order
   managedby   = var.managedby
@@ -25,10 +25,10 @@ resource "null_resource" "cluster" {
 }
 
 module "alarm-lambda" {
-  source = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=tags/0.12.5"
+  source  = "clouddrove/lambda/aws"
+  version = "0.15.0"
 
   name        = "alarm-lambda"
-  application = var.application
   environment = var.environment
   label_order = var.label_order
   enabled     = var.enabled
@@ -69,10 +69,10 @@ module "alarm-lambda" {
 #Module      : SNS
 #Description : Provides an SNS topic resource
 module "sns" {
-  source = "git::https://github.com/clouddrove/terraform-aws-sns.git?ref=tags/0.12.2"
+  source  = "clouddrove/sns/aws"
+  version = "0.15.0"
 
   name         = "alarm-sns"
-  application  = var.application
   environment  = var.environment
   label_order  = var.label_order
   managedby    = var.managedby
@@ -492,7 +492,7 @@ resource "aws_cloudwatch_metric_alarm" "network_gw_changes" {
 }
 
 #Module      : AWS_CLOUDWATCH_LOG_METRIC_FILTER
-#Description : Provides a CloudWatch Log Metric Filter resource.
+#Description : Provides a CloudWatchLog Metric Filter resource.
 resource "aws_cloudwatch_log_metric_filter" "route_table_changes" {
   count = var.enabled && var.route_table_changes ? 1 : 0
 

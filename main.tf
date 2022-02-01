@@ -1,4 +1,3 @@
-
 #Module      : CLOUDTRAIL
 #Description : Terraform module to provision an AWS CloudTrail with encrypted S3 bucket.
 #              This bucket is used to store CloudTrail logs.

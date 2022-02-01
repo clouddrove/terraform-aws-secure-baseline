@@ -9,10 +9,10 @@ data "aws_region" "current" {}
 #              tags for resources. You can use terraform-labels to implement a strict
 #              naming convention
 module "labels" {
-  source = "git::https://github.com/clouddrove/terraform-labels.git?ref=tags/0.12.0"
+  source  = "clouddrove/labels/aws"
+  version = "0.15.0"
 
   name        = var.name
-  application = var.application
   environment = var.environment
   label_order = var.label_order
   managedby   = var.managedby
@@ -37,10 +37,10 @@ data "template_file" "aws_config_acm_certificate_expiration" {
 }
 
 module "config_lambda" {
-  source = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=tags/0.12.5"
+  source  = "clouddrove/lambda/aws"
+  version = "0.15.0"
 
   name        = "config-lambda"
-  application = var.application
   environment = var.environment
   label_order = var.label_order
   managedby   = var.managedby
@@ -81,10 +81,10 @@ module "config_lambda" {
 #Module      : SNS
 #Description : Provides an SNS topic resource
 module "sns" {
-  source = "git::https://github.com/clouddrove/terraform-aws-sns.git?ref=tags/0.12.2"
+  source  = "clouddrove/sns/aws"
+  version = "0.15.0"
 
   name         = "alarm-sns"
-  application  = var.application
   environment  = var.environment
   label_order  = var.label_order
   managedby    = var.managedby
@@ -100,15 +100,13 @@ module "sns" {
 # Description : Terraform module to create default S3 bucket with logging and encryption
 #               type specific features.
 module "s3_bucket" {
-  source = "git::https://github.com/clouddrove/terraform-aws-s3.git?ref=tags/0.12.7"
+  source  = "clouddrove/s3/aws"
+  version = "0.15.0"
 
-  name        = var.config_s3_bucket_name
-  application = var.application
-  environment = var.environment
-  managedby   = var.managedby
-  label_order = ["name"]
-
-  bucket_enabled          = var.enabled
+  name                    = var.config_s3_bucket_name
+  environment             = var.environment
+  managedby               = var.managedby
+  label_order             = ["name"]
   versioning              = true
   acl                     = "log-delivery-write"
   bucket_policy           = true
@@ -204,7 +202,7 @@ data "aws_iam_policy_document" "recorder_publish_policy" {
   statement {
     actions = ["s3:PutObject"]
     resources = [
-      format("arn:aws:s3:::%s%s%s/config/AWSLogs/%s/*", var.config_s3_bucket_name, var.delimiter, var.application, data.aws_caller_identity.current.account_id),
+      format("arn:aws:s3:::%s%s/config/AWSLogs/%s/*", var.config_s3_bucket_name, var.delimiter, data.aws_caller_identity.current.account_id),
     ]
 
     condition {
@@ -216,7 +214,7 @@ data "aws_iam_policy_document" "recorder_publish_policy" {
 
   statement {
     actions   = ["s3:GetBucketAcl"]
-    resources = [format("arn:aws:s3:::%s%s%s", var.config_s3_bucket_name, var.delimiter, var.application)]
+    resources = [format("arn:aws:s3:::%s%s", var.config_s3_bucket_name, var.delimiter)]
   }
 
   statement {
