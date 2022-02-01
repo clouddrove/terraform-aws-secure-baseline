@@ -391,11 +391,12 @@ resource "aws_cloudtrail" "default" {
 module "cloudtrail-slack-notification" {
   source = "git::https://github.com/clouddrove/terraform-aws-cloudtrail-slack-notification.git?ref=tags/0.15.0"
 
+
   name        = "cloudtrail-slack-notification"
   environment = var.environment
   managedby   = var.managedby
   label_order = var.label_order
-  enabled     = var.lambda_enabled && var.enabled
+  enabled     = false
   bucket_arn  = format("arn:aws:s3:::%s", var.s3_bucket_name)
   bucket_name = var.s3_bucket_name
   variables = {
