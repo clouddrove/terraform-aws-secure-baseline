@@ -18,7 +18,7 @@ variable "enable_aws_foundational_standard" {
   default     = true
 }
 variable "enable_ccis_standard" {
-  default     = true
+  default = true
 }
 
 variable "member_accounts" {
