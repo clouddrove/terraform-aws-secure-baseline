@@ -139,14 +139,53 @@ module "secure_baseline" {
   threatintelset_activate  = false
   threatintelset_iplist    = ["192.168.2.0/32", "4.4.4.4", ]
 
-  ## Inspector
+
+## Inspector
+  inspector_enabled = true
   rules_package_arns = [
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-ubA5XvBh",
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-sJBhCr0F",
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-SPzU33xe",
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-SnojL3Z6",
   ]
+  schedule_expression = "cron(0/10 * ? * * *)"
+
+  # analyzer
+  analyzer_enable = true
+  type            = "ACCOUNT"
+
+  # Shield
+  shield_enable = true
+
+  # EBS
+  default_ebs_enable = true
+
+  # Security Hub
+  security_hub_enable = true
+
+  # IAM baseline
+  ##IAM
+  enable_iam_baseline          = false
+  master_iam_role_name         = "IAM-Master"
+  master_iam_role_policy_name  = "IAM-master-Policy"
+  manager_iam_role_name        = "IAM-manager"
+  manager_iam_role_policy_name = "IAM-Manager-Policy"
+  support_iam_role_name        = "IAM-Policy"
+  support_iam_role_policy_name = "IAM-Support-Role"
+
+  #Password policy
+
+  aws_iam_account_password_policy = true
+  minimum_password_length         = 24
+  password_reuse_prevention       = 24
+  require_lowercase_characters    = true
+  require_numbers                 = true
+  require_uppercase_characters    = true
+  require_symbols                 = true
+  allow_users_to_change_password  = true
+  max_password_age                = 120
 }
+
 ```
 
 
