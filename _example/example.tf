@@ -10,8 +10,8 @@ module "secure_baseline" {
 
   environment = "test"
   label_order = [
-    "environment",
-  "name"]
+    "environment", "name"
+  ]
 
   enabled       = true
   slack_webhook = "https://hooks.slack.com/services/TEE0GF0QZ/BSDT97PJB/vMt86BHwUUrUxpzdgdxrTW"
@@ -23,6 +23,28 @@ module "secure_baseline" {
   cloudwatch_logs_retention_in_days = 365
   cloudwatch_logs_group_name        = "cloudtrail-log-group"
   cloudtrail_bucket_name            = "cloudtrail-bucket-logs123"
+  event_selector = [{
+    read_write_type           = "All"
+    include_management_events = true
+
+    data_resource = [
+      {
+        type   = "AWS::Lambda::Function"
+        values = ["arn:aws:lambda"]
+      },
+    ]
+    },
+    {
+      read_write_type           = "WriteOnly"
+      include_management_events = true
+
+      data_resource = [{
+        type   = "AWS::S3::Object"
+        values = ["arn:aws:s3:::"]
+      }]
+    },
+  ]
+
   EVENT_IGNORE_LIST = jsonencode([
     "^Describe*",
     "^Assume*",
@@ -37,10 +59,12 @@ module "secure_baseline" {
     "TestEventPattern",
     "TestScheduleExpression",
     "CreateNetworkInterface",
-  "ValidateTemplate"])
+    "ValidateTemplate"
+  ])
   EVENT_ALERT_LIST = jsonencode([
     "DetachRolePolicy",
-  "ConsoleLogin"])
+    "ConsoleLogin"
+  ])
   USER_IGNORE_LIST = jsonencode([
     "^awslambda_*",
     "^aws-batch$",
@@ -51,9 +75,11 @@ module "secure_baseline" {
     "^AutoScaling$",
     "^AWSCloudFormation$",
     "^CloudTrailBot$",
-  "^SLRManagement$"])
+    "^SLRManagement$"
+  ])
   SOURCE_LIST = jsonencode([
-  "aws-sdk-go"])
+    "aws-sdk-go"
+  ])
 
 
   # Alarm
@@ -103,16 +129,15 @@ module "secure_baseline" {
   # guardduty
   guardduty_enable         = true
   guardduty_s3_bucket_name = "guardduty-files"
-  ipset_iplist = [
-    "10.10.0.0/16",
-  "172.16.0.0/16", ]
-  threatintelset_activate = false
+  ipset_iplist             = ["10.10.0.0/16", "172.16.0.0/16", ]
+  threatintelset_activate  = false
   threatintelset_iplist = [
     "192.168.2.0/32",
-  "4.4.4.4", ]
+    "4.4.4.4",
+  ]
 
   ## Inspector
-  inspector_enabled = false
+  inspector_enabled = true
   rules_package_arns = [
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-ubA5XvBh",
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-sJBhCr0F",
@@ -122,15 +147,37 @@ module "secure_baseline" {
   schedule_expression = "cron(0/10 * ? * * *)"
 
   # analyzer
-  analyzer_enable = false
+  analyzer_enable = true
   type            = "ACCOUNT"
 
-  # Shield 
-  shield_enable = false
+  # Shield
+  shield_enable = true
 
   # EBS
   default_ebs_enable = true
 
   # Security Hub
-  security_hub_enable = false
+  security_hub_enable = true
+
+  # IAM baseline
+  ##IAM
+  enable_iam_baseline          = false
+  master_iam_role_name         = "IAM-Master"
+  master_iam_role_policy_name  = "IAM-master-Policy"
+  manager_iam_role_name        = "IAM-manager"
+  manager_iam_role_policy_name = "IAM-Manager-Policy"
+  support_iam_role_name        = "IAM-Policy"
+  support_iam_role_policy_name = "IAM-Support-Role"
+
+  #Password policy
+
+  aws_iam_account_password_policy = true
+  minimum_password_length         = 24
+  password_reuse_prevention       = 24
+  require_lowercase_characters    = true
+  require_numbers                 = true
+  require_uppercase_characters    = true
+  require_symbols                 = true
+  allow_users_to_change_password  = true
+  max_password_age                = 120
 }
