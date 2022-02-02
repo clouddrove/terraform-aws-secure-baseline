@@ -192,6 +192,11 @@ variable "s3_policy" {
   description = "Policy of s3."
 }
 
+variable "s3_mfa_delete" {
+  default     = false
+  description = "mfa enable for bucket."
+}
+
 variable "managedby" {
   type        = string
   default     = "hello@clouddrove.com"

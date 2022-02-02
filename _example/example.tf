@@ -23,6 +23,7 @@ module "secure_baseline" {
   cloudwatch_logs_retention_in_days = 365
   cloudwatch_logs_group_name        = "cloudtrail-log-group"
   cloudtrail_bucket_name            = "cloudtrail-bucket-logs123"
+  s3_mfa_delete                     = false
   event_selector = [{
     read_write_type           = "All"
     include_management_events = true

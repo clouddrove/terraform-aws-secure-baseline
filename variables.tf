@@ -132,6 +132,11 @@ variable "sns_topic_name" {
   default     = null
 }
 
+variable "s3_mfa_delete" {
+  default     = false
+  description = "mfa enable for bucket."
+}
+
 # analyzer
 variable "analyzer_enable" {
   description = "The boolean flag whether alarm module is enabled or not. No resources are created when set to false."

@@ -33,7 +33,7 @@ module "s3_bucket" {
   managedby     = var.managedby
   create_bucket = var.enabled
   versioning    = true
-  #mfa_delete    = var.s3_mfa_delete
+  mfa_delete    = var.s3_mfa_delete
   acl           = "log-delivery-write"
   force_destroy = true
   object_lock_configuration = {

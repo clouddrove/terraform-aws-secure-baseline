@@ -24,6 +24,7 @@ module "cloudtrail" {
   s3_policy                         = var.cloudtrail_s3_policy
   sns_topic_name                    = var.sns_topic_name
   event_selector                    = var.event_selector
+  s3_mfa_delete                     = var.s3_mfa_delete
 }
 
 #Module      : ALARM
