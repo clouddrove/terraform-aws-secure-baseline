@@ -7,7 +7,7 @@
     Terraform AWS Secure Baseline
 </h1>
 
-<p align="center" style="font-size: 1.2rem;">
+<p align="center" style="font-size: 1.2rem;"> 
     Terraform module to create an Secure Basline, inclued module is alarm baseline, config baseline, and clouddtrail baseline.
      </p>
 
@@ -38,7 +38,7 @@
 <hr>
 
 
-We eat, drink, sleep and most importantly love **DevOps**. We are working towards strategies for standardizing architecture while ensuring security for the infrastructure. We are strong believer of the philosophy <b>Bigger problems are always solved by breaking them into smaller manageable problems</b>. Resonating with microservices architecture, it is considered best-practice to run database, cluster, storage in smaller <b>connected yet manageable pieces</b> within the infrastructure.
+We eat, drink, sleep and most importantly love **DevOps**. We are working towards strategies for standardizing architecture while ensuring security for the infrastructure. We are strong believer of the philosophy <b>Bigger problems are always solved by breaking them into smaller manageable problems</b>. Resonating with microservices architecture, it is considered best-practice to run database, cluster, storage in smaller <b>connected yet manageable pieces</b> within the infrastructure. 
 
 This module is basically combination of [Terraform open source](https://www.terraform.io/) and includes automatation tests and examples. It also helps to create and improve your infrastructure with minimalistic code instead of maintaining the whole infrastructure code yourself.
 
@@ -49,9 +49,9 @@ We have [*fifty plus terraform modules*][terraform_modules]. A few of them are c
 
 ## Prerequisites
 
-This module has a few dependencies:
+This module has a few dependencies: 
 
-- [Terraform 0.15](https://learn.hashicorp.com/terraform/getting-started/install.html)
+- [Terraform 1.x.x](https://learn.hashicorp.com/terraform/getting-started/install.html)
 - [Go](https://golang.org/doc/install)
 - [github.com/stretchr/testify/assert](https://github.com/stretchr/testify)
 - [github.com/gruntwork-io/terratest/modules/terraform](https://github.com/gruntwork-io/terratest)
@@ -166,8 +166,11 @@ module "secure_baseline" {
 | acm\_days\_to\_expiration | Specify the number of days before the rule flags the ACM Certificate as noncompliant. | `number` | `14` | no |
 | alarm\_enabled | The boolean flag whether alarm module is enabled or not. No resources are created when set to false. | `bool` | `true` | no |
 | alarm\_namespace | The namespace in which all alarms are set up. | `string` | `"CISBenchmark"` | no |
+| allow\_users\_to\_change\_password | Whether to allow users to change their own password. | `bool` | `true` | no |
 | analyzer\_enable | The boolean flag whether alarm module is enabled or not. No resources are created when set to false. | `bool` | `true` | no |
 | attributes | Additional attributes (e.g. `1`). | `list(any)` | `[]` | no |
+| aws\_config\_changes\_enabled | If you want to create alarm when any changes in aws config. | `bool` | `true` | no |
+| aws\_iam\_account\_password\_policy | n/a | `bool` | `true` | no |
 | cloudtrail\_bucket\_name | The name of the S3 bucket which will store configuration snapshots. | `string` | n/a | yes |
 | cloudtrail\_cfg\_changes | If you want to create alarm when any changes in cloudtrail cfg. | `bool` | `true` | no |
 | cloudtrail\_enabled | The boolean flag whether cloudtrail module is enabled or not. No resources are created when set to false. | `bool` | `true` | no |
@@ -187,7 +190,9 @@ module "secure_baseline" {
 | ec2\_volume\_inuse\_check | Checks whether EBS volumes are attached to EC2 instances. | `bool` | `false` | no |
 | eip\_attached | Checks whether all Elastic IP addresses that are allocated to a VPC are attached to EC2 instances or in-use elastic network interfaces (ENIs). | `bool` | `false` | no |
 | enable\_aws\_foundational\_standard | Boolean whether AWS Foundations standard is enabled. | `bool` | `true` | no |
+| enable\_ccis\_standard | n/a | `bool` | `true` | no |
 | enable\_cis\_standard | Boolean whether CIS standard is enabled. | `bool` | `true` | no |
+| enable\_iam\_baseline | n/a | `bool` | `true` | no |
 | enable\_pci\_dss\_standard | Boolean whether PCI DSS standard is enabled. | `bool` | `true` | no |
 | enabled | The boolean flag whether this module is enabled or not. No resources are created when set to false. | `bool` | `true` | no |
 | environment | Environment (e.g. `prod`, `dev`, `staging`). | `string` | `""` | no |
@@ -206,8 +211,14 @@ module "secure_baseline" {
 | key\_deletion\_window\_in\_days | Duration in days after which the key is deleted after destruction of the resource, must be between 7 and 30 days. Defaults to 30 days. | `number` | `10` | no |
 | label\_order | Label order, e.g. `name`,`application`. | `list(any)` | `[]` | no |
 | managedby | ManagedBy, eg 'CloudDrove' | `string` | `"hello@clouddrove.com"` | no |
+| manager\_iam\_role\_name | The name of the IAM Manager role. | `string` | `"IAM-Manager"` | no |
+| manager\_iam\_role\_policy\_name | The name of the IAM Manager role policy. | `string` | `"IAM-Manager-Policy"` | no |
+| master\_iam\_role\_name | The name of the IAM Master role. | `string` | `"IAM-Master"` | no |
+| master\_iam\_role\_policy\_name | The name of the IAM Master role policy. | `string` | `"IAM-Master-Policy"` | no |
+| max\_password\_age | The number of days that an user password is valid. | `number` | `120` | no |
 | member\_accounts | A list of IDs and emails of AWS accounts which associated as member accounts. | <pre>list(object({<br>    account_id = string<br>    email      = string<br>  }))</pre> | `[]` | no |
 | member\_list | The list of member accounts to be added. Each member list need to have values of account\_id, member\_email and invite boolean | <pre>list(object({<br>    account_id = string<br>    email      = string<br>    invite     = bool<br>  }))</pre> | `[]` | no |
+| minimum\_password\_length | Minimum length to require for user passwords. | `number` | `14` | no |
 | multi\_region\_cloudtrail\_enabled | Ensuring that the multi-region-cloud-trail is enabled | `bool` | `false` | no |
 | nacl\_changes | If you want to create alarm when any changes in nacl. | `bool` | `true` | no |
 | name | Name  (e.g. `app` or `cluster`). | `string` | `""` | no |
@@ -224,7 +235,11 @@ module "secure_baseline" {
 | rds\_instance\_public\_access\_check | Checks whether the Amazon Relational Database Service (RDS) instances are not publicly accessible. | `bool` | `false` | no |
 | rds\_snapshots\_public\_prohibited | Checks if Amazon Relational Database Service (Amazon RDS) snapshots are public. | `bool` | `false` | no |
 | rds\_storage\_encrypted | Checks whether storage encryption is enabled for your RDS DB instances. | `bool` | `false` | no |
-| resource\_arn | The ARN (Amazon Resource Name) of the resource to be protected. | `string` | n/a | yes |
+| require\_lowercase\_characters | Whether to require lowercase characters for user passwords. | `bool` | `true` | no |
+| require\_numbers | Whether to require numbers for user passwords. | `bool` | `true` | no |
+| require\_symbols | Whether to require symbols for user passwords. | `bool` | `true` | no |
+| require\_uppercase\_characters | Whether to require uppercase characters for user passwords. | `bool` | `true` | no |
+| resource\_arn | The ARN (Amazon Resource Name) of the resource to be protected. | `string` | `""` | no |
 | restricted\_ports | If you want to enable the restricted incoming port. | `bool` | `false` | no |
 | restricted\_ports\_list | This list of blocked ports. | `string` | `"{\"blockedPort1\": \"22\", \"blockedPort2\": \"3306\",\"blockedPort3\": \"6379\", \"blockedPort4\": \"5432\"}"` | no |
 | root\_usage | If you want to create alarm when sign in with root user. | `bool` | `true` | no |
@@ -240,6 +255,9 @@ module "secure_baseline" {
 | slack\_channel | The channel of slack. | `string` | n/a | yes |
 | slack\_webhook | The webhook of slack. | `string` | n/a | yes |
 | sns\_topic\_name | Specifies the name of the Amazon SNS topic defined for notification of log file delivery | `string` | `null` | no |
+| support\_iam\_role\_name | The name of the the support role. | `string` | `"IAM-Support"` | no |
+| support\_iam\_role\_policy\_name | The name of the support role policy. | `string` | `"IAM-Support-Role"` | no |
+| support\_iam\_role\_principal\_arn | The ARN of the IAM principal element by which the support role could be assumed. | `string` | `""` | no |
 | tags | Additional tags (e.g. map(`BusinessUnit`,`XYZ`). | `map(any)` | `{}` | no |
 | threatintelset\_activate | Specifies whether GuardDuty is to start using the uploaded ThreatIntelSet | `bool` | `true` | no |
 | threatintelset\_iplist | ThreatIntelSet list of known malicious IP addresses | `list(any)` | `[]` | no |
@@ -261,7 +279,7 @@ module "secure_baseline" {
 
 
 ## Testing
-In this module testing is performed with [terratest](https://github.com/gruntwork-io/terratest) and it creates a small piece of infrastructure, matches the output like ARN, ID and Tags name etc and destroy infrastructure in your AWS account. This testing is written in GO, so you need a [GO environment](https://golang.org/doc/install) in your system.
+In this module testing is performed with [terratest](https://github.com/gruntwork-io/terratest) and it creates a small piece of infrastructure, matches the output like ARN, ID and Tags name etc and destroy infrastructure in your AWS account. This testing is written in GO, so you need a [GO environment](https://golang.org/doc/install) in your system. 
 
 You need to run the following command in the testing folder:
 ```hcl
@@ -270,7 +288,7 @@ You need to run the following command in the testing folder:
 
 
 
-## Feedback
+## Feedback 
 If you come accross a bug or have any feedback, please log it in our [issue tracker](https://github.com/clouddrove/clouddrove/terraform-aws-secure-baseline/modules//issues), or feel free to drop us an email at [hello@clouddrove.com](mailto:hello@clouddrove.com).
 
 If you have found it worth your time, go ahead and give us a ★ on [our GitHub](https://github.com/clouddrove/clouddrove/terraform-aws-secure-baseline/modules/)!
