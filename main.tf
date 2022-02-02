@@ -50,6 +50,7 @@ module "alarm" {
   route_table_changes      = var.route_table_changes
   vpc_changes              = var.vpc_changes
   alarm_namespace          = var.alarm_namespace
+  aws_config_changes_enabled = var.aws_config_changes_enabled
 
   cloudtrail_log_group_name = module.cloudtrail.log_group_name
   variables = {
@@ -178,6 +179,7 @@ module "iam_access_analyzer" {
 
   ## IAM Access Analyzer
   type = var.type
+
   variables = {
     SLACK_WEBHOOK = var.slack_webhook
     SLACK_CHANNEL = var.slack_channel
@@ -203,18 +205,42 @@ module "aws_shield" {
 ## EBS
 module "aws_ebs" {
   source = "./modules/ebs"
-
   enabled = var.enabled && var.default_ebs_enable
+
 }
 
 ## AWS Security Hub
 module "security_hub" {
-  source = "./module/security_hub"
+  source = "./modules/security_hub"
 
   enabled                          = var.enabled && var.security_hub_enable
-  enable_ccis_standard             = var.enable_ccis_standard
+  enable_cis_standard             = var.enable_cis_standard
   enable_aws_foundational_standard = var.enable_aws_foundational_standard
   enable_pci_dss_standard          = var.enable_pci_dss_standard
+}
+
+
+# AWS IAM Baseline
+module "aws-iam-baseline" {
+  source = "./modules/iam"
+
+  master_iam_role_name            = var.master_iam_role_name
+  master_iam_role_policy_name     = var.master_iam_role_policy_name
+  manager_iam_role_name           = var.manager_iam_role_name
+  manager_iam_role_policy_name    = var.manager_iam_role_policy_name
+  support_iam_role_name           = var.support_iam_role_name
+  support_iam_role_policy_name    = var.support_iam_role_policy_name
+  support_iam_role_principal_arn  = var.support_iam_role_principal_arn
+  minimum_password_length         = var.minimum_password_length
+  password_reuse_prevention       = var.password_reuse_prevention
+  require_lowercase_characters    = var.require_lowercase_characters
+  require_numbers                 = var.require_numbers
+  require_uppercase_characters    = var.require_uppercase_characters
+  require_symbols                 = var.require_symbols
+  allow_users_to_change_password  = var.allow_users_to_change_password
+  max_password_age                = var.max_password_age
+  enabled                         = var.enabled && var.enable_iam_baseline
+  aws_iam_account_password_policy = var.aws_iam_account_password_policy
 
 
 }

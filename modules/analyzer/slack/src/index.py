@@ -104,4 +104,3 @@ def post_to_slack(payload):
             ),
             code=255
         )
-

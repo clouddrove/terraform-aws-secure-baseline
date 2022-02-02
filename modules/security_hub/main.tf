@@ -17,7 +17,7 @@ resource "aws_securityhub_member" "members" {
 
 # Subscribe CIS benchmark
 resource "aws_securityhub_standards_subscription" "cis" {
-  count = var.enabled && var.enable_ccis_standard ? 1 : 0
+  count = var.enabled && var.enable_cis_standard ? 1 : 0
 
   standards_arn = "arn:aws:securityhub:::ruleset/cis-aws-foundations-benchmark/v/1.2.0"
 
@@ -41,4 +41,3 @@ resource "aws_securityhub_standards_subscription" "pci_dss" {
 
   depends_on = [aws_securityhub_account.main]
 }
-

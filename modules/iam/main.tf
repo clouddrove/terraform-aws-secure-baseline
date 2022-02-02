@@ -17,7 +17,7 @@ module "labels" {
 }
 
 resource "aws_iam_account_password_policy" "default" {
-  count                          = var.enabled && var.aws_iam_account_password_policy ? 1 : 0
+  count                          = var.aws_iam_account_password_policy ? 1 : 0
   minimum_password_length        = var.minimum_password_length
   password_reuse_prevention      = var.password_reuse_prevention
   require_lowercase_characters   = var.require_lowercase_characters
@@ -45,7 +45,7 @@ data "aws_iam_policy_document" "master_assume_policy" {
 }
 
 resource "aws_iam_role" "master" {
-  count              = var.enabled && var.aws_iam_role ? 1 : 0
+  count              = var.enabled  ? 1 : 0
   name               = var.master_iam_role_name
   assume_role_policy = data.aws_iam_policy_document.master_assume_policy.json
   tags               = module.labels.tags
@@ -87,7 +87,7 @@ data "aws_iam_policy_document" "master_policy" {
 }
 
 resource "aws_iam_role_policy" "master_policy" {
-  count  = var.enabled && var.aws_iam_role_policy ? 1 : 0
+  count  = var.enabled  ? 1 : 0
   name   = var.master_iam_role_policy_name
   role   = join("", aws_iam_role.master.*.id)
   policy = data.aws_iam_policy_document.master_policy.json
@@ -104,7 +104,7 @@ data "aws_iam_policy_document" "manager_assume_policy" {
 }
 
 resource "aws_iam_role" "manager" {
-  count              = var.enabled && var.aws_iam_role_manager ? 1 : 0
+  count              = var.enabled  ? 1 : 0
   name               = var.manager_iam_role_name
   assume_role_policy = data.aws_iam_policy_document.manager_assume_policy.json
   tags               = module.labels.tags
@@ -146,7 +146,7 @@ data "aws_iam_policy_document" "manager_policy" {
 }
 
 resource "aws_iam_role_policy" "manager_policy" {
-  count  = var.enabled && var.manager_policy ? 1 : 0
+  count  = var.enabled  ? 1 : 0
   name   = var.manager_iam_role_policy_name
   role   = join("", aws_iam_role.manager.*.id)
   policy = data.aws_iam_policy_document.manager_policy.json
@@ -166,7 +166,7 @@ data "aws_iam_policy_document" "support_assume_policy" {
 }
 
 resource "aws_iam_role" "support" {
-  count              = var.enabled && var.support ? 1 : 0
+  count              = var.enabled ? 1 : 0
   name               = var.support_iam_role_name
   assume_role_policy = data.aws_iam_policy_document.support_assume_policy.json
 
@@ -174,7 +174,7 @@ resource "aws_iam_role" "support" {
 }
 
 resource "aws_iam_role_policy_attachment" "support_policy" {
-  count      = var.enabled && var.support_policy ? 1 : 0
+  count      = var.enabled ? 1 : 0
   role       = join("", aws_iam_role.support.*.id)
   policy_arn = "arn:aws:iam::aws:policy/AWSSupportAccess"
 }

@@ -133,33 +133,3 @@ variable "aws_iam_account_password_policy" {
   type    = bool
   default = true
 }
-
-variable "aws_iam_role" {
-  type    = bool
-  default = true
-}
-
-variable "aws_iam_role_policy" {
-  type    = bool
-  default = true
-}
-
-variable "aws_iam_role_manager" {
-  type    = bool
-  default = true
-}
-
-variable "manager_policy" {
-  type    = bool
-  default = true
-}
-
-variable "support" {
-  type    = bool
-  default = true
-}
-
-variable "support_policy" {
-  type    = bool
-  default = true
-}

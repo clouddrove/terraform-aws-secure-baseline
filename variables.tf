@@ -234,6 +234,12 @@ variable "alarm_namespace" {
   default     = "CISBenchmark"
 }
 
+variable "aws_config_changes_enabled" {
+  type        = bool
+  default     = true
+  description = "If you want to create alarm when any changes in aws config."
+}
+
 ## Guardduty
 variable "guardduty_enable" {
   type        = bool
@@ -510,6 +516,7 @@ variable "shield_enable" {
 
 variable "resource_arn" {
   type        = string
+  default = ""
   description = "The ARN (Amazon Resource Name) of the resource to be protected."
 }
 
@@ -528,9 +535,14 @@ variable "member_accounts" {
   }))
   default = []
 }
+
 variable "security_hub_enable" {
   description = "The boolean flag whether this module is enabled or not. No resources are created when set to false."
   default     = true
+}
+
+variable "enable_ccis_standard" {
+  default = true
 }
 
 variable "enable_cis_standard" {
@@ -546,4 +558,87 @@ variable "enable_pci_dss_standard" {
 variable "enable_aws_foundational_standard" {
   description = "Boolean whether AWS Foundations standard is enabled."
   default     = true
+}
+
+#IAM baseline
+variable "master_iam_role_name" {
+  description = "The name of the IAM Master role."
+  default     = "IAM-Master"
+}
+
+variable "master_iam_role_policy_name" {
+  description = "The name of the IAM Master role policy."
+  default     = "IAM-Master-Policy"
+}
+
+variable "manager_iam_role_name" {
+  description = "The name of the IAM Manager role."
+  default     = "IAM-Manager"
+}
+
+variable "manager_iam_role_policy_name" {
+  description = "The name of the IAM Manager role policy."
+  default     = "IAM-Manager-Policy"
+}
+
+variable "support_iam_role_name" {
+  description = "The name of the the support role."
+  default     = "IAM-Support"
+}
+
+variable "support_iam_role_policy_name" {
+  description = "The name of the support role policy."
+  default     = "IAM-Support-Role"
+}
+
+variable "support_iam_role_principal_arn" {
+  default = ""
+  description = "The ARN of the IAM principal element by which the support role could be assumed."
+
+}
+
+variable "max_password_age" {
+  default     = 120
+  description = "The number of days that an user password is valid."
+
+}
+
+variable "minimum_password_length" {
+  default     = 14
+  description = "Minimum length to require for user passwords."
+}
+
+variable "require_lowercase_characters" {
+  default     = true
+  description = "Whether to require lowercase characters for user passwords."
+}
+
+variable "require_numbers" {
+  default     = true
+  description = "Whether to require numbers for user passwords."
+}
+
+variable "require_uppercase_characters" {
+  default     = true
+  description = "Whether to require uppercase characters for user passwords."
+}
+
+variable "require_symbols" {
+  default     = true
+  description = "Whether to require symbols for user passwords."
+}
+
+variable "allow_users_to_change_password" {
+  default     = true
+  description = "Whether to allow users to change their own password."
+}
+
+variable "aws_iam_account_password_policy" {
+  type    = bool
+  default = true
+}
+
+variable "enable_iam_baseline" {
+  type    = bool
+  default = true
 }

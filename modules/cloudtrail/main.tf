@@ -33,9 +33,51 @@ module "s3_bucket" {
   managedby     = var.managedby
   create_bucket = var.enabled
   versioning    = true
+  #mfa_delete    = var.s3_mfa_delete
   acl           = "log-delivery-write"
   force_destroy = true
+  object_lock_configuration = {
+    mode  = "GOVERNANCE"
+    days  = 366
+    years = 1
+  }
 
+
+
+}
+
+module "s3_bucket_logging" {
+  source  = "clouddrove/s3/aws"
+  version = "0.15.0"
+
+  name        = format("%s-logging-bucket", var.s3_bucket_name)
+  environment = var.environment
+  label_order = ["name",]
+
+  versioning    = true
+  acl           = "private"
+  sse_algorithm = "AES256"
+  logging       = { target_bucket : module.s3_bucket.id, target_prefix = "logs" }
+
+  depends_on = [module.s3_bucket]
+}
+
+resource "aws_s3_bucket_public_access_block" "s3_bucket_logging" {
+  count = var.enabled ? 1 : 0
+  bucket = module.s3_bucket_logging.id
+  block_public_acls = true
+  block_public_policy = true
+  ignore_public_acls = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_public_access_block" "s3_bucket" {
+  count = var.enabled ? 1 : 0
+  bucket = module.s3_bucket.id
+  block_public_acls = true
+  block_public_policy = true
+  ignore_public_acls = true
+  restrict_public_buckets = true
 }
 
 resource "aws_s3_bucket_policy" "this" {

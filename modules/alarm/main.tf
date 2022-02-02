@@ -594,7 +594,7 @@ resource "aws_cloudwatch_metric_alarm" "aws_config_changes" {
   statistic                 = "Sum"
   threshold                 = "1"
   alarm_description         = "Monitoring changes to AWS Config configuration will help ensure sustained visibility of configuration items within the AWS account."
-  alarm_actions             = [aws_sns_topic.alarms[0].arn]
+  alarm_actions             =  [module.sns.topic-arn]
   treat_missing_data        = "notBreaching"
   insufficient_data_actions = []
   tags                      = module.labels.tags

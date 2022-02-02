@@ -126,6 +126,11 @@ variable "vpc_changes" {
   description = "If you want to create alarm when any changes in vpc."
 }
 
+variable "aws_config_changes_enabled" {
+  type        = bool
+  default     = true
+  description = "If you want to create alarm when any changes in aws config."
+}
 
 variable "alarm_namespace" {
   type        = string
@@ -143,4 +148,3 @@ variable "variables" {
   default     = {}
   description = "The environment variables for lambda function."
 }
-
