@@ -69,6 +69,7 @@ module "config" {
   label_order           = var.label_order
   managedby             = var.managedby
   config_s3_bucket_name = var.config_s3_bucket_name
+  enabled             = var.config_enabled
 
   # roles
   restricted_ports                   = var.restricted_ports
