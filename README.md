@@ -287,6 +287,7 @@ module "secure_baseline" {
 | s3\_bucket\_policy\_changes | If you want to create alarm when any changes in S3 policy. | `bool` | `true` | no |
 | s3\_bucket\_public\_write\_prohibited | Checks that your S3 buckets do not allow public write access. | `bool` | `false` | no |
 | s3\_bucket\_ssl\_requests\_only | Checks whether S3 buckets have policies that require requests to use Secure Socket Layer (SSL). | `bool` | `false` | no |
+| s3\_mfa\_delete | mfa enable for bucket. | `bool` | `false` | no |
 | schedule\_expression | AWS Schedule Expression: https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html | `string` | `"cron(0 14 ? * THU *)"` | no |
 | security\_group\_changes | If you want to create alarm when any changes on security groups. | `bool` | `true` | no |
 | security\_hub\_enable | The boolean flag whether this module is enabled or not. No resources are created when set to false. | `bool` | `true` | no |
