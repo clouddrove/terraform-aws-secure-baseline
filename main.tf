@@ -8,6 +8,7 @@ module "cloudtrail" {
   environment                       = var.environment
   managedby                         = var.managedby
   label_order                       = var.label_order
+  enabled = var.enabled && var.cloudtrail_enabled
   iam_role_name                     = "CloudTrail-CloudWatch-Delivery-Role"
   iam_role_policy_name              = "CloudTrail-CloudWatch-Delivery-Policy"
   account_type                      = "individual"
@@ -104,7 +105,7 @@ module "config" {
   password_min_length        = var.password_min_length
   password_reuse_prevention  = var.password_reuse_prevention
   password_max_age           = var.password_max_age
-
+  slack_enabled              = var.slack_channel != "" ? true : false
   variables = {
     SLACK_WEBHOOK = var.slack_webhook
     SLACK_CHANNEL = var.slack_channel
@@ -128,6 +129,7 @@ module "guardduty" {
 
   is_guardduty_member = var.is_guardduty_member
   member_list         = var.member_list
+  slack_enabled       = var.slack_channel != "" ? true : false
   variables = {
     minSeverityLevel = "LOW"
     webHookUrl       = var.slack_webhook

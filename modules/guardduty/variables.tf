@@ -31,6 +31,12 @@ variable "guardduty_enable" {
   description = "Enable monitoring and feedback reporting. Setting to false is equivalent to `suspending` GuardDuty. Defaults to true"
 }
 
+variable "slack_enabled" {
+  type        = bool
+  default     = true
+  description = "The boolean flag whether this slack notification is enabled or not. No resources are created when set to false."
+}
+
 variable "ipset_iplist" {
   type        = list(any)
   description = "IPSet list of trusted IP addresses"

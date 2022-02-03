@@ -124,7 +124,7 @@ module "slack-lambda" {
   environment = var.environment
   label_order = ["name"]
   managedby   = var.managedby
-  enabled     = var.enabled
+  enabled     = var.enabled && var.slack_enabled
 
   filename = format("%s/slack", path.module)
   handler  = "index.handler"

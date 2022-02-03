@@ -43,6 +43,12 @@ variable "enabled" {
   description = "The boolean flag whether this module is enabled or not. No resources are created when set to false."
 }
 
+variable "slack_enabled" {
+  type        = bool
+  default     = true
+  description = "The boolean flag whether this slack notification is enabled or not. No resources are created when set to false."
+}
+
 variable "config_s3_bucket_name" {
   type        = string
   default     = ""

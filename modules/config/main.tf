@@ -44,7 +44,7 @@ module "config_lambda" {
   environment = var.environment
   label_order = var.label_order
   managedby   = var.managedby
-  enabled     = var.enabled
+  enabled     = var.enabled && var.slack_enabled
 
   filename = format("%s/slack/src", path.module)
   handler  = "index.lambda_handler"

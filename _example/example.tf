@@ -14,8 +14,8 @@ module "secure_baseline" {
   ]
 
   enabled       = true
-  slack_webhook = "https://hooks.slack.com/services/TEE0GF0QZ/BSDT97PJB/vMt86BHwUUrUxpzdgdxrTW"
-  slack_channel = "testing"
+  slack_webhook = ""
+  slack_channel = ""
 
   # cloudtrail
   cloudtrail_enabled                = true

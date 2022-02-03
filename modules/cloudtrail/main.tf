@@ -51,6 +51,7 @@ module "s3_bucket_logging" {
   label_order = ["name", ]
 
   versioning    = true
+  create_bucket = var.enabled
   acl           = "private"
   sse_algorithm = "AES256"
   logging       = { target_bucket : module.s3_bucket.id, target_prefix = "logs" }
