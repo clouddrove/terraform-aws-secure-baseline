@@ -24,6 +24,7 @@ module "secure_baseline" {
   cloudwatch_logs_group_name        = "cloudtrail-log-group"
   cloudtrail_bucket_name            = "cloudtrail-bucket-logs123"
   s3_mfa_delete                     = false
+
   event_selector = [{
     read_write_type           = "All"
     include_management_events = true
@@ -84,7 +85,7 @@ module "secure_baseline" {
 
 
   # Alarm
-  alarm_enabled            = true
+  alarm_enabled            = false
   alarm_namespace          = "Alert_Alarm"
   unauthorized_api_calls   = true
   no_mfa_console_signin    = true
@@ -102,7 +103,7 @@ module "secure_baseline" {
 
 
   ## Config
-  config_enabled                     = true
+  config_enabled                     = false
   config_s3_bucket_name              = "config-bucket"
   restricted_ports                   = true
   iam_mfa                            = true

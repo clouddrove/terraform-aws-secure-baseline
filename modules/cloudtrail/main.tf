@@ -27,20 +27,16 @@ module "s3_bucket" {
   source  = "clouddrove/s3/aws"
   version = "0.15.0"
 
-  name          = var.s3_bucket_name
-  environment   = var.environment
-  label_order   = ["name"]
-  managedby     = var.managedby
-  create_bucket = var.enabled
-  versioning    = true
-  mfa_delete    = var.s3_mfa_delete
-  acl           = "log-delivery-write"
-  force_destroy = true
-  object_lock_configuration = {
-    mode  = "GOVERNANCE"
-    days  = 366
-    years = 1
-  }
+  name                      = var.s3_bucket_name
+  environment               = var.environment
+  label_order               = ["name"]
+  managedby                 = var.managedby
+  create_bucket             = var.enabled
+  versioning                = true
+  mfa_delete                = var.s3_mfa_delete
+  acl                       = "log-delivery-write"
+  force_destroy             = true
+  object_lock_configuration = var.object_lock_configuration
 
 
 
@@ -52,7 +48,7 @@ module "s3_bucket_logging" {
 
   name        = format("%s-logging-bucket", var.s3_bucket_name)
   environment = var.environment
-  label_order = ["name",]
+  label_order = ["name", ]
 
   versioning    = true
   acl           = "private"
@@ -63,20 +59,20 @@ module "s3_bucket_logging" {
 }
 
 resource "aws_s3_bucket_public_access_block" "s3_bucket_logging" {
-  count = var.enabled ? 1 : 0
-  bucket = module.s3_bucket_logging.id
-  block_public_acls = true
-  block_public_policy = true
-  ignore_public_acls = true
+  count                   = var.enabled ? 1 : 0
+  bucket                  = module.s3_bucket_logging.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
   restrict_public_buckets = true
 }
 
 resource "aws_s3_bucket_public_access_block" "s3_bucket" {
-  count = var.enabled ? 1 : 0
-  bucket = module.s3_bucket.id
-  block_public_acls = true
-  block_public_policy = true
-  ignore_public_acls = true
+  count                   = var.enabled ? 1 : 0
+  bucket                  = module.s3_bucket.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
   restrict_public_buckets = true
 }
 

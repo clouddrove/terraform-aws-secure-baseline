@@ -25,6 +25,7 @@ module "cloudtrail" {
   sns_topic_name                    = var.sns_topic_name
   event_selector                    = var.event_selector
   s3_mfa_delete                     = var.s3_mfa_delete
+  object_lock_configuration         = var.object_lock_configuration
 }
 
 #Module      : ALARM
@@ -36,21 +37,21 @@ module "alarm" {
   managedby   = var.managedby
   label_order = var.label_order
 
-  enabled                  = var.enabled && var.alarm_enabled
-  unauthorized_api_calls   = var.unauthorized_api_calls
-  no_mfa_console_signin    = var.no_mfa_console_signin
-  root_usage               = var.root_usage
-  iam_changes              = var.iam_changes
-  cloudtrail_cfg_changes   = var.cloudtrail_cfg_changes
-  console_signin_failures  = var.console_signin_failures
-  disable_or_delete_cmk    = var.disable_or_delete_cmk
-  s3_bucket_policy_changes = var.s3_bucket_policy_changes
-  security_group_changes   = var.security_group_changes
-  nacl_changes             = var.nacl_changes
-  network_gw_changes       = var.network_gw_changes
-  route_table_changes      = var.route_table_changes
-  vpc_changes              = var.vpc_changes
-  alarm_namespace          = var.alarm_namespace
+  enabled                    = var.enabled && var.alarm_enabled
+  unauthorized_api_calls     = var.unauthorized_api_calls
+  no_mfa_console_signin      = var.no_mfa_console_signin
+  root_usage                 = var.root_usage
+  iam_changes                = var.iam_changes
+  cloudtrail_cfg_changes     = var.cloudtrail_cfg_changes
+  console_signin_failures    = var.console_signin_failures
+  disable_or_delete_cmk      = var.disable_or_delete_cmk
+  s3_bucket_policy_changes   = var.s3_bucket_policy_changes
+  security_group_changes     = var.security_group_changes
+  nacl_changes               = var.nacl_changes
+  network_gw_changes         = var.network_gw_changes
+  route_table_changes        = var.route_table_changes
+  vpc_changes                = var.vpc_changes
+  alarm_namespace            = var.alarm_namespace
   aws_config_changes_enabled = var.aws_config_changes_enabled
 
   cloudtrail_log_group_name = module.cloudtrail.log_group_name
@@ -69,7 +70,7 @@ module "config" {
   label_order           = var.label_order
   managedby             = var.managedby
   config_s3_bucket_name = var.config_s3_bucket_name
-  enabled             = var.config_enabled
+  enabled               = var.config_enabled
 
   # roles
   restricted_ports                   = var.restricted_ports
@@ -206,7 +207,7 @@ module "aws_shield" {
 
 ## EBS
 module "aws_ebs" {
-  source = "./modules/ebs"
+  source  = "./modules/ebs"
   enabled = var.enabled && var.default_ebs_enable
 
 }
@@ -216,7 +217,7 @@ module "security_hub" {
   source = "./modules/security_hub"
 
   enabled                          = var.enabled && var.security_hub_enable
-  enable_cis_standard             = var.enable_cis_standard
+  enable_cis_standard              = var.enable_cis_standard
   enable_aws_foundational_standard = var.enable_aws_foundational_standard
   enable_pci_dss_standard          = var.enable_pci_dss_standard
 }

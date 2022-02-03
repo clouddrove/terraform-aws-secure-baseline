@@ -109,9 +109,11 @@ module "s3_bucket" {
   label_order             = ["name"]
   versioning              = true
   acl                     = "log-delivery-write"
-  bucket_policy           = true
+  bucket_policy           = var.enabled
+  create_bucket           = var.enabled
   aws_iam_policy_document = data.aws_iam_policy_document.default.json
   force_destroy           = true
+
 }
 
 

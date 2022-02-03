@@ -197,6 +197,16 @@ variable "s3_mfa_delete" {
   description = "mfa enable for bucket."
 }
 
+variable "object_lock_configuration" {
+  type = object({
+    mode  = string
+    days  = number
+    years = number
+  })
+  default     = null
+  description = "With S3 Object Lock, you can store objects using a write-once-read-many (WORM) model. Object Lock can help prevent objects from being deleted or overwritten for a fixed amount of time or indefinitely."
+
+}
 variable "managedby" {
   type        = string
   default     = "hello@clouddrove.com"

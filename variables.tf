@@ -80,11 +80,13 @@ variable "enabled" {
 
 variable "slack_webhook" {
   type        = string
+  default     = ""
   description = "The webhook of slack."
 }
 
 variable "slack_channel" {
   type        = string
+  default     = ""
   description = "The channel of slack."
 }
 
@@ -137,6 +139,16 @@ variable "s3_mfa_delete" {
   description = "mfa enable for bucket."
 }
 
+variable "object_lock_configuration" {
+  type = object({
+    mode  = string
+    days  = number
+    years = number
+  })
+  default     = null
+  description = "With S3 Object Lock, you can store objects using a write-once-read-many (WORM) model. Object Lock can help prevent objects from being deleted or overwritten for a fixed amount of time or indefinitely."
+
+}
 # analyzer
 variable "analyzer_enable" {
   description = "The boolean flag whether alarm module is enabled or not. No resources are created when set to false."
@@ -523,7 +535,7 @@ variable "shield_enable" {
 
 variable "resource_arn" {
   type        = string
-  default = ""
+  default     = ""
   description = "The ARN (Amazon Resource Name) of the resource to be protected."
 }
 
@@ -599,7 +611,7 @@ variable "support_iam_role_policy_name" {
 }
 
 variable "support_iam_role_principal_arn" {
-  default = ""
+  default     = ""
   description = "The ARN of the IAM principal element by which the support role could be assumed."
 
 }

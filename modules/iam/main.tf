@@ -45,7 +45,7 @@ data "aws_iam_policy_document" "master_assume_policy" {
 }
 
 resource "aws_iam_role" "master" {
-  count              = var.enabled  ? 1 : 0
+  count              = var.enabled ? 1 : 0
   name               = var.master_iam_role_name
   assume_role_policy = data.aws_iam_policy_document.master_assume_policy.json
   tags               = module.labels.tags
@@ -87,7 +87,7 @@ data "aws_iam_policy_document" "master_policy" {
 }
 
 resource "aws_iam_role_policy" "master_policy" {
-  count  = var.enabled  ? 1 : 0
+  count  = var.enabled ? 1 : 0
   name   = var.master_iam_role_policy_name
   role   = join("", aws_iam_role.master.*.id)
   policy = data.aws_iam_policy_document.master_policy.json
@@ -104,7 +104,7 @@ data "aws_iam_policy_document" "manager_assume_policy" {
 }
 
 resource "aws_iam_role" "manager" {
-  count              = var.enabled  ? 1 : 0
+  count              = var.enabled ? 1 : 0
   name               = var.manager_iam_role_name
   assume_role_policy = data.aws_iam_policy_document.manager_assume_policy.json
   tags               = module.labels.tags
@@ -146,7 +146,7 @@ data "aws_iam_policy_document" "manager_policy" {
 }
 
 resource "aws_iam_role_policy" "manager_policy" {
-  count  = var.enabled  ? 1 : 0
+  count  = var.enabled ? 1 : 0
   name   = var.manager_iam_role_policy_name
   role   = join("", aws_iam_role.manager.*.id)
   policy = data.aws_iam_policy_document.manager_policy.json
