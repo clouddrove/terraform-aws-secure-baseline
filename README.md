@@ -264,6 +264,7 @@ module "secure_baseline" {
 | network\_gw\_changes | If you want to create alarm when any changes in network gateway. | `bool` | `true` | no |
 | no\_mfa\_console\_signin | If you want to create alarm when MFA not enabled on root user. | `bool` | `true` | no |
 | no\_policies\_with\_full\_admin\_access | Check user no policies with full admin access. | `bool` | `false` | no |
+| object\_lock\_configuration | With S3 Object Lock, you can store objects using a write-once-read-many (WORM) model. Object Lock can help prevent objects from being deleted or overwritten for a fixed amount of time or indefinitely. | <pre>object({<br>    mode  = string<br>    days  = number<br>    years = number<br>  })</pre> | `null` | no |
 | password\_max\_age | Number of days before password expiration. | `number` | `90` | no |
 | password\_min\_length | Password minimum length. | `number` | `16` | no |
 | password\_require\_lowercase | Require at least one lowercase character in password. | `bool` | `true` | no |
@@ -292,8 +293,8 @@ module "secure_baseline" {
 | security\_group\_changes | If you want to create alarm when any changes on security groups. | `bool` | `true` | no |
 | security\_hub\_enable | The boolean flag whether this module is enabled or not. No resources are created when set to false. | `bool` | `true` | no |
 | shield\_enable | The boolean flag whether shield module is enabled or not. No resources are created when set to false. | `bool` | `false` | no |
-| slack\_channel | The channel of slack. | `string` | n/a | yes |
-| slack\_webhook | The webhook of slack. | `string` | n/a | yes |
+| slack\_channel | The channel of slack. | `string` | `""` | no |
+| slack\_webhook | The webhook of slack. | `string` | `""` | no |
 | sns\_topic\_name | Specifies the name of the Amazon SNS topic defined for notification of log file delivery | `string` | `null` | no |
 | support\_iam\_role\_name | The name of the the support role. | `string` | `"IAM-Support"` | no |
 | support\_iam\_role\_policy\_name | The name of the support role policy. | `string` | `"IAM-Support-Role"` | no |
