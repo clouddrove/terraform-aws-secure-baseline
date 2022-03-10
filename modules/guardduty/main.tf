@@ -18,7 +18,6 @@ module "labels" {
 resource "aws_s3_bucket" "bucket" {
   count         = var.enabled ? 1 : 0
   bucket        = var.bucket_name
-  acl           = "private"
   force_destroy = true
 }
 resource "aws_guardduty_detector" "detector" {
@@ -108,7 +107,7 @@ resource "aws_cloudwatch_event_rule" "default" {
 #Module      : CLOUD WATCH EVENT TARGET
 #Description : Attaching event rule and lambda function to targets.
 resource "aws_cloudwatch_event_target" "default" {
-  count     = var.enabled ? 1 : 0
+  count     = var.enabled && var.slack_enabled ? 1 : 0
   rule      = join("", aws_cloudwatch_event_rule.default.*.name)
   target_id = "Guardduty"
   arn       = module.slack-lambda.arn # ARN of the Lambda Function, write after including lambda function

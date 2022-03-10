@@ -101,7 +101,7 @@ module "sns" {
 #               type specific features.
 module "s3_bucket" {
   source  = "clouddrove/s3/aws"
-  version = "0.15.0"
+  version = "0.15.1"
 
   name                    = var.config_s3_bucket_name
   environment             = var.environment
