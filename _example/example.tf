@@ -9,9 +9,7 @@ module "secure_baseline" {
   source = "./../"
 
   environment = "test"
-  label_order = [
-    "environment", "name"
-  ]
+  label_order = ["environment", "name"]
 
   enabled       = true
   slack_webhook = ""

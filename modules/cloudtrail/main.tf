@@ -25,7 +25,7 @@ module "labels" {
 #               type specific features.
 module "s3_bucket" {
   source  = "clouddrove/s3/aws"
-  version = "0.15.0"
+  version = "0.15.1"
 
   name                      = var.s3_bucket_name
   environment               = var.environment
@@ -44,7 +44,7 @@ module "s3_bucket" {
 
 module "s3_bucket_logging" {
   source  = "clouddrove/s3/aws"
-  version = "0.15.0"
+  version = "0.15.1"
 
   name        = format("%s-logging-bucket", var.s3_bucket_name)
   environment = var.environment
@@ -54,7 +54,6 @@ module "s3_bucket_logging" {
   create_bucket = var.enabled
   acl           = "private"
   sse_algorithm = "AES256"
-  logging       = { target_bucket : module.s3_bucket.id, target_prefix = "logs" }
 
   depends_on = [module.s3_bucket]
 }

@@ -105,7 +105,7 @@ variable "cloudwatch_logs_retention_in_days" {
 
 variable "iam_role_name" {
   type        = string
-  default     = "CloudTrail-CloudWatch-Delivery-Role"
+  default     = "CloudTrail-CloudWatch-Delivery-Role-prakash"
   description = "The name of the IAM Role to be used by CloudTrail to delivery logs to CloudWatch Logs group."
 }
 

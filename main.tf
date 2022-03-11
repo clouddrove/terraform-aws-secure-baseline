@@ -8,7 +8,7 @@ module "cloudtrail" {
   environment                       = var.environment
   managedby                         = var.managedby
   label_order                       = var.label_order
-  enabled = var.enabled && var.cloudtrail_enabled
+  enabled                           = var.enabled && var.cloudtrail_enabled
   iam_role_name                     = "CloudTrail-CloudWatch-Delivery-Role"
   iam_role_policy_name              = "CloudTrail-CloudWatch-Delivery-Policy"
   account_type                      = "individual"
