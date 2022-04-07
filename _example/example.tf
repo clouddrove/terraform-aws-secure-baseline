@@ -151,7 +151,7 @@ module "secure_baseline" {
   type            = "ACCOUNT"
 
   # Shield
-  shield_enable = true
+  shield_enable = false
 
   # EBS
   default_ebs_enable = true
