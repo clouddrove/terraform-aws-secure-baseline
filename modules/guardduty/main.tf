@@ -15,6 +15,7 @@ module "labels" {
   managedby   = var.managedby
 }
 
+#tfsec:ignore:aws-s3-block-public-acls
 resource "aws_s3_bucket" "bucket" {
   count         = var.enabled ? 1 : 0
   bucket        = var.bucket_name
