@@ -15,11 +15,15 @@ module "labels" {
   managedby   = var.managedby
 }
 
+#tfsec:ignore:aws-s3-block-public-acls
+#tfsec:ignore:aws-s3-block-public-policy
+#tfsec:ignore:aws-s3-enable-bucket-encryption
+#tfsec:ignore:aws-s3-encryption-customer-key
 resource "aws_s3_bucket" "bucket" {
   count         = var.enabled ? 1 : 0
   bucket        = var.bucket_name
   force_destroy = true
-}#tfsec:ignore:aws-s3-block-public-acls
+}
 
 resource "aws_guardduty_detector" "detector" {
   count                        = var.enabled ? 1 : 0
