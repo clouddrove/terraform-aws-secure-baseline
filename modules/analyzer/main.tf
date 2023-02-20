@@ -5,7 +5,7 @@
 #Description : Terraform module to create consistent naming for multiple names.
 module "labels" {
   source  = "clouddrove/labels/aws"
-  version = "0.15.0"
+  version = "1.3.0"
 
   name        = var.name
   environment = var.environment
@@ -55,7 +55,7 @@ resource "null_resource" "cluster" {
 
 module "slack-lambda" {
   source  = "clouddrove/lambda/aws"
-  version = "0.15.0"
+  version = "1.3.0"
 
   name        = format("%s-slack-lambda", module.labels.id)
   environment = var.environment

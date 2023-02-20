@@ -11,7 +11,7 @@ data "aws_region" "current" {}
 #              naming convention
 module "labels" {
   source  = "clouddrove/labels/aws"
-  version = "0.15.0"
+  version = "1.3.0"
 
   name        = var.name
   environment = var.environment
@@ -25,7 +25,7 @@ module "labels" {
 #               type specific features.
 module "s3_bucket" {
   source  = "clouddrove/s3/aws"
-  version = "0.15.1"
+  version = "1.3.0"
 
   name                      = var.s3_bucket_name
   environment               = var.environment
@@ -44,7 +44,7 @@ module "s3_bucket" {
 
 module "s3_bucket_logging" {
   source  = "clouddrove/s3/aws"
-  version = "0.15.1"
+  version = "1.3.0"
 
   name        = format("%s-logging-bucket", var.s3_bucket_name)
   environment = var.environment
@@ -184,7 +184,7 @@ data "aws_iam_policy_document" "cloudwatch_delivery_policy" {
 
 module "kms_key" {
   source  = "clouddrove/kms/aws"
-  version = "0.15.0"
+  version = "1.3.0"
 
   name                    = var.name
   environment             = var.environment

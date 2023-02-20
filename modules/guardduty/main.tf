@@ -7,7 +7,7 @@ data "aws_caller_identity" "current" {}
 
 module "labels" {
   source  = "clouddrove/labels/aws"
-  version = "0.15.0"
+  version = "1.3.0"
 
   name        = var.name
   environment = var.environment
