@@ -5,7 +5,7 @@
 #Description : Terraform module to create consistent naming for multiple names.
 module "labels" {
   source  = "clouddrove/labels/aws"
-  version = "0.15.0"
+  version = "1.3.0"
 
   name        = var.name
   environment = var.environment
@@ -69,7 +69,7 @@ resource "aws_cloudwatch_event_target" "default" {
 #Description : Creating a lambda function for assessment run.
 module "lambda" {
   source  = "clouddrove/lambda/aws"
-  version = "0.15.0"
+  version = "1.3.0"
 
   name          = var.name
   environment   = var.environment

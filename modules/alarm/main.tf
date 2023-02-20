@@ -9,7 +9,7 @@ data "aws_caller_identity" "current" {}
 #              naming convention
 module "labels" {
   source  = "clouddrove/labels/aws"
-  version = "0.15.0"
+  version = "1.3.0"
 
   name        = var.name
   environment = var.environment
@@ -26,7 +26,7 @@ resource "null_resource" "cluster" {
 
 module "alarm-lambda" {
   source  = "clouddrove/lambda/aws"
-  version = "0.15.0"
+  version = "1.3.0"
 
   name        = "alarm-lambda"
   environment = var.environment
@@ -70,7 +70,7 @@ module "alarm-lambda" {
 #Description : Provides an SNS topic resource
 module "sns" {
   source  = "clouddrove/sns/aws"
-  version = "0.15.0"
+  version = "1.3.0"
 
   name         = "alarm-sns"
   environment  = var.environment
