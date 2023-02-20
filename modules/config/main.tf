@@ -38,7 +38,7 @@ data "template_file" "aws_config_acm_certificate_expiration" {
 
 module "config_lambda" {
   source  = "clouddrove/lambda/aws"
-  version = "0.15.0"
+  version = "1.3.0"
 
   name        = "config-lambda"
   environment = var.environment
@@ -82,7 +82,7 @@ module "config_lambda" {
 #Description : Provides an SNS topic resource
 module "sns" {
   source  = "clouddrove/sns/aws"
-  version = "0.15.0"
+  version = "1.3.0"
 
   name         = "alarm-sns"
   environment  = var.environment
@@ -101,7 +101,7 @@ module "sns" {
 #               type specific features.
 module "s3_bucket" {
   source  = "clouddrove/s3/aws"
-  version = "0.15.1"
+  version = "1.3.0"
 
   name                    = var.config_s3_bucket_name
   environment             = var.environment

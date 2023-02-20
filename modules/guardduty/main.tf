@@ -122,7 +122,7 @@ resource "aws_cloudwatch_event_target" "default" {
 
 module "slack-lambda" {
   source  = "clouddrove/lambda/aws"
-  version = "0.15.0"
+  version = "1.3.0"
 
   name        = format("%s-slack-lambda", module.labels.id)
   environment = var.environment
