@@ -128,7 +128,7 @@ module "secure_baseline" {
 
   # guardduty
   guardduty_enable         = true
-  guardduty_s3_bucket_name = "guardduty-filesss"
+  guardduty_s3_bucket_name = "guardduty-files"
   ipset_iplist             = ["10.10.0.0/16", "172.16.0.0/16", ]
   threatintelset_activate  = false
   threatintelset_iplist = [
