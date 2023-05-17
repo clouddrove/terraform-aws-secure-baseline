@@ -427,7 +427,7 @@ resource "aws_cloudtrail" "default" {
 
 
 module "cloudtrail-slack-notification" {
-  source = "git::https://github.com/clouddrove/terraform-aws-cloudtrail-slack-notification.git?ref=tags/0.15.0"
+  source = "git::https://github.com/clouddrove/terraform-aws-cloudtrail-slack-notification.git?ref=tags/1.0.1"
 
   name        = "cloudtrail-slack-notification"
   environment = var.environment
