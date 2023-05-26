@@ -45,7 +45,7 @@ module "secure_baseline" {
     },
   ]
 
-  EVENT_IGNORE_LIST = jsonencode([
+  event_ignore_list = jsonencode([
     "^Describe*",
     "^Assume*",
     "^List*",
@@ -61,11 +61,11 @@ module "secure_baseline" {
     "CreateNetworkInterface",
     "ValidateTemplate"
   ])
-  EVENT_ALERT_LIST = jsonencode([
+  event_alert_list = jsonencode([
     "DetachRolePolicy",
     "ConsoleLogin"
   ])
-  USER_IGNORE_LIST = jsonencode([
+  user_ignore_list = jsonencode([
     "^awslambda_*",
     "^aws-batch$",
     "^bamboo*",
@@ -77,7 +77,7 @@ module "secure_baseline" {
     "^CloudTrailBot$",
     "^SLRManagement$"
   ])
-  SOURCE_LIST = jsonencode([
+  source_list = jsonencode([
     "aws-sdk-go"
   ])
 

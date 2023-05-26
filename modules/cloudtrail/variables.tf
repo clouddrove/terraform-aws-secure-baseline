@@ -163,25 +163,25 @@ variable "account_type" {
   description = "The type of the AWS account. The possible values are `individual`, `master` and `member` . Specify `master` and `member` to set up centalized logging for multiple accounts in AWS Organization. Use individual` otherwise."
 }
 
-variable "EVENT_IGNORE_LIST" {
+variable "event_ignore_list" {
   type        = string
   default     = ""
   description = "Event List which event is ignore."
 }
 
-variable "EVENT_ALERT_LIST" {
+variable "event_alert_list" {
   type        = string
   default     = ""
   description = "Event List which event is not ignore."
 }
 
-variable "USER_IGNORE_LIST" {
+variable "user_ignore_list" {
   type        = string
   default     = ""
   description = "User List which event is ignore."
 }
 
-variable "SOURCE_LIST" {
+variable "source_list" {
   type        = string
   default     = ""
   description = "Event Source List which event is ignore."

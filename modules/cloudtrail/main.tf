@@ -427,7 +427,8 @@ resource "aws_cloudtrail" "default" {
 
 
 module "cloudtrail-slack-notification" {
-  source = "git::https://github.com/clouddrove/terraform-aws-cloudtrail-slack-notification.git?ref=tags/1.0.1"
+  source  = "clouddrove/cloudtrail-slack-notification/aws"
+  version = "1.0.1"
 
   name        = "cloudtrail-slack-notification"
   environment = var.environment
@@ -437,11 +438,11 @@ module "cloudtrail-slack-notification" {
   bucket_arn  = format("arn:aws:s3:::%s", var.s3_bucket_name)
   bucket_name = var.s3_bucket_name
   variables = {
-    SLACK_WEBHOOK     = var.slack_webhook
-    SLACK_CHANNEL     = var.slack_channel
-    EVENT_IGNORE_LIST = var.EVENT_IGNORE_LIST
-    EVENT_ALERT_LIST  = var.EVENT_ALERT_LIST
-    USER_IGNORE_LIST  = var.USER_IGNORE_LIST
-    SOURCE_LIST       = var.SOURCE_LIST
+    slack_webhook     = var.slack_webhook
+    slack_channel     = var.slack_channel
+    event_ignore_list = var.event_ignore_list
+    event_alert_list  = var.event_alert_list
+    user_ignore_list  = var.user_ignore_list
+    source_list       = var.source_list
   }
 }
