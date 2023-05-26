@@ -203,10 +203,6 @@ module "secure_baseline" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| EVENT\_ALERT\_LIST | Event List which event is not ignore. | `string` | `""` | no |
-| EVENT\_IGNORE\_LIST | Event List which event is ignore. | `string` | `""` | no |
-| SOURCE\_LIST | Event Source List which event is ignore. | `string` | `""` | no |
-| USER\_IGNORE\_LIST | User List which event is ignore. | `string` | `""` | no |
 | acm\_certificate\_expiration\_check | Check ACM Certificates in your account are marked for expiration within the specified number of days. | `bool` | `false` | no |
 | acm\_days\_to\_expiration | Specify the number of days before the rule flags the ACM Certificate as noncompliant. | `number` | `14` | no |
 | alarm\_enabled | The boolean flag whether alarm module is enabled or not. No resources are created when set to false. | `bool` | `true` | no |
@@ -241,6 +237,8 @@ module "secure_baseline" {
 | enable\_pci\_dss\_standard | Boolean whether PCI DSS standard is enabled. | `bool` | `true` | no |
 | enabled | The boolean flag whether this module is enabled or not. No resources are created when set to false. | `bool` | `true` | no |
 | environment | Environment (e.g. `prod`, `dev`, `staging`). | `string` | `""` | no |
+| event\_alert\_list | Event List which event is not ignore. | `string` | `""` | no |
+| event\_ignore\_list | Event List which event is ignore. | `string` | `""` | no |
 | event\_selector | Specifies an event selector for enabling data event logging. See: https://www.terraform.io/docs/providers/aws/r/cloudtrail.html for details on this variable | <pre>list(object({<br>    include_management_events = bool<br>    read_write_type           = string<br><br>  }))</pre> | `[]` | no |
 | guardduty\_enable | Enable monitoring and feedback reporting. Setting to false is equivalent to `suspending` GuardDuty. Defaults to true | `bool` | `true` | no |
 | guardduty\_enabled\_centralized | Checks whether Amazon GuardDuty is enabled in your AWS account and region. | `bool` | `false` | no |
@@ -302,6 +300,7 @@ module "secure_baseline" {
 | slack\_channel | The channel of slack. | `string` | `""` | no |
 | slack\_webhook | The webhook of slack. | `string` | `""` | no |
 | sns\_topic\_name | Specifies the name of the Amazon SNS topic defined for notification of log file delivery | `string` | `null` | no |
+| source\_list | Event Source List which event is ignore. | `string` | `""` | no |
 | support\_iam\_role\_name | The name of the the support role. | `string` | `"IAM-Support"` | no |
 | support\_iam\_role\_policy\_name | The name of the support role policy. | `string` | `"IAM-Support-Role"` | no |
 | support\_iam\_role\_principal\_arn | The ARN of the IAM principal element by which the support role could be assumed. | `string` | `""` | no |
@@ -311,6 +310,7 @@ module "secure_baseline" {
 | type | Type of Analyzer. Valid value is currently only ACCOUNT. Defaults to ACCOUNT. | `string` | `"ACCOUNT"` | no |
 | unauthorized\_api\_calls | If you want to create alarm for unauthorized api calls. | `bool` | `true` | no |
 | unused\_credentials | Check unused credentials in AWS account. | `bool` | `false` | no |
+| user\_ignore\_list | User List which event is ignore. | `string` | `""` | no |
 | user\_no\_policies | Check user no policies. | `bool` | `false` | no |
 | vpc\_changes | If you want to create alarm when any changes in vpc. | `bool` | `true` | no |
 | vpc\_default\_security\_group\_closed | Checks that the default security group of any Amazon Virtual Private Cloud (VPC) does not allow inbound or outbound traffic. | `bool` | `false` | no |
