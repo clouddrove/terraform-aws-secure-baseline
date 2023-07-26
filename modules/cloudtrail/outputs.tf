@@ -20,7 +20,7 @@ output "log_group_name" {
 }
 
 output "s3_id" {
-  value       = coalesce(join("", data.aws_s3_bucket.bucket.*.arn), module.s3_logs.arn )
+  value       = coalesce(join("", data.aws_s3_bucket.bucket.*.arn), module.s3_logs.arn)
   description = "The Name of S3 bucket."
 }
 

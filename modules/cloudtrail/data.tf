@@ -5,7 +5,7 @@ data "aws_region" "current" {}
 #Data        : S3 bucket
 #Description : Terraform Data block to get an AWS S3 bucket information.
 data "aws_s3_bucket" "bucket" {
-  count = var.s3_bucket_name != "" ? 1 : 0
+  count  = var.s3_bucket_name != "" ? 1 : 0
   bucket = var.s3_bucket_name
 }
 

@@ -9,17 +9,17 @@ data "aws_region" "current" {}
 module "cloudtrail" {
   source = "../modules/cloudtrail"
 
-  name                          = "cloudtrail-testing"
-  environment                   = "security"
-  label_order                   = ["name", "environment"]
+  name        = "cloudtrail-testing"
+  environment = "security"
+  label_order = ["name", "environment"]
 
-  enabled_cloudtrail                = true
-  key_deletion_window_in_days       = 10
-  bucket_policy                     = true
-  log_retention_days                = 90
-  cloudwatch_log_group_name         = "cloudtrail-log-group"  
-  include_global_service_events     = true
-  is_organization_trail             = false
+  enabled_cloudtrail            = true
+  key_deletion_window_in_days   = 10
+  bucket_policy                 = true
+  log_retention_days            = 90
+  cloudwatch_log_group_name     = "cloudtrail-log-group"
+  include_global_service_events = true
+  is_organization_trail         = false
 
   event_selector = [{
     read_write_type           = "All"

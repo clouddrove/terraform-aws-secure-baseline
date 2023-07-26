@@ -3,8 +3,8 @@
 # Copyright @ CloudDrove. All Right Reserved.
 
 locals {
-  bucket_name = coalesce(var.s3_bucket_name, module.s3_logs.id )
-  bucket_id   = coalesce(join("", data.aws_s3_bucket.bucket.*.arn), module.s3_logs.arn ) 
+  bucket_name = coalesce(var.s3_bucket_name, module.s3_logs.id)
+  bucket_id   = coalesce(join("", data.aws_s3_bucket.bucket.*.arn), module.s3_logs.arn)
 }
 
 #Module      : Labels
@@ -74,7 +74,7 @@ resource "aws_iam_policy" "cloudtrail_cloudwatch_logs" {
 }
 resource "aws_iam_policy_attachment" "main" {
   count      = var.enable_cloudwatch && var.enabled_cloudtrail ? 1 : 0
-  name       = format("%s-cloudwatch-logs-policy-attachment",var.name)
+  name       = format("%s-cloudwatch-logs-policy-attachment", var.name)
   policy_arn = aws_iam_policy.cloudtrail_cloudwatch_logs[0].arn
   roles      = [aws_iam_role.cloudtrail_cloudwatch_role[0].name]
 }
@@ -152,12 +152,12 @@ module "cloudtrail-slack-notification" {
   source  = "clouddrove/cloudtrail-slack-notification/aws"
   version = "1.0.1"
 
-  name        = format("%s-cloudtrail-slack-notification", var.name )
+  name        = format("%s-cloudtrail-slack-notification", var.name)
   environment = var.environment
   managedby   = var.managedby
   label_order = var.label_order
   enabled     = var.slack_webhook != "" && var.enabled_cloudtrail
-  bucket_arn  = format("arn:aws:s3:::%s", local.bucket_id )
+  bucket_arn  = format("arn:aws:s3:::%s", local.bucket_id)
   bucket_name = local.bucket_name
   variables = {
     slack_webhook     = var.slack_webhook
