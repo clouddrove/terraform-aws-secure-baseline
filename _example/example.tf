@@ -20,6 +20,7 @@ module "cloudtrail" {
   cloudwatch_log_group_name     = "cloudtrail-log-group"
   include_global_service_events = true
   is_organization_trail         = false
+  kms_enabled                   = true
 
   event_selector = [{
     read_write_type           = "All"
