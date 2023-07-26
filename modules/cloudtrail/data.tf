@@ -1,0 +1,150 @@
+data "aws_caller_identity" "current" {}
+data "aws_partition" "current" {}
+data "aws_region" "current" {}
+
+#Data        : S3 bucket
+#Description : Terraform Data block to get an AWS S3 bucket information.
+data "aws_s3_bucket" "bucket" {
+  count = var.s3_bucket_name != "" ? 1 : 0
+  bucket = var.s3_bucket_name
+}
+
+
+#Data        : KMS
+#Description : Terraform Data block to read an AWS IAM policy document for kms.
+data "aws_iam_policy_document" "kms" {
+  version = "2012-10-17"
+  statement {
+    sid    = "Enable IAM User Permissions"
+    effect = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+    actions   = ["kms:*"]
+    resources = ["*"]
+  }
+  statement {
+    sid    = "Allow CloudTrail to encrypt logs"
+    effect = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["cloudtrail.amazonaws.com"]
+    }
+    actions   = ["kms:GenerateDataKey*"]
+    resources = ["*"]
+    condition {
+      test     = "StringLike"
+      variable = "kms:EncryptionContext:aws:cloudtrail:arn"
+      values   = ["arn:${data.aws_partition.current.partition}:cloudtrail:*:${data.aws_caller_identity.current.account_id}:trail/*"]
+    }
+  }
+
+  statement {
+    sid    = "Allow CloudTrail to describe key"
+    effect = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["cloudtrail.amazonaws.com"]
+    }
+    actions   = ["kms:DescribeKey"]
+    resources = ["*"]
+  }
+
+  statement {
+    sid    = "Allow principals in the account to decrypt log files"
+    effect = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+    actions = [
+      "kms:Decrypt",
+      "kms:ReEncryptFrom"
+    ]
+    resources = ["*"]
+    condition {
+      test     = "StringEquals"
+      variable = "kms:CallerAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
+    condition {
+      test     = "StringLike"
+      variable = "kms:EncryptionContext:aws:cloudtrail:arn"
+      values   = ["arn:${data.aws_partition.current.partition}:cloudtrail:*:${data.aws_caller_identity.current.account_id}:trail/*"]
+    }
+  }
+
+  statement {
+    sid    = "Allow alias creation during setup"
+    effect = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+    actions   = ["kms:CreateAlias"]
+    resources = ["*"]
+  }
+}
+
+#Data        : cloudwatch logs
+#Description : Terraform Data block to read an AWS IAM policy document for Cloudtrail cloudwatch logs.
+data "aws_iam_policy_document" "cloudtrail_cloudwatch_logs" {
+  statement {
+    sid = "WriteCloudWatchLogs"
+
+    effect = "Allow"
+
+    actions = [
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+    ]
+    #tfsec:ignore:aws-iam-no-policy-wildcards
+    resources = ["arn:${data.aws_partition.current.partition}:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:cloudwatch-log-group:*"]
+  }
+}
+
+#Data        : Assume role for cloudtrail
+#Description : Terraform Data block to read an AWS IAM policy document for Assumerole of cloudtrail.
+data "aws_iam_policy_document" "cloudtrail_assume_role" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["cloudtrail.amazonaws.com"]
+    }
+  }
+}
+
+#Data        : S3 bucket policy
+#Description : Terraform Data block to read an AWS IAM policy document for s3 bucket policy.
+data "aws_iam_policy_document" "default" {
+  statement {
+    sid    = "cloudtrail-logs-get-bucket-acl"
+    effect = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["cloudtrail.amazonaws.com"]
+    }
+    actions   = ["s3:GetBucketAcl"]
+    resources = ["arn:aws:s3:::${local.bucket_name}"]
+  }
+
+  statement {
+    sid    = "cloudtrail-logs-put-object"
+    effect = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["cloudtrail.amazonaws.com"]
+    }
+    actions   = ["s3:PutObject"]
+    resources = ["arn:aws:s3:::${local.bucket_name}/AWSLogs/*"]
+    condition {
+      test     = "StringEquals"
+      variable = "s3:x-amz-acl"
+      values   = ["bucket-owner-full-control"]
+    }
+  }
+}

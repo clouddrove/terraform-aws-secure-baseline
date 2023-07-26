@@ -2,32 +2,32 @@
 #Module      : CLOUDTRAIL
 #Description : Terraform module to provision an AWS CloudTrail with encrypted S3 bucket.
 #              This bucket is used to store CloudTrail logs.
-module "cloudtrail" {
-  source                            = "./modules/cloudtrail"
-  name                              = "cloudtrail"
-  environment                       = var.environment
-  managedby                         = var.managedby
-  label_order                       = var.label_order
-  enabled                           = var.enabled && var.cloudtrail_enabled
-  iam_role_name                     = "CloudTrail-CloudWatch-Delivery-Role"
-  iam_role_policy_name              = "CloudTrail-CloudWatch-Delivery-Policy"
-  account_type                      = "individual"
-  key_deletion_window_in_days       = var.key_deletion_window_in_days
-  cloudwatch_logs_retention_in_days = var.cloudwatch_logs_retention_in_days
-  cloudwatch_logs_group_name        = var.cloudwatch_logs_group_name
-  event_ignore_list                 = var.event_ignore_list
-  event_alert_list                  = var.event_alert_list
-  user_ignore_list                  = var.user_ignore_list
-  source_list                       = var.source_list
-  s3_bucket_name                    = var.cloudtrail_bucket_name
-  slack_webhook                     = var.slack_webhook
-  slack_channel                     = var.slack_channel
-  s3_policy                         = var.cloudtrail_s3_policy
-  sns_topic_name                    = var.sns_topic_name
-  event_selector                    = var.event_selector
-  s3_mfa_delete                     = var.s3_mfa_delete
-  object_lock_configuration         = var.object_lock_configuration
-}
+# module "cloudtrail" {
+#   source                            = "./modules/cloudtrail"
+#   name                              = "cloudtrail"
+#   environment                       = var.environment
+#   managedby                         = var.managedby
+#   label_order                       = var.label_order
+#   enabled                           = var.enabled && var.cloudtrail_enabled
+#   iam_role_name                     = "CloudTrail-CloudWatch-Delivery-Role"
+#   iam_role_policy_name              = "CloudTrail-CloudWatch-Delivery-Policy"
+#   account_type                      = "individual"
+#   key_deletion_window_in_days       = var.key_deletion_window_in_days
+#   cloudwatch_logs_retention_in_days = var.cloudwatch_logs_retention_in_days
+#   cloudwatch_logs_group_name        = var.cloudwatch_logs_group_name
+#   event_ignore_list                 = var.event_ignore_list
+#   event_alert_list                  = var.event_alert_list
+#   user_ignore_list                  = var.user_ignore_list
+#   source_list                       = var.source_list
+#   s3_bucket_name                    = var.cloudtrail_bucket_name
+#   slack_webhook                     = var.slack_webhook
+#   slack_channel                     = var.slack_channel
+#   s3_policy                         = var.cloudtrail_s3_policy
+#   sns_topic_name                    = var.sns_topic_name
+#   event_selector                    = var.event_selector
+#   s3_mfa_delete                     = var.s3_mfa_delete
+#   object_lock_configuration         = var.object_lock_configuration
+# }
 
 #Module      : ALARM
 #Description : Provides a CloudWatch Metric Alarm resource.
@@ -55,7 +55,7 @@ module "alarm" {
   alarm_namespace            = var.alarm_namespace
   aws_config_changes_enabled = var.aws_config_changes_enabled
 
-  cloudtrail_log_group_name = module.cloudtrail.log_group_name
+  # cloudtrail_log_group_name = module.cloudtrail.log_group_name
   variables = {
     SLACK_WEBHOOK = var.slack_webhook
     SLACK_CHANNEL = var.slack_channel
@@ -246,6 +246,4 @@ module "aws-iam-baseline" {
   max_password_age                = var.max_password_age
   enabled                         = var.enabled && var.enable_iam_baseline
   aws_iam_account_password_policy = var.aws_iam_account_password_policy
-
-
 }

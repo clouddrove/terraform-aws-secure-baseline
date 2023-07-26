@@ -90,7 +90,9 @@ variable "slack_channel" {
   description = "The channel of slack."
 }
 
-## Cloudtrail
+#Variable    : CloudTrail
+#Description : Terraform cloudtrail module variables.
+
 variable "cloudtrail_enabled" {
   description = "The boolean flag whether cloudtrail module is enabled or not. No resources are created when set to false."
   default     = true
@@ -116,7 +118,97 @@ variable "cloudwatch_logs_retention_in_days" {
 
 variable "cloudtrail_bucket_name" {
   type        = string
+  default     = "Cloudtrail"
   description = "The name of the S3 bucket which will store configuration snapshots."
+}
+
+variable "include_global_service_events" {
+  type        = bool
+  default     = true
+  description = "Specifies whether the trail is publishing events from global services such as IAM to the log files."
+}
+
+variable "is_organization_trail" {
+  type        = bool
+  default     = false
+  description = "Specifies whether the trail is an AWS Organizations trail. Organization trails log events for the master account and all member accounts. Can only be created in the organization master account."
+}
+
+variable "log_retention_days" {
+  description = "Number of days to keep AWS logs around in specific log group."
+  default     = 90
+  type        = string
+}
+
+variable "enable_logging" {
+  type        = bool
+  default     = true
+  description = "Enable logging for the trail."
+}
+
+variable "enable_log_file_validation" {
+  type        = bool
+  default     = true
+  description = "Specifies whether log file integrity validation is enabled. Creates signed digest for validated contents of logs."
+}
+
+variable "is_multi_region_trail" {
+  type        = bool
+  default     = false
+  description = "Specifies whether the trail is created in the current region or in all regions"
+}
+
+variable "cloud_watch_logs_role_arn" {
+  type        = string
+  default     = ""
+  description = "Specifies the role for the CloudWatch Logs endpoint to assume to write to a user’s log group."
+  sensitive   = true
+}
+
+variable "cloud_watch_logs_group_arn" {
+  type        = string
+  default     = ""
+  description = "Specifies a log group name using an Amazon Resource Name (ARN), that represents the log group to which CloudTrail logs will be delivered."
+  sensitive   = true
+}
+
+variable "additional_member_root_arn" {
+  type        = list(any)
+  default     = []
+  description = "Additional member root user arn."
+}
+
+variable "additional_member_trail" {
+  type        = list(any)
+  default     = []
+  description = "Additional member trails."
+}
+
+variable "additional_member_account_id" {
+  type        = list(any)
+  default     = []
+  description = "Additional member account id."
+}
+
+variable "cloudwatch_log_group_name" {
+  description = "The name of the CloudWatch Log Group that receives CloudTrail events."
+  default     = "cloudtrail-events"
+  type        = string
+}
+
+variable "s3_bucket_name" {
+  type        = string
+  default     = ""
+  description = "The name of the S3 bucket which will store configuration snapshots."
+}
+
+variable "insight_selector" {
+  type = list(object({
+    insight_type = string
+  }))
+
+  description = "Specifies an insight selector for type of insights to log on a trail"
+  default     = []
 }
 
 variable "event_selector" {

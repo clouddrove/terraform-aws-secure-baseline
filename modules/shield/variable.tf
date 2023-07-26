@@ -45,7 +45,7 @@ variable "managedby" {
 
 variable "enabled" {
   type        = bool
-  default     = true
+  default     = false
   description = "The boolean flag whether this module is enabled or not. No resources are created when set to false."
 }
 

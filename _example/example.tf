@@ -5,23 +5,21 @@ provider "aws" {
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
-module "secure_baseline" {
-  source = "./../"
 
-  environment = "test"
-  label_order = ["environment", "name"]
+module "cloudtrail" {
+  source = "../modules/cloudtrail"
 
-  enabled       = true
-  slack_webhook = ""
-  slack_channel = ""
+  name                          = "cloudtrail-testing"
+  environment                   = "security"
+  label_order                   = ["name", "environment"]
 
-  # cloudtrail
-  cloudtrail_enabled                = true
+  enabled_cloudtrail                = true
   key_deletion_window_in_days       = 10
-  cloudwatch_logs_retention_in_days = 365
-  cloudwatch_logs_group_name        = "cloudtrail-log-group"
-  cloudtrail_bucket_name            = "cloudtrail-bucket-logs123"
-  s3_mfa_delete                     = false
+  bucket_policy                     = true
+  log_retention_days                = 90
+  cloudwatch_log_group_name         = "cloudtrail-log-group"  
+  include_global_service_events     = true
+  is_organization_trail             = false
 
   event_selector = [{
     read_write_type           = "All"
@@ -33,18 +31,8 @@ module "secure_baseline" {
         values = ["arn:aws:lambda"]
       },
     ]
-    },
-    {
-      read_write_type           = "WriteOnly"
-      include_management_events = true
-
-      data_resource = [{
-        type   = "AWS::S3::Object"
-        values = ["arn:aws:s3:::"]
-      }]
-    },
+    }
   ]
-
   event_ignore_list = jsonencode([
     "^Describe*",
     "^Assume*",
@@ -80,6 +68,17 @@ module "secure_baseline" {
   source_list = jsonencode([
     "aws-sdk-go"
   ])
+}
+
+module "secure_baseline" {
+  source = "./../"
+
+  environment = "test"
+  label_order = ["environment", "name"]
+
+  enabled       = false
+  slack_webhook = ""
+  slack_channel = ""
 
 
   # Alarm
@@ -127,7 +126,7 @@ module "secure_baseline" {
   restricted_ports_list              = "{\"blockedPort1\": \"22\", \"blockedPort2\": \"3306\",\"blockedPort3\": \"6379\", \"blockedPort4\": \"5432\"}"
 
   # guardduty
-  guardduty_enable         = true
+  guardduty_enable         = false
   guardduty_s3_bucket_name = "guardduty-files"
   ipset_iplist             = ["10.10.0.0/16", "172.16.0.0/16", ]
   threatintelset_activate  = false
@@ -137,7 +136,7 @@ module "secure_baseline" {
   ]
 
   ## Inspector
-  inspector_enabled = true
+  inspector_enabled = false
   rules_package_arns = [
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-ubA5XvBh",
     "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-sJBhCr0F",
@@ -150,14 +149,14 @@ module "secure_baseline" {
   analyzer_enable = true
   type            = "ACCOUNT"
 
-  # Shield
+  # Shield        # Don't enable it for testing, it is too costly service right now.
   shield_enable = false
 
   # EBS
-  default_ebs_enable = true
+  default_ebs_enable = false
 
   # Security Hub
-  security_hub_enable = true
+  security_hub_enable = false
 
   # IAM baseline
   ##IAM
