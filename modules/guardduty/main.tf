@@ -68,6 +68,45 @@ resource "aws_s3_bucket_object" "threatintelset" {
   tags          = module.labels.tags
 }
 
+# ORGANISATION ACCOUNT ENABLED FOR GUARDDUTY
+
+resource "aws_guardduty_organization_admin_account" "default" {
+  count            = var.enabled && var.organization_auto_enable ? 1 : 0
+  admin_account_id = coalesce(var.guardduty_admin_id, data.aws_caller_identity.current.account_id)
+
+  depends_on = [
+    aws_guardduty_detector.detector
+  ]
+}
+
+resource "aws_guardduty_organization_configuration" "default" {
+  count       = var.enabled && var.organization_auto_enable ? 1 : 0
+  auto_enable = var.organization_auto_enable
+  detector_id = aws_guardduty_detector.detector[0].id
+
+  datasources {
+    s3_logs {
+      auto_enable = var.datasources.s3_logs
+    }
+    kubernetes {
+      audit_logs {
+        enable = var.datasources.kubernetes_audit_logs
+      }
+    }
+    malware_protection {
+      scan_ec2_instance_with_findings {
+        ebs_volumes {
+          auto_enable = var.datasources.malware_protection_ebs
+        }
+      }
+    }
+  }
+
+  depends_on = [
+    aws_guardduty_detector.detector
+  ]
+}
+
 resource "aws_guardduty_threatintelset" "threatintelset" {
   count       = var.enabled ? 1 : 0
   activate    = var.threatintelset_activate

@@ -31,6 +31,18 @@ variable "guardduty_enable" {
   description = "Enable monitoring and feedback reporting. Setting to false is equivalent to `suspending` GuardDuty. Defaults to true"
 }
 
+variable "organization_auto_enable" {
+  type        = bool
+  default     = false
+  description = "When this setting is enabled, all new accounts that are created in, or added to, the organization are added as a member accounts of the organization’s GuardDuty delegated administrator and GuardDuty is enabled in that AWS Region."
+}
+
+variable "guardduty_admin_id" {
+  type        = string
+  default     = ""
+  description = "AWS account identifier to designate as a delegated administrator for GuardDuty."
+}
+
 variable "slack_enabled" {
   type        = bool
   default     = true
@@ -100,7 +112,7 @@ variable "threatintelset_activate" {
 variable "member_list" {
   type = list(object({
     account_id = string
-    email      = string
+    email      = optional(string)
     invite     = bool
   }))
   default     = []
@@ -133,4 +145,9 @@ variable "variables" {
   default     = {}
   description = "The environment variables for lambda function."
 
+}
+
+variable "datasources" {
+  type    = any
+  default = {}
 }

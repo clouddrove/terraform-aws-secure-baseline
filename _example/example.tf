@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "eu-west-1"
+  region = "us-west-2"
 }
 
 data "aws_caller_identity" "current" {}
@@ -69,6 +69,45 @@ module "cloudtrail" {
   source_list = jsonencode([
     "aws-sdk-go"
   ])
+}
+
+module "guardduty" {
+  source = "./modules/guardduty"
+
+  name                    = var.name
+  label_order             = ["name"]
+  enabled                 = true
+  bucket_name             = "reachtalent-guardduty"
+  ipset_format            = "TXT"
+  ipset_iplist            = ["10.10.0.0/16", "10.20.0.0/16", "10.30.0.0/16"]
+  threatintelset_activate = true
+  threatintelset_format   = "TXT"
+
+  finding_publishing_frequency = "ONE_HOUR"
+
+  is_guardduty_member      = false
+  organization_auto_enable = false
+  guardduty_admin_id       = "112233445567"
+
+  datasources = {
+    s3_logs                = true,
+    kubernetes_audit_logs  = false,
+    malware_protection_ebs = true
+  }
+
+  # member_list         = [
+  #   {
+  #     account_id = "560633484280",
+  #     invite     = true
+  #   }
+  # ]
+
+  slack_enabled = false
+  variables = {
+    minSeverityLevel = "LOW"
+    webHookUrl       = "" #var.slack_webhook
+    slackChannel     = "" #var.slack_channel
+  }
 }
 
 module "secure_baseline" {
