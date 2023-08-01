@@ -16,6 +16,7 @@ module "cloudtrail" {
   enabled_cloudtrail            = true
   key_deletion_window_in_days   = 10
   bucket_policy                 = true
+  is_multi_region_trail         = true
   log_retention_days            = 90
   cloudwatch_log_group_name     = "cloudtrail-log-group"
   include_global_service_events = true
@@ -72,12 +73,12 @@ module "cloudtrail" {
 }
 
 module "guardduty" {
-  source = "./modules/guardduty"
+  source = "../modules/guardduty"
 
-  name                    = var.name
+  name                    = "test-guardduty"
   label_order             = ["name"]
   enabled                 = true
-  bucket_name             = "reachtalent-guardduty"
+  bucket_name             = "secure-baseline-guardduty"
   ipset_format            = "TXT"
   ipset_iplist            = ["10.10.0.0/16", "10.20.0.0/16", "10.30.0.0/16"]
   threatintelset_activate = true
