@@ -22,10 +22,6 @@ module "labels" {
 resource "aws_s3_bucket" "bucket" {
   count                   = var.enabled ? 1 : 0
   bucket                  = var.bucket_name
-  block_public_acls       = var.block_public_acls
-  block_public_policy     = var.block_public_policy
-  ignore_public_acls      = var.ignore_public_acls
-  restrict_public_buckets = var.restrict_public_buckets
   force_destroy           = true
 }
 
@@ -51,6 +47,18 @@ resource "aws_s3_bucket_object" "ipset" {
   force_destroy = true
   tags          = module.labels.tags
 }
+
+resource "aws_s3_bucket_public_access_block" "this" {
+  count = var.enabled ? 1 : 0
+
+  bucket = aws_s3_bucket.bucket[0].id
+
+  block_public_acls       = var.block_public_acls
+  block_public_policy     = var.block_public_policy
+  ignore_public_acls      = var.ignore_public_acls
+  restrict_public_buckets = var.restrict_public_buckets
+}
+
 
 resource "aws_guardduty_ipset" "ipset" {
   count       = var.enabled ? 1 : 0
