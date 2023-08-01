@@ -157,7 +157,7 @@ variable "datasources" {
 
 variable "block_public_acls" {
   type        = bool
-  default     = false
+  default     = true
   description = <<EOF
     Whether Amazon S3 should block public ACLs for this bucket. Defaults to false. Enabling this setting does not affect existing policies or ACLs. When set to true causes the following behavior:
     - PUT Bucket acl and PUT Object acl calls will fail if the specified ACL allows public access.
@@ -167,7 +167,7 @@ variable "block_public_acls" {
 
 variable "block_public_policy" {
   type        = bool
-  default     = false
+  default     = true
   description = <<EOF
     Whether Amazon S3 should block public bucket policies for this bucket. Defaults to false. Enabling this setting does not affect the existing bucket policy. When set to true causes Amazon S3 to:
     - Reject calls to PUT Bucket policy if the specified bucket policy allows public access.
