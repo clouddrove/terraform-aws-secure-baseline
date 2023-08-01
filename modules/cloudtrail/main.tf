@@ -40,8 +40,13 @@ module "s3_logs" {
   create_bucket                = local.create_bucket
   environment                  = local.bucket_environment
   label_order                  = var.label_order
+  logging                      = var.logging
   versioning                   = var.bucket_versioning
   acl                          = "log-delivery-write"
+  block_public_acls            = var.block_public_acls
+  block_public_policy          = var.block_public_policy
+  ignore_public_acls           = var.ignore_public_acls
+  restrict_public_buckets      = var.restrict_public_buckets
   bucket_policy                = var.bucket_policy
   aws_iam_policy_document      = data.aws_iam_policy_document.default.json
   lifecycle_expiration_enabled = var.lifecycle_expiration_enabled
@@ -59,6 +64,12 @@ resource "aws_iam_role" "cloudtrail_cloudwatch_role" {
   name               = "${var.name}-${var.iam_role_name}"
   assume_role_policy = data.aws_iam_policy_document.cloudtrail_assume_role.json
   tags               = module.labels.tags
+}
+resource "aws_iam_role_policy" "cloudwatch_delivery_policy" {
+  count  = var.enable_cloudwatch && var.enabled_cloudtrail ? 1 : 0
+  name   = format("%s-cloudwatch-delivery-policy", module.labels.id)
+  role   = aws_iam_role.cloudtrail_cloudwatch_role[0].id
+  policy = data.aws_iam_policy_document.cloudwatch_delivery_policy[0].json
 }
 resource "aws_cloudwatch_log_group" "cloudtrail" {
   count             = var.enable_cloudwatch && var.enabled_cloudtrail ? 1 : 0

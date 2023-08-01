@@ -104,6 +104,21 @@ data "aws_iam_policy_document" "cloudtrail_cloudwatch_logs" {
   }
 }
 
+data "aws_iam_policy_document" "cloudwatch_delivery_policy" {
+  count = var.enable_cloudwatch && var.enabled_cloudtrail ? 1 : 0
+  statement {
+    sid       = "AWSCloudTrailCreateLogStream2014110"
+    actions   = ["logs:CreateLogStream"]
+    resources = [format("arn:aws:logs:%s:%s:log-group:%s:log-stream:*", data.aws_region.current.name, data.aws_caller_identity.current.account_id, aws_cloudwatch_log_group.cloudtrail[0].name)]
+  }
+  statement {
+    sid       = "AWSCloudTrailPutLogEvents20141101"
+    actions   = ["logs:PutLogEvents"]
+    resources = [format("arn:aws:logs:%s:%s:log-group:%s:log-stream:*", data.aws_region.current.name, data.aws_caller_identity.current.account_id, aws_cloudwatch_log_group.cloudtrail[0].name)]
+  }
+}
+
+
 #Data        : Assume role for cloudtrail
 #Description : Terraform Data block to read an AWS IAM policy document for Assumerole of cloudtrail.
 data "aws_iam_policy_document" "cloudtrail_assume_role" {
