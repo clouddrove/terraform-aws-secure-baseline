@@ -71,8 +71,3 @@ variable "member_details" {
   }))
   default = []
 }
-
-variable "name" {
-  type    = string
-  default = "clouddrove"
-}
