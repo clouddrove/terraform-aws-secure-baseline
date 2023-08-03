@@ -87,7 +87,7 @@ variable "finding_publishing_frequency" {
 
 variable "bucket_name" {
   type        = string
-  default     = ""
+  default     = "secure-baseline-guardduty"
   description = "Name of the S3 bucket to use"
 }
 
@@ -148,8 +148,12 @@ variable "variables" {
 }
 
 variable "datasources" {
-  type    = any
-  default = {}
+  type = any
+  default = {
+    s3_logs                = true,
+    kubernetes_audit_logs  = true,
+    malware_protection_ebs = true
+  }
 }
 
 

@@ -20,9 +20,9 @@ module "labels" {
 #tfsec:ignore:aws-s3-enable-bucket-encryption
 #tfsec:ignore:aws-s3-encryption-customer-key
 resource "aws_s3_bucket" "bucket" {
-  count                   = var.enabled ? 1 : 0
-  bucket                  = var.bucket_name
-  force_destroy           = true
+  count         = var.enabled ? 1 : 0
+  bucket        = var.bucket_name
+  force_destroy = true
 }
 
 resource "aws_guardduty_detector" "detector" {

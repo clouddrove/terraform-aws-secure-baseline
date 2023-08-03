@@ -13,28 +13,11 @@ module "cloudtrail" {
   environment = "security"
   label_order = ["name", "environment"]
 
-  enabled_cloudtrail            = true
-  key_deletion_window_in_days   = 10
-  bucket_policy                 = true
-  is_multi_region_trail         = true
-  log_retention_days            = 90
-  cloudwatch_log_group_name     = "cloudtrail-log-group"
-  include_global_service_events = true
-  is_organization_trail         = false
-  kms_enabled                   = true
+  enabled_cloudtrail    = true
+  bucket_policy         = true
+  is_multi_region_trail = true
+  kms_enabled           = true
 
-  event_selector = [{
-    read_write_type           = "All"
-    include_management_events = true
-
-    data_resource = [
-      {
-        type   = "AWS::Lambda::Function"
-        values = ["arn:aws:lambda"]
-      },
-    ]
-    }
-  ]
   event_ignore_list = jsonencode([
     "^Describe*",
     "^Assume*",
@@ -75,40 +58,30 @@ module "cloudtrail" {
 module "guardduty" {
   source = "../modules/guardduty"
 
-  name                    = "test-guardduty"
-  label_order             = ["name"]
-  enabled                 = true
-  bucket_name             = "secure-baseline-guardduty"
-  ipset_format            = "TXT"
-  ipset_iplist            = ["10.10.0.0/16", "10.20.0.0/16", "10.30.0.0/16"]
-  threatintelset_activate = true
-  threatintelset_format   = "TXT"
+  name          = "test-guardduty"
+  label_order   = ["name"]
+  enabled       = true
+  ipset_iplist  = ["10.10.0.0/16"]
+  slack_enabled = false
 
   finding_publishing_frequency = "ONE_HOUR"
 
-  is_guardduty_member      = false
-  organization_auto_enable = false
-  guardduty_admin_id       = "112233445567"
+  guardduty_admin_id = "112233445567"
+}
 
-  datasources = {
-    s3_logs                = true,
-    kubernetes_audit_logs  = false,
-    malware_protection_ebs = true
-  }
+module "security-hub" {
+  source               = "../modules/security_hub"
+  name                 = "test"
+  security_hub_enabled = true
 
-  # member_list         = [
+  #member account add
+  # member_details = [
   #   {
-  #     account_id = "560633484280",
+  #     account_id = "1122334466"
+  #     mail_id    = "hello@clouddrove.com"
   #     invite     = true
   #   }
   # ]
-
-  slack_enabled = false
-  variables = {
-    minSeverityLevel = "LOW"
-    webHookUrl       = "" #var.slack_webhook
-    slackChannel     = "" #var.slack_channel
-  }
 }
 
 module "secure_baseline" {
@@ -166,16 +139,6 @@ module "secure_baseline" {
   rds_storage_encrypted              = true
   restricted_ports_list              = "{\"blockedPort1\": \"22\", \"blockedPort2\": \"3306\",\"blockedPort3\": \"6379\", \"blockedPort4\": \"5432\"}"
 
-  # guardduty
-  guardduty_enable         = false
-  guardduty_s3_bucket_name = "guardduty-files"
-  ipset_iplist             = ["10.10.0.0/16", "172.16.0.0/16", ]
-  threatintelset_activate  = false
-  threatintelset_iplist = [
-    "192.168.2.0/32",
-    "4.4.4.4",
-  ]
-
   ## Inspector
   inspector_enabled = false
   rules_package_arns = [
@@ -195,9 +158,6 @@ module "secure_baseline" {
 
   # EBS
   default_ebs_enable = false
-
-  # Security Hub
-  security_hub_enable = false
 
   # IAM baseline
   ##IAM

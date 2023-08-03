@@ -109,7 +109,7 @@ variable "enable_cloudwatch" {
 
 variable "cloudwatch_log_group_name" {
   description = "The name of the CloudWatch Log Group that receives CloudTrail events."
-  default     = "cloudtrail-events"
+  default     = "cloudtrail-log-group"
   type        = string
 }
 

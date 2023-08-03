@@ -113,29 +113,29 @@ module "config" {
 }
 
 #Module      :  GUARD DUTY
-module "guardduty" {
-  source                  = "./modules/guardduty"
-  name                    = "guardduty"
-  environment             = var.environment
-  managedby               = var.managedby
-  label_order             = var.label_order
-  enabled                 = var.enabled && var.guardduty_enable
-  bucket_name             = var.guardduty_s3_bucket_name
-  ipset_format            = "TXT"
-  ipset_iplist            = var.ipset_iplist
-  threatintelset_activate = var.threatintelset_activate
-  threatintelset_format   = "TXT"
-  threatintelset_iplist   = var.threatintelset_iplist
+# module "guardduty" {
+#   source                  = "./modules/guardduty"
+#   name                    = "guardduty"
+#   environment             = var.environment
+#   managedby               = var.managedby
+#   label_order             = var.label_order
+#   enabled                 = var.enabled && var.guardduty_enable
+#   bucket_name             = var.guardduty_s3_bucket_name
+#   ipset_format            = "TXT"
+#   ipset_iplist            = var.ipset_iplist
+#   threatintelset_activate = var.threatintelset_activate
+#   threatintelset_format   = "TXT"
+#   threatintelset_iplist   = var.threatintelset_iplist
 
-  is_guardduty_member = var.is_guardduty_member
-  member_list         = var.member_list
-  slack_enabled       = var.slack_channel != "" ? true : false
-  variables = {
-    minSeverityLevel = "LOW"
-    webHookUrl       = var.slack_webhook
-    slackChannel     = var.slack_channel
-  }
-}
+#   is_guardduty_member = var.is_guardduty_member
+#   member_list         = var.member_list
+#   slack_enabled       = var.slack_channel != "" ? true : false
+#   variables = {
+#     minSeverityLevel = "LOW"
+#     webHookUrl       = var.slack_webhook
+#     slackChannel     = var.slack_channel
+#   }
+# }
 
 
 ## Inspector
@@ -215,14 +215,14 @@ module "aws_ebs" {
 }
 
 ## AWS Security Hub
-module "security_hub" {
-  source = "./modules/security_hub"
+# module "security_hub" {
+#   source = "./modules/security_hub"
 
-  enabled                          = var.enabled && var.security_hub_enable
-  enable_cis_standard              = var.enable_cis_standard
-  enable_aws_foundational_standard = var.enable_aws_foundational_standard
-  enable_pci_dss_standard          = var.enable_pci_dss_standard
-}
+#   enabled                          = var.enabled && var.security_hub_enable
+#   enable_cis_standard              = var.enable_cis_standard
+#   enable_aws_foundational_standard = var.enable_aws_foundational_standard
+#   enable_pci_dss_standard          = var.enable_pci_dss_standard
+# }
 
 
 # AWS IAM Baseline
