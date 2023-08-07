@@ -5,7 +5,6 @@ provider "aws" {
 module "security-hub" {
   source = "../../../modules/security_hub"
 
-  name                 = "test"
   security_hub_enabled = true
 
   #standards 
