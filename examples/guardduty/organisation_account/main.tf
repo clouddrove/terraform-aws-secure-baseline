@@ -5,10 +5,10 @@ provider "aws" {
 module "guardduty" {
   source = "../../../modules/guardduty"
 
-  name          = "test-guardduty"
-  label_order   = ["name"]
-  enabled       = true
-  ipset_iplist  = ["10.10.0.0/16"]
+  name         = "test-guardduty"
+  label_order  = ["name"]
+  enabled      = true
+  ipset_iplist = ["10.10.0.0/16"]
 
   finding_publishing_frequency = "ONE_HOUR"
 
@@ -26,7 +26,7 @@ module "guardduty" {
   member_list = [
     {
       account_id = "333333333333", # Member account id of the organization member account
-      invite     = true,           
+      invite     = true,
       email      = "email@example.com"
     },
     {
@@ -37,5 +37,5 @@ module "guardduty" {
   ]
 
   # Slack Alerts
-  slack_enabled = false  # Pass true to enable lambda
+  slack_enabled = false # Pass true to enable lambda
 }

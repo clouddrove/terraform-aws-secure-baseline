@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 module "security-hub" {
-  source               = "../modules/security_hub"
+  source = "../modules/security_hub"
 
   name                 = "test"
   security_hub_enabled = true
@@ -23,9 +23,9 @@ module "security-hub" {
   # member account details
   member_details = [
     {
-      account_id = "111222333444"         # Account id of the organisation member
-      email_id   = "test@example.com"     # The email of the member AWS Account
-      invite     = true                   # Whether to invite the account to Security Hub as a member
+      account_id = "111222333444"     # Account id of the organisation member
+      email_id   = "test@example.com" # The email of the member AWS Account
+      invite     = true               # Whether to invite the account to Security Hub as a member
     },
     {
       account_id = "555666777888"

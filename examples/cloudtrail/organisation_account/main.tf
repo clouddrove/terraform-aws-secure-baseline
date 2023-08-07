@@ -13,6 +13,8 @@ module "cloudtrail" {
   bucket_policy         = true
   is_multi_region_trail = true
   kms_enabled           = true
+  bucket_versioning     = true
+  logging               = true
 
   is_organization_trail = true
 

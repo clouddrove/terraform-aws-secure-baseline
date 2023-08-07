@@ -31,7 +31,12 @@ jobs:
           - ${{ needs.versionExtract.outputs.minVersion }}
           - ${{ needs.versionExtract.outputs.maxVersion }}
         directory:
-          - _example/
+          - examples/cloudtrail/complete
+          - examples/cloudtrail/organisation_account
+          - examples/guardduty/complete
+          - examples/guardduty/organisation_account
+          - examples/security-group/complete
+          - examples/security-group/organisation_account
 
     steps:
       - name: Checkout

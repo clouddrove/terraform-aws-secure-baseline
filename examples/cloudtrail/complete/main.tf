@@ -15,14 +15,20 @@ module "cloudtrail" {
 
   create_bucket     = true
   bucket_versioning = true
-  enable_logging    = true
+  logging           = true
   force_destroy     = true
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 
   enabled_cloudtrail    = true
   enable_cloudwatch     = true
   bucket_policy         = true
   is_multi_region_trail = true
   kms_enabled           = true
+  enable_logging        = true
 
   event_ignore_list = jsonencode([
     "^Describe*",
