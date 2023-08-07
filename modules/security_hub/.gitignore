@@ -1,8 +1,0 @@
-# ignored files
-*.tfstate
-*.tfstate.backup
-.terraform
-.idea
-*.iml
-*.zip
-cloudtrail_slack_notification

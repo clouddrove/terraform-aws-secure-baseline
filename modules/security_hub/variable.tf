@@ -66,8 +66,8 @@ variable "security_hub_enabled" {
 variable "member_details" {
   type = list(object({
     account_id = string
-    mail_id    = string
-    invite     = bool
+    mail_id    = optional(string, null)
+    invite     = optional(bool, null)
   }))
   default = []
 }
