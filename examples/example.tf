@@ -17,21 +17,21 @@ module "secure_baseline" {
 
 
   # Alarm
-  alarm_enabled            = false
-  alarm_namespace          = "Alert_Alarm"
-  unauthorized_api_calls   = true
-  no_mfa_console_signin    = true
-  root_usage               = true
-  iam_changes              = true
-  cloudtrail_cfg_changes   = true
-  console_signin_failures  = true
-  disable_or_delete_cmk    = true
-  s3_bucket_policy_changes = true
-  security_group_changes   = true
-  nacl_changes             = true
-  network_gw_changes       = true
-  route_table_changes      = true
-  vpc_changes              = true
+  # alarm_enabled            = false
+  # alarm_namespace          = "Alert_Alarm"
+  # unauthorized_api_calls   = true
+  # no_mfa_console_signin    = true
+  # root_usage               = true
+  # iam_changes              = true
+  # cloudtrail_cfg_changes   = true
+  # console_signin_failures  = true
+  # disable_or_delete_cmk    = true
+  # s3_bucket_policy_changes = true
+  # security_group_changes   = true
+  # nacl_changes             = true
+  # network_gw_changes       = true
+  # route_table_changes      = true
+  # vpc_changes              = true
 
 
   ## Config
@@ -76,9 +76,6 @@ module "secure_baseline" {
 
   # Shield        # Don't enable it for testing, it is too costly service right now.
   shield_enable = false
-
-  # EBS
-  default_ebs_enable = false
 
   # IAM baseline
   ##IAM

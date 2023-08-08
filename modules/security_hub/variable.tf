@@ -71,3 +71,23 @@ variable "member_details" {
   }))
   default = []
 }
+
+# Managed Security Hub account variables
+
+variable "master_account_id" {
+  type = string
+  default = ""
+  description = "The account ID of the master Security Hub account whose invitation you're accepting."
+}
+
+variable "security_hub_id" {
+  type        = string
+  default     = ""
+  description = "Security Hub id of the master account."
+}
+
+variable "security_hub_arn" {
+  type        = string
+  default     = ""
+  description = "Security Hub id of the master account."
+}

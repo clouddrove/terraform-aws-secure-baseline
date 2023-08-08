@@ -31,36 +31,36 @@
 
 #Module      : ALARM
 #Description : Provides a CloudWatch Metric Alarm resource.
-module "alarm" {
-  source      = "./modules/alarm"
-  name        = "alarm"
-  environment = var.environment
-  managedby   = var.managedby
-  label_order = var.label_order
+# module "alarm" {
+#   source      = "./modules/alarm"
+#   name        = "alarm"
+#   environment = var.environment
+#   managedby   = var.managedby
+#   label_order = var.label_order
 
-  enabled                    = var.enabled && var.alarm_enabled
-  unauthorized_api_calls     = var.unauthorized_api_calls
-  no_mfa_console_signin      = var.no_mfa_console_signin
-  root_usage                 = var.root_usage
-  iam_changes                = var.iam_changes
-  cloudtrail_cfg_changes     = var.cloudtrail_cfg_changes
-  console_signin_failures    = var.console_signin_failures
-  disable_or_delete_cmk      = var.disable_or_delete_cmk
-  s3_bucket_policy_changes   = var.s3_bucket_policy_changes
-  security_group_changes     = var.security_group_changes
-  nacl_changes               = var.nacl_changes
-  network_gw_changes         = var.network_gw_changes
-  route_table_changes        = var.route_table_changes
-  vpc_changes                = var.vpc_changes
-  alarm_namespace            = var.alarm_namespace
-  aws_config_changes_enabled = var.aws_config_changes_enabled
+#   enabled                    = var.enabled && var.alarm_enabled
+#   unauthorized_api_calls     = var.unauthorized_api_calls
+#   no_mfa_console_signin      = var.no_mfa_console_signin
+#   root_usage                 = var.root_usage
+#   iam_changes                = var.iam_changes
+#   cloudtrail_cfg_changes     = var.cloudtrail_cfg_changes
+#   console_signin_failures    = var.console_signin_failures
+#   disable_or_delete_cmk      = var.disable_or_delete_cmk
+#   s3_bucket_policy_changes   = var.s3_bucket_policy_changes
+#   security_group_changes     = var.security_group_changes
+#   nacl_changes               = var.nacl_changes
+#   network_gw_changes         = var.network_gw_changes
+#   route_table_changes        = var.route_table_changes
+#   vpc_changes                = var.vpc_changes
+#   alarm_namespace            = var.alarm_namespace
+#   aws_config_changes_enabled = var.aws_config_changes_enabled
 
-  # cloudtrail_log_group_name = module.cloudtrail.log_group_name
-  variables = {
-    SLACK_WEBHOOK = var.slack_webhook
-    SLACK_CHANNEL = var.slack_channel
-  }
-}
+#   # cloudtrail_log_group_name = module.cloudtrail.log_group_name
+#   variables = {
+#     SLACK_WEBHOOK = var.slack_webhook
+#     SLACK_CHANNEL = var.slack_channel
+#   }
+# }
 
 #Module      : CONFIG BASELINE
 #Description : Manages status (recording / stopped) of an AWS Config Configuration Recorder.
@@ -208,11 +208,11 @@ module "aws_shield" {
 
 
 ## EBS
-module "aws_ebs" {
-  source  = "./modules/ebs"
-  enabled = var.enabled && var.default_ebs_enable
+# module "aws_ebs" {
+#   source  = "./modules/ebs"
+#   enabled = var.enabled && var.default_ebs_enable
 
-}
+# }
 
 ## AWS Security Hub
 # module "security_hub" {

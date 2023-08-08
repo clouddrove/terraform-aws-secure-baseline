@@ -16,7 +16,7 @@ jobs:
         id: minMax
         uses: clowdhaus/terraform-min-max@main
     outputs:
-      minVersion: "1.5.3"
+      minVersion: ${{ steps.minMax.outputs.minVersion }}
       maxVersion: ${{ steps.minMax.outputs.maxVersion }}
 
 
@@ -31,12 +31,13 @@ jobs:
           - ${{ needs.versionExtract.outputs.minVersion }}
           - ${{ needs.versionExtract.outputs.maxVersion }}
         directory:
-          - examples/cloudtrail/complete
-          - examples/cloudtrail/organisation_account
-          - examples/guardduty/complete
-          - examples/guardduty/organisation_account
-          - examples/security-group/complete
-          - examples/security-group/organisation_account
+          - examples/cloudtrail/complete                      # CloudTrail example to enable Cloudtrail for only current account.
+          - examples/cloudtrail/organisation_account          # CloudTrail example to enable Cloudtrail for all account of organisation.
+          - examples/guardduty/complete                       # GuardDuty example to enable Guardduty for only current account.
+          - examples/guardduty/organisation_account           # GuardDuty example to enable Guardduty for all account of organisation.
+          - examples/security-hub/complete                    # Security-Hub example to enable security for only current account.
+          - examples/security-hub/organisation_account        # Security-Hub example to enable security for all account of organisation.
+          - examples/ebs/complete                             # Default EBS encryption enable Example.
 
     steps:
       - name: Checkout
@@ -54,7 +55,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.TEST_AWS_ACCESS_SECRET_KEY }}
           aws-region: us-east-2
 
-      - name: Init & validate v${{ matrix.version }}
+      - name: Init & validate v${{ matrix.version }} for ${{ matrix.directory }} Path 
         run: |
           cd ${{ matrix.directory }}
           terraform init

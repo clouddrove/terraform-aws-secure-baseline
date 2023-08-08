@@ -43,3 +43,13 @@ resource "aws_securityhub_member" "example" {
     aws_securityhub_account.security_hub
   ]
 }
+
+# To inivitation from another security-hub account to current account.
+resource "aws_securityhub_invite_accepter" "invitee" {
+  count      =  var.security_hub_enabled && var.master_account_id == "" ? 0 : 1
+  master_id  = var.master_account_id # Master id of the root security hub account. e.g. aws_securityhub_account.security_hub[0].master_id
+
+  depends_on = [ 
+    aws_securityhub_account.security_hub 
+  ]
+}

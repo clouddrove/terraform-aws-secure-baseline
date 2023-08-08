@@ -559,10 +559,10 @@ variable "resource_arn" {
 }
 
 #ebs
-variable "default_ebs_enable" {
-  description = "The boolean flag whether Default EBS  module is enabled or not. No resources are created when set to false."
-  default     = false
-}
+# variable "default_ebs_enable" {
+#   description = "The boolean flag whether Default EBS  module is enabled or not. No resources are created when set to false."
+#   default     = false
+# }
 
 #Security Hub
 
