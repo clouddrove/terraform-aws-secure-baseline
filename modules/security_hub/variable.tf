@@ -75,8 +75,8 @@ variable "member_details" {
 # Managed Security Hub account variables
 
 variable "master_account_id" {
-  type = string
-  default = ""
+  type        = string
+  default     = ""
   description = "The account ID of the master Security Hub account whose invitation you're accepting."
 }
 

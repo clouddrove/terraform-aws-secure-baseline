@@ -5,6 +5,6 @@ provider "aws" {
 module "ebs" {
   source = "../../../modules/ebs"
 
-  enabled                       = true  
+  enabled                       = true
   enable_default_ebs_encryption = true
 }
