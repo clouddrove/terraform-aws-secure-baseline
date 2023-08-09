@@ -180,16 +180,16 @@ variable "object_lock_configuration" {
 
 }
 # analyzer
-variable "analyzer_enable" {
-  description = "The boolean flag whether alarm module is enabled or not. No resources are created when set to false."
-  default     = true
-}
+# variable "analyzer_enable" {
+#   description = "The boolean flag whether alarm module is enabled or not. No resources are created when set to false."
+#   default     = true
+# }
 
-variable "type" {
-  type        = string
-  default     = "ACCOUNT"
-  description = "Type of Analyzer. Valid value is currently only ACCOUNT. Defaults to ACCOUNT."
-}
+# variable "type" {
+#   type        = string
+#   default     = "ACCOUNT"
+#   description = "Type of Analyzer. Valid value is currently only ACCOUNT. Defaults to ACCOUNT."
+# }
 
 
 # Alarm

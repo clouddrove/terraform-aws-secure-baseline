@@ -38,6 +38,8 @@ jobs:
           - examples/security-hub/complete                    # Security-Hub example to enable security for only current account.
           - examples/security-hub/organisation_account        # Security-Hub example to enable security for all account of organisation.
           - examples/ebs/complete                             # Default EBS encryption enable Example.
+          - examples/analyzer/complete
+          - examples/analyzer/organisation_account
 
     steps:
       - name: Checkout

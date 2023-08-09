@@ -27,7 +27,6 @@ module "alarm" {
   alarm_namespace            = "Alert_Alarm"
   aws_config_changes_enabled = true
 
-  cloudtrail_log_group_name = "test-cloudtrail-log-group" # Or you can directly pass the clouddrove module log group name. e.g. module.cloudtrail.log_group_name
   variables = {
     SLACK_WEBHOOK = "" # Webhook for the slack notification
     SLACK_CHANNEL = "" # Channel of the Slack where the notification will receive

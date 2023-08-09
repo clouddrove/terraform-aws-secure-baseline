@@ -173,23 +173,23 @@ module "inspector" {
 
 
 ## Analyzer
-module "iam_access_analyzer" {
-  source = "./modules/analyzer"
+# module "iam_access_analyzer" {
+#   source = "./modules/analyzer"
 
-  name        = "analyzer"
-  environment = var.environment
-  managedby   = var.managedby
-  label_order = var.label_order
-  enabled     = var.enabled && var.analyzer_enable
+#   name        = "analyzer"
+#   environment = var.environment
+#   managedby   = var.managedby
+#   label_order = var.label_order
+#   enabled     = var.enabled && var.analyzer_enable
 
-  ## IAM Access Analyzer
-  type = var.type
+#   ## IAM Access Analyzer
+#   type = var.type
 
-  variables = {
-    slack_webhook = var.slack_webhook
-    slack_channel = var.slack_channel
-  }
-}
+#   variables = {
+#     slack_webhook = var.slack_webhook
+#     slack_channel = var.slack_channel
+#   }
+# }
 
 ## Shield
 module "aws_shield" {

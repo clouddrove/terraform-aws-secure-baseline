@@ -71,8 +71,8 @@ module "secure_baseline" {
   schedule_expression = "cron(0/10 * ? * * *)"
 
   # analyzer
-  analyzer_enable = true
-  type            = "ACCOUNT"
+  # analyzer_enable = true
+  # type            = "ACCOUNT"
 
   # Shield        # Don't enable it for testing, it is too costly service right now.
   shield_enable = false
