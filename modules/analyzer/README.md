@@ -7,6 +7,57 @@ This Terraform module is designed to facilitate the creation of AWS Analyzer res
 
 
 <!-- BEGIN_TF_DOCS -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.6 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.10.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.10.0 |
+| <a name="provider_null"></a> [null](#provider\_null) | n/a |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_labels"></a> [labels](#module\_labels) | clouddrove/labels/aws | 1.3.0 |
+| <a name="module_slack-lambda"></a> [slack-lambda](#module\_slack-lambda) | clouddrove/lambda/aws | 1.3.0 |
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [aws_accessanalyzer_analyzer.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/accessanalyzer_analyzer) | resource |
+| [aws_cloudwatch_event_rule.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_rule) | resource |
+| [aws_cloudwatch_event_target.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_target) | resource |
+| [null_resource.cluster](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
+| [null_resource.default](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_enabled"></a> [enabled](#input\_enabled) | Flag to control the module creation. | `bool` | `false` | no |
+| <a name="input_environment"></a> [environment](#input\_environment) | Environment (e.g. `prod`, `dev`, `staging`). | `string` | `""` | no |
+| <a name="input_label_order"></a> [label\_order](#input\_label\_order) | Label order, e.g. `name`,`application`. | `list(any)` | `[]` | no |
+| <a name="input_managedby"></a> [managedby](#input\_managedby) | ManagedBy, eg 'CloudDrove' | `string` | `"hello@clouddrove.com"` | no |
+| <a name="input_name"></a> [name](#input\_name) | Name  (e.g. `app` or `cluster`). | `string` | `""` | no |
+| <a name="input_rule_iam_role_arn"></a> [rule\_iam\_role\_arn](#input\_rule\_iam\_role\_arn) | The Amazon Resource Name (ARN) associated with the role that is used for target invocation. | `any` | `null` | no |
+| <a name="input_target_iam_role_arn"></a> [target\_iam\_role\_arn](#input\_target\_iam\_role\_arn) | The Amazon Resource Name (ARN) associated with the role that is used for target invocation. | `any` | `null` | no |
+| <a name="input_type"></a> [type](#input\_type) | Type of Analyzer. Valid value is currently only ACCOUNT. Defaults to ACCOUNT. | `string` | `""` | no |
+| <a name="input_variables"></a> [variables](#input\_variables) | The environment variables for lambda function. | `map` | `{}` | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_analyzer_name"></a> [analyzer\_name](#output\_analyzer\_name) | Analyzer name. |
+| <a name="output_tags"></a> [tags](#output\_tags) | The tags of the iam access analyzer. |
 <!-- END_TF_DOCS -->
 
 
