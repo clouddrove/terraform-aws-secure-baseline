@@ -69,6 +69,7 @@ jobs:
           working-dir: ./modules/
           recursive: true
           output-method: print
+          output-file: README.md
           recursive-path: .
           git-push: true
           git-push-user-name: "clouddrove-ci"
