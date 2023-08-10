@@ -10,7 +10,6 @@ provider "aws" {
 module "inspector" {
   source = "../../../modules/inspector"
 
-  ## Tags
   name        = "inspector"
   environment = "security"
   label_order = ["name", "environment"]
