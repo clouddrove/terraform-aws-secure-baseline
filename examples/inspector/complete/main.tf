@@ -24,7 +24,6 @@ module "inspector" {
   lambda_enabled      = true
   schedule_expression = "cron(0/10 * ? * * *)"
   handler             = "index.handler"
-  runtime             = "nodejs18.x"
   statement_ids       = ["AllowExecutionFromEvents"]
   actions             = ["lambda:InvokeFunction"]
   principals          = ["events.amazonaws.com"]

@@ -96,7 +96,7 @@ variable "handler" {
 
 variable "runtime" {
   type        = string
-  default     = ""
+  default     = "nodejs18.x"
   description = "Runtimes."
 }
 

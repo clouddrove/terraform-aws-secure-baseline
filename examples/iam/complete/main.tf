@@ -20,6 +20,5 @@ module "iam-baseline" {
   manager_iam_role_name          = "IAM-manager"
   manager_iam_role_policy_name   = "IAM-Manager-Policy"
   support_iam_role_name          = "IAM-Policy"
-  support_iam_role_policy_name   = "IAM-Support-Role"
   support_iam_role_principal_arn = data.aws_caller_identity.current.arn
 }
