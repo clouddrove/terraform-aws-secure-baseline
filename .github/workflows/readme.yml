@@ -73,6 +73,7 @@ jobs:
           ls -la
           sudo apt install tree
           tree
+          cat ./modules/alarm/README.md
 
       # - name: 'Slack Notification'
       #   uses: clouddrove/action-slack@v2
