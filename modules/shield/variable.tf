@@ -32,7 +32,7 @@ variable "enabled" {
 }
 
 variable "resource_arn" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "The ARN (Amazon Resource Name) of the resource to be protected."
 }

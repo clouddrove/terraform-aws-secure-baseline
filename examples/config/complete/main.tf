@@ -6,7 +6,7 @@ provider "aws" {
 }
 
 module "config" {
-  source                = "../../../modules/config"
+  source = "../../../modules/config"
 
   name                  = "config"
   environment           = "security"
@@ -46,7 +46,7 @@ module "config" {
   password_require_numbers   = true
   password_max_age           = 90
   slack_enabled              = false
-  
+
   variables = {
     SLACK_WEBHOOK = "" # Webhook for the slack notification
     SLACK_CHANNEL = "" # Channel of the Slack where the notification will receive
