@@ -66,10 +66,9 @@ jobs:
       - name: Generate TF Docs
         uses: terraform-docs/gh-actions@v1.0.0
         with:
-          find-dir: *.tf
           working-dir: ./modules/
           recursive: true
-          recursive-path: .
+          # recursive-path: .
           git-push: true
           git-push-user-name: "clouddrove-ci"
           git-push-user-email: 84795582+clouddrove-ci@users.noreply.github.com
