@@ -7,7 +7,56 @@ This Terraform module is designed to facilitate the creation of AWS Security Hub
 
 
 <!-- BEGIN_TF_DOCS -->
+## Requirements
 
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.6 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.10.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.10.0 |
+
+## Modules
+
+No modules.
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [aws_securityhub_account.security_hub](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/securityhub_account) | resource |
+| [aws_securityhub_invite_accepter.invitee](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/securityhub_invite_accepter) | resource |
+| [aws_securityhub_member.example](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/securityhub_member) | resource |
+| [aws_securityhub_product_subscription.products](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/securityhub_product_subscription) | resource |
+| [aws_securityhub_standards_subscription.standards](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/securityhub_standards_subscription) | resource |
+| [aws_partition.security_hub](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
+| [aws_region.security_hub](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_auto_enable_controls"></a> [auto\_enable\_controls](#input\_auto\_enable\_controls) | Whether to automatically enable new controls when they are added to standards that are enabled. <br>By default, this is set to true, and new controls are enabled automatically. <br>To not automatically enable new controls, set this to false. | `bool` | `true` | no |
+| <a name="input_control_finding_generator"></a> [control\_finding\_generator](#input\_control\_finding\_generator) | Updates whether the calling account has consolidated control findings turned on. <br>If the value for this field is set to SECURITY\_CONTROL, <br>Security Hub generates a single finding for a control check even when the check applies to multiple enabled standards. <br>If the value for this field is set to STANDARD\_CONTROL, <br>Security Hub generates separate findings for a control check when the check applies to multiple enabled standards. <br>For accounts that are part of an organization, <br>this value can only be updated in the administrator account. | `string` | `null` | no |
+| <a name="input_enable_default_standards"></a> [enable\_default\_standards](#input\_enable\_default\_standards) | Flag to indicate whether default standards should be enabled | `bool` | `true` | no |
+| <a name="input_enabled_products"></a> [enabled\_products](#input\_enabled\_products) | The possible values are:<br>- product/aws/guardduty<br>- product/aws/inspector<br>- product/aws/macie | `list(any)` | <pre>[<br>  "product/aws/guardduty",<br>  "product/aws/inspector",<br>  "product/aws/macie"<br>]</pre> | no |
+| <a name="input_enabled_standards"></a> [enabled\_standards](#input\_enabled\_standards) | The possible values are:<br>- standards/aws-foundational-security-best-practices/v/1.0.0<br>- ruleset/cis-aws-foundations-benchmark/v/1.2.0<br>- standards/pci-dss/v/3.2.1 | `list(any)` | <pre>[<br>  "standards/aws-foundational-security-best-practices/v/1.0.0",<br>  "ruleset/cis-aws-foundations-benchmark/v/1.2.0"<br>]</pre> | no |
+| <a name="input_master_account_id"></a> [master\_account\_id](#input\_master\_account\_id) | The account ID of the master Security Hub account whose invitation you're accepting. | `string` | `""` | no |
+| <a name="input_member_details"></a> [member\_details](#input\_member\_details) | n/a | <pre>list(object({<br>    account_id = string<br>    mail_id    = optional(string, null)<br>    invite     = optional(bool, null)<br>  }))</pre> | `[]` | no |
+| <a name="input_security_hub_arn"></a> [security\_hub\_arn](#input\_security\_hub\_arn) | Security Hub id of the master account. | `string` | `""` | no |
+| <a name="input_security_hub_enabled"></a> [security\_hub\_enabled](#input\_security\_hub\_enabled) | To Enable seucirty-hub in aws account | `bool` | `false` | no |
+| <a name="input_security_hub_id"></a> [security\_hub\_id](#input\_security\_hub\_id) | Security Hub id of the master account. | `string` | `""` | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_arn"></a> [arn](#output\_arn) | The ARN of the secuirty hub deployed in the master account. |
+| <a name="output_id"></a> [id](#output\_id) | The ID of the secuirty hub deployed in the master account. |
 <!-- END_TF_DOCS -->
 
 

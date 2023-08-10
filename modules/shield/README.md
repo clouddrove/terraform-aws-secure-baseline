@@ -7,7 +7,48 @@ This Terraform module is designed to facilitate the creation of AWS Shield resou
 
 
 <!-- BEGIN_TF_DOCS -->
+## Requirements
 
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.6 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.10.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.10.0 |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_labels"></a> [labels](#module\_labels) | clouddrove/labels/aws | 1.3.0 |
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [aws_shield_protection.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/shield_protection) | resource |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_enabled"></a> [enabled](#input\_enabled) | The boolean flag whether this module is enabled or not. No resources are created when set to false. | `bool` | `false` | no |
+| <a name="input_environment"></a> [environment](#input\_environment) | Environment (e.g. `prod`, `dev`, `staging`). | `string` | `""` | no |
+| <a name="input_label_order"></a> [label\_order](#input\_label\_order) | Label order, e.g. `name`,`application`. | `list(any)` | `[]` | no |
+| <a name="input_managedby"></a> [managedby](#input\_managedby) | ManagedBy, eg 'CloudDrove' | `string` | `"hello@clouddrove.com"` | no |
+| <a name="input_name"></a> [name](#input\_name) | Name  (e.g. `app` or `cluster`). | `string` | `""` | no |
+| <a name="input_resource_arn"></a> [resource\_arn](#input\_resource\_arn) | The ARN (Amazon Resource Name) of the resource to be protected. | `list(any)` | `[]` | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_arn"></a> [arn](#output\_arn) | The unique identifier (ID) for the Protection object that is created. |
+| <a name="output_id"></a> [id](#output\_id) | The unique identifier (ID) for the Protection object that is created. |
 <!-- END_TF_DOCS -->
 
 

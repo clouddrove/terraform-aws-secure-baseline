@@ -7,7 +7,129 @@ This Terraform module is designed to facilitate the creation of AWS Config resou
 
 
 <!-- BEGIN_TF_DOCS -->
+## Requirements
 
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.6 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.10.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.10.0 |
+| <a name="provider_null"></a> [null](#provider\_null) | n/a |
+| <a name="provider_template"></a> [template](#provider\_template) | n/a |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_config_lambda"></a> [config\_lambda](#module\_config\_lambda) | clouddrove/lambda/aws | 1.3.0 |
+| <a name="module_labels"></a> [labels](#module\_labels) | clouddrove/labels/aws | 1.3.0 |
+| <a name="module_s3_bucket"></a> [s3\_bucket](#module\_s3\_bucket) | clouddrove/s3/aws | 1.3.0 |
+| <a name="module_sns"></a> [sns](#module\_sns) | clouddrove/sns/aws | 1.3.0 |
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [aws_config_config_rule.acm_certificate_expiration_check](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_config_rule) | resource |
+| [aws_config_config_rule.cloudtrail_enabled](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_config_rule) | resource |
+| [aws_config_config_rule.cloudwatch_log_group_encrypted](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_config_rule) | resource |
+| [aws_config_config_rule.ebs_snapshot_public_restorable](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_config_rule) | resource |
+| [aws_config_config_rule.ec2_encrypted_volumes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_config_rule) | resource |
+| [aws_config_config_rule.ec2_volume_inuse_check](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_config_rule) | resource |
+| [aws_config_config_rule.eip_attached](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_config_rule) | resource |
+| [aws_config_config_rule.guardduty_enabled_centralized](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_config_rule) | resource |
+| [aws_config_config_rule.iam_mfa](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_config_rule) | resource |
+| [aws_config_config_rule.iam_password_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_config_rule) | resource |
+| [aws_config_config_rule.iam_root_access_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_config_rule) | resource |
+| [aws_config_config_rule.instances_in_vpc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_config_rule) | resource |
+| [aws_config_config_rule.multi_region_cloudtrail_enabled](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_config_rule) | resource |
+| [aws_config_config_rule.no_policies_with_full_admin_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_config_rule) | resource |
+| [aws_config_config_rule.rds_instance_public_access_check](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_config_rule) | resource |
+| [aws_config_config_rule.rds_snapshots_public_prohibited](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_config_rule) | resource |
+| [aws_config_config_rule.rds_storage_encrypted](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_config_rule) | resource |
+| [aws_config_config_rule.restricted_ports](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_config_rule) | resource |
+| [aws_config_config_rule.s3_bucket_public_write_prohibited](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_config_rule) | resource |
+| [aws_config_config_rule.s3_bucket_ssl_requests_only](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_config_rule) | resource |
+| [aws_config_config_rule.unused_credentials](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_config_rule) | resource |
+| [aws_config_config_rule.user_no_policies](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_config_rule) | resource |
+| [aws_config_config_rule.vpc_default_security_group_closed](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_config_rule) | resource |
+| [aws_config_configuration_recorder.recorder](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_configuration_recorder) | resource |
+| [aws_config_configuration_recorder_status.recorder](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_configuration_recorder_status) | resource |
+| [aws_config_delivery_channel.bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/config_delivery_channel) | resource |
+| [aws_iam_role.recorder](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
+| [aws_iam_role_policy.recorder_publish_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [null_resource.cluster](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_iam_policy_document.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_iam_policy_document.recorder_assume_role_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_iam_policy_document.recorder_publish_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
+| [template_file.aws_config_acm_certificate_expiration](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
+| [template_file.aws_config_iam_password_policy](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_acm_certificate_expiration_check"></a> [acm\_certificate\_expiration\_check](#input\_acm\_certificate\_expiration\_check) | Check ACM Certificates in your account are marked for expiration within the specified number of days. | `bool` | `true` | no |
+| <a name="input_acm_days_to_expiration"></a> [acm\_days\_to\_expiration](#input\_acm\_days\_to\_expiration) | Specify the number of days before the rule flags the ACM Certificate as noncompliant. | `number` | `14` | no |
+| <a name="input_cloudwatch_log_group_encrypted"></a> [cloudwatch\_log\_group\_encrypted](#input\_cloudwatch\_log\_group\_encrypted) | Ensuring that log group is encrypted | `bool` | `true` | no |
+| <a name="input_config_cloudtrail_enabled"></a> [config\_cloudtrail\_enabled](#input\_config\_cloudtrail\_enabled) | Ensuring that the cloudtrail is enabled. | `bool` | `true` | no |
+| <a name="input_config_max_execution_frequency"></a> [config\_max\_execution\_frequency](#input\_config\_max\_execution\_frequency) | The maximum frequency with which AWS Config runs evaluations for a rule. | `string` | `"TwentyFour_Hours"` | no |
+| <a name="input_config_s3_bucket_name"></a> [config\_s3\_bucket\_name](#input\_config\_s3\_bucket\_name) | The name of the S3 bucket which will store configuration snapshots. | `string` | `""` | no |
+| <a name="input_delimiter"></a> [delimiter](#input\_delimiter) | Delimiter to be used between `organization`, `environment`, `name` and `attributes`. | `string` | `"-"` | no |
+| <a name="input_delivery_frequency"></a> [delivery\_frequency](#input\_delivery\_frequency) | The frequency which AWS Config sends a snapshot into the S3 bucket. | `string` | `"One_Hour"` | no |
+| <a name="input_ebs_snapshot_public_restorable"></a> [ebs\_snapshot\_public\_restorable](#input\_ebs\_snapshot\_public\_restorable) | Checks whether Amazon Elastic Block Store snapshots are not publicly restorable. | `bool` | `true` | no |
+| <a name="input_ec2_encrypted_volumes"></a> [ec2\_encrypted\_volumes](#input\_ec2\_encrypted\_volumes) | Evaluates whether EBS volumes that are in an attached state are encrypted. Optionally, you can specify the ID of a KMS key to use to encrypt the volume. | `bool` | `true` | no |
+| <a name="input_ec2_volume_inuse_check"></a> [ec2\_volume\_inuse\_check](#input\_ec2\_volume\_inuse\_check) | Checks whether EBS volumes are attached to EC2 instances. | `bool` | `true` | no |
+| <a name="input_eip_attached"></a> [eip\_attached](#input\_eip\_attached) | Checks whether all Elastic IP addresses that are allocated to a VPC are attached to EC2 instances or in-use elastic network interfaces (ENIs). | `bool` | `true` | no |
+| <a name="input_enabled"></a> [enabled](#input\_enabled) | The boolean flag whether this module is enabled or not. No resources are created when set to false. | `bool` | `true` | no |
+| <a name="input_environment"></a> [environment](#input\_environment) | Environment (e.g. `prod`, `dev`, `staging`). | `string` | `""` | no |
+| <a name="input_guardduty_enabled_centralized"></a> [guardduty\_enabled\_centralized](#input\_guardduty\_enabled\_centralized) | Checks whether Amazon GuardDuty is enabled in your AWS account and region. | `bool` | `true` | no |
+| <a name="input_iam_mfa"></a> [iam\_mfa](#input\_iam\_mfa) | Check MFA is enabled. | `bool` | `true` | no |
+| <a name="input_iam_password_policy"></a> [iam\_password\_policy](#input\_iam\_password\_policy) | Ensuring that log group is encrypted | `bool` | `true` | no |
+| <a name="input_iam_root_access_key"></a> [iam\_root\_access\_key](#input\_iam\_root\_access\_key) | Checks whether the root user access key is available. The rule is COMPLIANT if the user access key does not exist. | `bool` | `true` | no |
+| <a name="input_include_global_resource_types"></a> [include\_global\_resource\_types](#input\_include\_global\_resource\_types) | Specifies whether AWS Config includes all supported types of global resources with the resources that it records. | `bool` | `true` | no |
+| <a name="input_instances_in_vpc"></a> [instances\_in\_vpc](#input\_instances\_in\_vpc) | Ensuring that all the instances in VPC | `bool` | `true` | no |
+| <a name="input_label_order"></a> [label\_order](#input\_label\_order) | Label order, e.g. `name`,`application`. | `list(any)` | `[]` | no |
+| <a name="input_managedby"></a> [managedby](#input\_managedby) | ManagedBy, eg 'CloudDrove' | `string` | `"hello@clouddrove.com"` | no |
+| <a name="input_multi_region_cloudtrail_enabled"></a> [multi\_region\_cloudtrail\_enabled](#input\_multi\_region\_cloudtrail\_enabled) | Ensuring that the multi-region-cloud-trail is enabled | `bool` | `true` | no |
+| <a name="input_name"></a> [name](#input\_name) | Name  (e.g. `app` or `cluster`). | `string` | `""` | no |
+| <a name="input_no_policies_with_full_admin_access"></a> [no\_policies\_with\_full\_admin\_access](#input\_no\_policies\_with\_full\_admin\_access) | Check user no policies with full admin access. | `bool` | `true` | no |
+| <a name="input_password_max_age"></a> [password\_max\_age](#input\_password\_max\_age) | Number of days before password expiration. | `number` | `90` | no |
+| <a name="input_password_min_length"></a> [password\_min\_length](#input\_password\_min\_length) | Password minimum length. | `number` | `16` | no |
+| <a name="input_password_require_lowercase"></a> [password\_require\_lowercase](#input\_password\_require\_lowercase) | Require at least one lowercase character in password. | `bool` | `true` | no |
+| <a name="input_password_require_numbers"></a> [password\_require\_numbers](#input\_password\_require\_numbers) | Require at least one number in password. | `bool` | `true` | no |
+| <a name="input_password_require_symbols"></a> [password\_require\_symbols](#input\_password\_require\_symbols) | Require at least one symbol in password. | `bool` | `true` | no |
+| <a name="input_password_require_uppercase"></a> [password\_require\_uppercase](#input\_password\_require\_uppercase) | Require at least one uppercase character in password. | `bool` | `true` | no |
+| <a name="input_password_reuse_prevention"></a> [password\_reuse\_prevention](#input\_password\_reuse\_prevention) | Number of passwords before allowing reuse. | `number` | `24` | no |
+| <a name="input_rds_instance_public_access_check"></a> [rds\_instance\_public\_access\_check](#input\_rds\_instance\_public\_access\_check) | Checks whether the Amazon Relational Database Service (RDS) instances are not publicly accessible. | `bool` | `true` | no |
+| <a name="input_rds_snapshots_public_prohibited"></a> [rds\_snapshots\_public\_prohibited](#input\_rds\_snapshots\_public\_prohibited) | Checks if Amazon Relational Database Service (Amazon RDS) snapshots are public. | `bool` | `true` | no |
+| <a name="input_rds_storage_encrypted"></a> [rds\_storage\_encrypted](#input\_rds\_storage\_encrypted) | Checks whether storage encryption is enabled for your RDS DB instances. | `bool` | `true` | no |
+| <a name="input_restricted_ports"></a> [restricted\_ports](#input\_restricted\_ports) | If you want to enable the restricted incoming port. | `bool` | `true` | no |
+| <a name="input_restricted_ports_list"></a> [restricted\_ports\_list](#input\_restricted\_ports\_list) | This list of blocked ports. | `string` | `"{\"blockedPort1\": \"22\", \"blockedPort2\": \"3306\",\"blockedPort3\": \"6379\", \"blockedPort4\": \"5432\"}"` | no |
+| <a name="input_s3_bucket_public_write_prohibited"></a> [s3\_bucket\_public\_write\_prohibited](#input\_s3\_bucket\_public\_write\_prohibited) | Checks that your S3 buckets do not allow public write access. | `bool` | `true` | no |
+| <a name="input_s3_bucket_ssl_requests_only"></a> [s3\_bucket\_ssl\_requests\_only](#input\_s3\_bucket\_ssl\_requests\_only) | Checks whether S3 buckets have policies that require requests to use Secure Socket Layer (SSL). | `bool` | `true` | no |
+| <a name="input_slack_enabled"></a> [slack\_enabled](#input\_slack\_enabled) | The boolean flag whether this slack notification is enabled or not. No resources are created when set to false. | `bool` | `true` | no |
+| <a name="input_unused_credentials"></a> [unused\_credentials](#input\_unused\_credentials) | Check unused credentials in AWS account. | `bool` | `true` | no |
+| <a name="input_user_no_policies"></a> [user\_no\_policies](#input\_user\_no\_policies) | Check user no policies. | `bool` | `true` | no |
+| <a name="input_variables"></a> [variables](#input\_variables) | The environment variables for lambda function. | `map` | `{}` | no |
+| <a name="input_vpc_default_security_group_closed"></a> [vpc\_default\_security\_group\_closed](#input\_vpc\_default\_security\_group\_closed) | Checks that the default security group of any Amazon Virtual Private Cloud (VPC) does not allow inbound or outbound traffic. | `bool` | `true` | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_config_sns_arn"></a> [config\_sns\_arn](#output\_config\_sns\_arn) | The SNS topic to which CloudWatch Alarms will be sent. |
+| <a name="output_config_sns_id"></a> [config\_sns\_id](#output\_config\_sns\_id) | The SNS topic to which CloudWatch Alarms will be sent. |
+| <a name="output_configuration_recorder_arn"></a> [configuration\_recorder\_arn](#output\_configuration\_recorder\_arn) | The ARN of configuration recorder. |
+| <a name="output_configuration_recorder_id"></a> [configuration\_recorder\_id](#output\_configuration\_recorder\_id) | The ID of configuration recorder. |
+| <a name="output_tags"></a> [tags](#output\_tags) | A mapping of tags to assign to the resource. |
 <!-- END_TF_DOCS -->
 
 

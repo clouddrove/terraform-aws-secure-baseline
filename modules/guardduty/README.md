@@ -7,7 +7,87 @@ This Terraform module is designed to facilitate the creation of AWS GuardDuty re
 
 
 <!-- BEGIN_TF_DOCS -->
+## Requirements
 
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.6 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.10.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.10.0 |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_labels"></a> [labels](#module\_labels) | clouddrove/labels/aws | 1.3.0 |
+| <a name="module_slack-lambda"></a> [slack-lambda](#module\_slack-lambda) | clouddrove/lambda/aws | 1.3.0 |
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [aws_cloudwatch_event_rule.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_rule) | resource |
+| [aws_cloudwatch_event_target.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_target) | resource |
+| [aws_guardduty_detector.detector](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/guardduty_detector) | resource |
+| [aws_guardduty_invite_accepter.member_accepter](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/guardduty_invite_accepter) | resource |
+| [aws_guardduty_ipset.ipset](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/guardduty_ipset) | resource |
+| [aws_guardduty_member.member](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/guardduty_member) | resource |
+| [aws_guardduty_organization_admin_account.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/guardduty_organization_admin_account) | resource |
+| [aws_guardduty_organization_configuration.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/guardduty_organization_configuration) | resource |
+| [aws_guardduty_threatintelset.threatintelset](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/guardduty_threatintelset) | resource |
+| [aws_s3_bucket.bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
+| [aws_s3_bucket_object.ipset](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_object) | resource |
+| [aws_s3_bucket_object.threatintelset](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_object) | resource |
+| [aws_s3_bucket_public_access_block.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_block_public_acls"></a> [block\_public\_acls](#input\_block\_public\_acls) | Whether Amazon S3 should block public ACLs for this bucket. Defaults to false. Enabling this setting does not affect existing policies or ACLs. When set to true causes the following behavior:<br>    - PUT Bucket acl and PUT Object acl calls will fail if the specified ACL allows public access.<br>    - PUT Object calls will fail if the request includes an object ACL. | `bool` | `true` | no |
+| <a name="input_block_public_policy"></a> [block\_public\_policy](#input\_block\_public\_policy) | Whether Amazon S3 should block public bucket policies for this bucket. Defaults to false. Enabling this setting does not affect the existing bucket policy. When set to true causes Amazon S3 to:<br>    - Reject calls to PUT Bucket policy if the specified bucket policy allows public access. | `bool` | `true` | no |
+| <a name="input_bucket_name"></a> [bucket\_name](#input\_bucket\_name) | Name of the S3 bucket to use | `string` | `"secure-baseline-guardduty"` | no |
+| <a name="input_datasources"></a> [datasources](#input\_datasources) | n/a | `any` | <pre>{<br>  "kubernetes_audit_logs": true,<br>  "malware_protection_ebs": true,<br>  "s3_logs": true<br>}</pre> | no |
+| <a name="input_disable_email_notification"></a> [disable\_email\_notification](#input\_disable\_email\_notification) | Boolean whether an email notification is sent to the accounts. | `bool` | `true` | no |
+| <a name="input_enabled"></a> [enabled](#input\_enabled) | Flag to control the module creation. | `bool` | `false` | no |
+| <a name="input_environment"></a> [environment](#input\_environment) | Environment (e.g. `prod`, `dev`, `staging`). | `string` | `""` | no |
+| <a name="input_finding_publishing_frequency"></a> [finding\_publishing\_frequency](#input\_finding\_publishing\_frequency) | Valid values for standalone and master accounts: `FIFTEEN_MINUTES`, `ONE_HOUR`, `SIX_HOURS` | `string` | `"SIX_HOURS"` | no |
+| <a name="input_guardduty_admin_id"></a> [guardduty\_admin\_id](#input\_guardduty\_admin\_id) | AWS account identifier to designate as a delegated administrator for GuardDuty. | `string` | `""` | no |
+| <a name="input_guardduty_enable"></a> [guardduty\_enable](#input\_guardduty\_enable) | Enable monitoring and feedback reporting. Setting to false is equivalent to `suspending` GuardDuty. Defaults to true | `bool` | `true` | no |
+| <a name="input_ignore_public_acls"></a> [ignore\_public\_acls](#input\_ignore\_public\_acls) | Whether Amazon S3 should ignore public ACLs for this bucket. Defaults to false. Enabling this setting does not affect the persistence of any existing ACLs and doesn't prevent new public ACLs from being set. When set to true causes Amazon S3 to:<br>    - Ignore public ACLs on this bucket and any objects that it contains. | `bool` | `true` | no |
+| <a name="input_ipset_activate"></a> [ipset\_activate](#input\_ipset\_activate) | Specifies whether GuardDuty is to start using the uploaded IPSet | `bool` | `true` | no |
+| <a name="input_ipset_format"></a> [ipset\_format](#input\_ipset\_format) | The format of the file that contains the IPSet. Valid values: `TXT` \| `STIX` \| `OTX_CSV` \| `ALIEN_VAULT` \| `PROOF_POINT` \| `FIRE_EYE`. | `string` | `"TXT"` | no |
+| <a name="input_ipset_iplist"></a> [ipset\_iplist](#input\_ipset\_iplist) | IPSet list of trusted IP addresses | `list(any)` | `[]` | no |
+| <a name="input_is_guardduty_member"></a> [is\_guardduty\_member](#input\_is\_guardduty\_member) | Whether the account is a member account | `bool` | `false` | no |
+| <a name="input_label_order"></a> [label\_order](#input\_label\_order) | Label order, e.g. `name`,`application`. | `list(any)` | `[]` | no |
+| <a name="input_managedby"></a> [managedby](#input\_managedby) | ManagedBy, eg 'CloudDrove' | `string` | `"hello@clouddrove.com"` | no |
+| <a name="input_member_list"></a> [member\_list](#input\_member\_list) | The list of member accounts to be added. Each member list need to have values of account\_id, member\_email and invite boolean | <pre>list(object({<br>    account_id = string<br>    email      = optional(string)<br>    invite     = bool<br>  }))</pre> | `[]` | no |
+| <a name="input_name"></a> [name](#input\_name) | Name  (e.g. `app` or `cluster`). | `string` | `""` | no |
+| <a name="input_organization_auto_enable"></a> [organization\_auto\_enable](#input\_organization\_auto\_enable) | When this setting is enabled, all new accounts that are created in, or added to, the organization are added as a member accounts of the organization’s GuardDuty delegated administrator and GuardDuty is enabled in that AWS Region. | `bool` | `false` | no |
+| <a name="input_restrict_public_buckets"></a> [restrict\_public\_buckets](#input\_restrict\_public\_buckets) | Whether Amazon S3 should restrict public bucket policies for this bucket. Defaults to false. Enabling this setting does not affect the previously stored bucket policy, except that public and cross-account access within the public bucket policy, including non-public delegation to specific accounts, is blocked. When set to true:<br>    - Only the bucket owner and AWS Services can access this buckets if it has a public policy. | `bool` | `true` | no |
+| <a name="input_rule_iam_role_arn"></a> [rule\_iam\_role\_arn](#input\_rule\_iam\_role\_arn) | The Amazon Resource Name (ARN) associated with the role that is used for target invocation. | `any` | `null` | no |
+| <a name="input_slack_enabled"></a> [slack\_enabled](#input\_slack\_enabled) | The boolean flag whether this slack notification is enabled or not. No resources are created when set to false. | `bool` | `true` | no |
+| <a name="input_target_iam_role_arn"></a> [target\_iam\_role\_arn](#input\_target\_iam\_role\_arn) | The Amazon Resource Name (ARN) associated with the role that is used for target invocation. | `any` | `null` | no |
+| <a name="input_threatintelset_activate"></a> [threatintelset\_activate](#input\_threatintelset\_activate) | Specifies whether GuardDuty is to start using the uploaded ThreatIntelSet | `bool` | `true` | no |
+| <a name="input_threatintelset_format"></a> [threatintelset\_format](#input\_threatintelset\_format) | The format of the file that contains the ThreatIntelSet | `string` | `"TXT"` | no |
+| <a name="input_threatintelset_iplist"></a> [threatintelset\_iplist](#input\_threatintelset\_iplist) | ThreatIntelSet list of known malicious IP addresses | `list(any)` | `[]` | no |
+| <a name="input_variables"></a> [variables](#input\_variables) | The environment variables for lambda function. | `map` | `{}` | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_account_id"></a> [account\_id](#output\_account\_id) | The AWS account ID of the GuardDuty detector |
+| <a name="output_bucket_arn"></a> [bucket\_arn](#output\_bucket\_arn) | The bucket ARN of S3 for guardduty logs. |
+| <a name="output_bucket_id"></a> [bucket\_id](#output\_bucket\_id) | The bucket id of S3 for guardduty logs. |
+| <a name="output_detector_id"></a> [detector\_id](#output\_detector\_id) | The ID of the GuardDuty detector |
+| <a name="output_tags"></a> [tags](#output\_tags) | The tags of aws inspector. |
 <!-- END_TF_DOCS -->
 
 

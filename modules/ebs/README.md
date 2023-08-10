@@ -7,7 +7,39 @@ This Terraform module is designed to facilitate the creation of AWS Elastic Bloc
 
 
 <!-- BEGIN_TF_DOCS -->
+## Requirements
 
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.6 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.10.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.10.0 |
+
+## Modules
+
+No modules.
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [aws_ebs_encryption_by_default.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ebs_encryption_by_default) | resource |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_enable_default_ebs_encryption"></a> [enable\_default\_ebs\_encryption](#input\_enable\_default\_ebs\_encryption) | The boolean flag whether default EBS Encryption is enabled or not. | `bool` | `true` | no |
+| <a name="input_enabled"></a> [enabled](#input\_enabled) | The boolean flag whether this module is enabled or not. No resources are created when set to false. | `bool` | `false` | no |
+
+## Outputs
+
+No outputs.
 <!-- END_TF_DOCS -->
 
 
