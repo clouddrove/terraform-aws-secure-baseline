@@ -68,6 +68,7 @@ jobs:
         with:
           working-dir: ./modules/
           recursive: true
+          output-method: print
           recursive-path: .
           git-push: true
           git-push-user-name: "clouddrove-ci"
