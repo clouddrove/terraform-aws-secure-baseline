@@ -119,7 +119,6 @@ variable "log_retention_days" {
   type        = string
 }
 
-
 #Variable    : S3 Bucket
 #Description : Terraform variables for s3 bucket.
 

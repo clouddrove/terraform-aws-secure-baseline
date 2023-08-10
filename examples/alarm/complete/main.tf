@@ -1,3 +1,5 @@
+## Managed By : CloudDrove
+## Copyright @ CloudDrove. All Right Reserved.
 provider "aws" {
   region = "us-east-1"
 }

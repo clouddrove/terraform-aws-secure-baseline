@@ -130,12 +130,6 @@ variable "rule_iam_role_arn" {
   description = "The Amazon Resource Name (ARN) associated with the role that is used for target invocation."
 }
 
-variable "is_enabled" {
-  type        = bool
-  default     = true
-  description = "Whether the rule should be enabled (defaults to true)."
-}
-
 variable "target_iam_role_arn" {
   default     = null
   description = "The Amazon Resource Name (ARN) associated with the role that is used for target invocation."

@@ -1,3 +1,6 @@
+## Managed By : CloudDrove
+## Copyright @ CloudDrove. All Right Reserved.
+
 provider "aws" {
   region = "us-east-1"
 }
@@ -6,6 +9,8 @@ locals {
   name = "cloudtrail-testing"
 }
 
+#Module      : CLOUDTRAIL
+#Description : enables auditing, security monitoring, and operational troubleshooting by tracking user activity and API usage.
 module "cloudtrail" {
   source = "../../../modules/cloudtrail"
 
@@ -13,16 +18,17 @@ module "cloudtrail" {
   environment = "security"
   label_order = ["name", "environment"]
 
-  create_bucket     = true
-  bucket_versioning = true
-  logging           = true
-  force_destroy     = true
-
+  # Cloudtrail S3 Bucket Configuration
+  create_bucket           = true
+  bucket_versioning       = true
+  logging                 = true
+  force_destroy           = true
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
 
+  # Cloudtrail Configuration
   enabled_cloudtrail    = true
   enable_cloudwatch     = true
   bucket_policy         = true

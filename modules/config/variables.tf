@@ -19,22 +19,10 @@ variable "label_order" {
   description = "Label order, e.g. `name`,`application`."
 }
 
-variable "attributes" {
-  type        = list(any)
-  default     = []
-  description = "Additional attributes (e.g. `1`)."
-}
-
 variable "delimiter" {
   type        = string
   default     = "-"
   description = "Delimiter to be used between `organization`, `environment`, `name` and `attributes`."
-}
-
-variable "tags" {
-  type        = map(any)
-  default     = {}
-  description = "Additional tags (e.g. map(`BusinessUnit`,`XYZ`)."
 }
 
 variable "enabled" {
@@ -264,7 +252,7 @@ variable "password_require_numbers" {
 
 variable "password_min_length" {
   type        = number
-  default     = 14
+  default     = 16
   description = "Password minimum length."
 }
 

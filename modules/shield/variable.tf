@@ -18,24 +18,6 @@ variable "label_order" {
   description = "Label order, e.g. `name`,`application`."
 }
 
-variable "attributes" {
-  type        = list(any)
-  default     = []
-  description = "Additional attributes (e.g. `1`)."
-}
-
-variable "delimiter" {
-  type        = string
-  default     = "-"
-  description = "Delimiter to be used between `organization`, `environment`, `name` and `attributes`."
-}
-
-variable "tags" {
-  type        = map(any)
-  default     = {}
-  description = "Additional tags (e.g. map(`BusinessUnit`,`XYZ`)."
-}
-
 variable "managedby" {
   type        = string
   default     = "hello@clouddrove.com"
@@ -49,14 +31,8 @@ variable "enabled" {
   description = "The boolean flag whether this module is enabled or not. No resources are created when set to false."
 }
 
-variable "shield_name" {
-  type        = string
-  default     = ""
-  description = "A friendly name for the Protection you are creating."
-}
-
 variable "resource_arn" {
-  type        = string
-  default     = ""
+  type        = list
+  default     = []
   description = "The ARN (Amazon Resource Name) of the resource to be protected."
 }

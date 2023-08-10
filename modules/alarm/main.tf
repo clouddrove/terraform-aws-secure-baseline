@@ -1,8 +1,6 @@
 ## Managed By : CloudDrove
 ## Copyright @ CloudDrove. All Right Reserved.
 
-data "aws_caller_identity" "current" {}
-
 #Module      : Label
 #Description : This terraform module is designed to generate consistent label names and
 #              tags for resources. You can use terraform-labels to implement a strict
@@ -17,70 +15,22 @@ module "labels" {
   managedby   = var.managedby
 }
 
-###---------------------------------------------------------------------------------------
-#Resource    : CloudWatch
-#Description : Terraform resource to create cloudwatch log with logging and encryption for cloudtrail. ( This role is used by CloudTrail to send logs to CloudWatch. )
-## CloudWatch enables you to create log group for lambda
-###--------------------------------------------------------------------------------------------
-module "cloudtrail" {
-  source = "../cloudtrail"
+#Resources   : Cloudwatch log group
+#Description : This is a group of log streams that share the same retention, monitoring, and access control settings.
+resource "aws_cloudwatch_log_group" "default" {
+  count             = var.enabled ? 1 : 0
+  name              = "${var.name}-cloudwatch_log_group_name"
+  retention_in_days = var.log_retention_days
+  kms_key_id        = aws_kms_key.default[0].arn
+}
 
-  name        = format("%s-cloudtrail",var.name)
-  environment = var.environment
-  label_order = var.label_order
-
-  create_bucket     = true
-  bucket_versioning = true
-  logging           = false
-  force_destroy     = true
-
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-
-  enabled_cloudtrail    = true
-  enable_cloudwatch     = true
-  bucket_policy         = true
-  is_multi_region_trail = true
-  kms_enabled           = true
-  enable_logging        = true
-
-  event_ignore_list = jsonencode([
-    "^Describe*",
-    "^Assume*",
-    "^List*",
-    "^Get*",
-    "^Decrypt*",
-    "^Lookup*",
-    "^BatchGet*",
-    "^CreateLogStream$",
-    "^RenewRole$",
-    "^REST.GET.OBJECT_LOCK_CONFIGURATION$",
-    "TestEventPattern",
-    "TestScheduleExpression",
-    "CreateNetworkInterface",
-    "ValidateTemplate"
-  ])
-  event_alert_list = jsonencode([
-    "DetachRolePolicy",
-    "ConsoleLogin"
-  ])
-  user_ignore_list = jsonencode([
-    "^awslambda_*",
-    "^aws-batch$",
-    "^bamboo*",
-    "^i-*",
-    "^[0-9]*$",
-    "^ecs-service-scheduler$",
-    "^AutoScaling$",
-    "^AWSCloudFormation$",
-    "^CloudTrailBot$",
-    "^SLRManagement$"
-  ])
-  source_list = jsonencode([
-    "aws-sdk-go"
-  ])
+resource "aws_kms_key" "default" {
+  count                   = var.enabled ? 1 : 0
+  description             = "A KMS key used to encrypt cloudwatch log files stored in S3."
+  deletion_window_in_days = var.key_deletion_window_in_days
+  enable_key_rotation     = true
+  policy                  = data.aws_iam_policy_document.kms.json
+  tags                    = module.labels.tags
 }
 
 resource "null_resource" "cluster" {
@@ -157,7 +107,7 @@ resource "aws_cloudwatch_log_metric_filter" "unauthorized_api_calls" {
 
   name           = "UnauthorizedAPICalls"
   pattern        = "{ ($.errorCode = \"*UnauthorizedOperation\") || ($.errorCode = \"AccessDenied*\") }"
-  log_group_name = module.cloudtrail.log_group_name
+  log_group_name = aws_cloudwatch_log_group.default[0].name
   metric_transformation {
     name      = "UnauthorizedAPICalls"
     namespace = var.alarm_namespace
@@ -193,7 +143,7 @@ resource "aws_cloudwatch_log_metric_filter" "no_mfa_console_signin" {
 
   name           = "NoMFAConsoleSignin"
   pattern        = "{ ($.eventName = \"ConsoleLogin\") && ($.additionalEventData.MFAUsed != \"Yes\") }"
-  log_group_name = module.cloudtrail.log_group_name
+  log_group_name = aws_cloudwatch_log_group.default[0].name
 
   metric_transformation {
     name      = "NoMFAConsoleSignin"
@@ -230,7 +180,7 @@ resource "aws_cloudwatch_log_metric_filter" "root_usage" {
 
   name           = "RootUsage"
   pattern        = "{ $.userIdentity.type = \"Root\" && $.userIdentity.invokedBy NOT EXISTS && $.eventType != \"AwsServiceEvent\" }"
-  log_group_name = module.cloudtrail.log_group_name
+  log_group_name = aws_cloudwatch_log_group.default[0].name
 
   metric_transformation {
     name      = "RootUsage"
@@ -267,7 +217,7 @@ resource "aws_cloudwatch_log_metric_filter" "iam_changes" {
 
   name           = "IAMChanges"
   pattern        = "{($.eventName=DeleteGroupPolicy)||($.eventName=DeleteRolePolicy)||($.eventName=DeleteUserPolicy)||($.eventName=PutGroupPolicy)||($.eventName=PutRolePolicy)||($.eventName=PutUserPolicy)||($.eventName=CreatePolicy)||($.eventName=DeletePolicy)||($.eventName=CreatePolicyVersion)||($.eventName=DeletePolicyVersion)||($.eventName=AttachRolePolicy)||($.eventName=DetachRolePolicy)||($.eventName=AttachUserPolicy)||($.eventName=DetachUserPolicy)||($.eventName=AttachGroupPolicy)||($.eventName=DetachGroupPolicy)}"
-  log_group_name = module.cloudtrail.log_group_name
+  log_group_name = aws_cloudwatch_log_group.default[0].name
 
   metric_transformation {
     name      = "IAMChanges"
@@ -304,7 +254,7 @@ resource "aws_cloudwatch_log_metric_filter" "cloudtrail_cfg_changes" {
 
   name           = "CloudTrailCfgChanges"
   pattern        = "{ ($.eventName = CreateTrail) || ($.eventName = UpdateTrail) || ($.eventName = DeleteTrail) || ($.eventName = StartLogging) || ($.eventName = StopLogging) }"
-  log_group_name = module.cloudtrail.log_group_name
+  log_group_name = aws_cloudwatch_log_group.default[0].name
 
   metric_transformation {
     name      = "CloudTrailCfgChanges"
@@ -341,7 +291,7 @@ resource "aws_cloudwatch_log_metric_filter" "console_signin_failures" {
 
   name           = "ConsoleSigninFailures"
   pattern        = "{ ($.eventName = ConsoleLogin) && ($.errorMessage = \"Failed authentication\") }"
-  log_group_name = module.cloudtrail.log_group_name
+  log_group_name = aws_cloudwatch_log_group.default[0].name
 
   metric_transformation {
     name      = "ConsoleSigninFailures"
@@ -379,7 +329,7 @@ resource "aws_cloudwatch_log_metric_filter" "disable_or_delete_cmk" {
 
   name           = "DisableOrDeleteCMK"
   pattern        = "{ ($.eventSource = kms.amazonaws.com) && (($.eventName = DisableKey) || ($.eventName = ScheduleKeyDeletion)) }"
-  log_group_name = module.cloudtrail.log_group_name
+  log_group_name = aws_cloudwatch_log_group.default[0].name
 
   metric_transformation {
     name      = "DisableOrDeleteCMK"
@@ -416,7 +366,7 @@ resource "aws_cloudwatch_log_metric_filter" "s3_bucket_policy_changes" {
 
   name           = "S3BucketPolicyChanges"
   pattern        = "{ ($.eventSource = s3.amazonaws.com) && (($.eventName = PutBucketAcl) || ($.eventName = PutBucketPolicy) || ($.eventName = PutBucketCors) || ($.eventName = PutBucketLifecycle) || ($.eventName = PutBucketReplication) || ($.eventName = DeleteBucketPolicy) || ($.eventName = DeleteBucketCors) || ($.eventName = DeleteBucketLifecycle) || ($.eventName = DeleteBucketReplication)) }"
-  log_group_name = module.cloudtrail.log_group_name
+  log_group_name = aws_cloudwatch_log_group.default[0].name
 
   metric_transformation {
     name      = "S3BucketPolicyChanges"
@@ -453,7 +403,7 @@ resource "aws_cloudwatch_log_metric_filter" "security_group_changes" {
 
   name           = "SecurityGroupChanges"
   pattern        = "{ ($.eventName = AuthorizeSecurityGroupIngress) || ($.eventName = AuthorizeSecurityGroupEgress) || ($.eventName = RevokeSecurityGroupIngress) || ($.eventName = RevokeSecurityGroupEgress) || ($.eventName = CreateSecurityGroup) || ($.eventName = DeleteSecurityGroup)}"
-  log_group_name = module.cloudtrail.log_group_name
+  log_group_name = aws_cloudwatch_log_group.default[0].name
 
   metric_transformation {
     name      = "SecurityGroupChanges"
@@ -489,7 +439,7 @@ resource "aws_cloudwatch_log_metric_filter" "nacl_changes" {
 
   name           = "NACLChanges"
   pattern        = "{ ($.eventName = CreateNetworkAcl) || ($.eventName = CreateNetworkAclEntry) || ($.eventName = DeleteNetworkAcl) || ($.eventName = DeleteNetworkAclEntry) || ($.eventName = ReplaceNetworkAclEntry) || ($.eventName = ReplaceNetworkAclAssociation) }"
-  log_group_name = module.cloudtrail.log_group_name
+  log_group_name = aws_cloudwatch_log_group.default[0].name
 
   metric_transformation {
     name      = "NACLChanges"
@@ -527,7 +477,7 @@ resource "aws_cloudwatch_log_metric_filter" "network_gw_changes" {
 
   name           = "NetworkGWChanges"
   pattern        = "{ ($.eventName = CreateCustomerGateway) || ($.eventName = DeleteCustomerGateway) || ($.eventName = AttachInternetGateway) || ($.eventName = CreateInternetGateway) || ($.eventName = DeleteInternetGateway) || ($.eventName = DetachInternetGateway) }"
-  log_group_name = module.cloudtrail.log_group_name
+  log_group_name = aws_cloudwatch_log_group.default[0].name
 
   metric_transformation {
     name      = "NetworkGWChanges"
@@ -564,7 +514,7 @@ resource "aws_cloudwatch_log_metric_filter" "route_table_changes" {
 
   name           = "RouteTableChanges"
   pattern        = "{ ($.eventName = CreateRoute) || ($.eventName = CreateRouteTable) || ($.eventName = ReplaceRoute) || ($.eventName = ReplaceRouteTableAssociation) || ($.eventName = DeleteRouteTable) || ($.eventName = DeleteRoute) || ($.eventName = DisassociateRouteTable) }"
-  log_group_name = module.cloudtrail.log_group_name
+  log_group_name = aws_cloudwatch_log_group.default[0].name
 
   metric_transformation {
     name      = "RouteTableChanges"
@@ -601,7 +551,7 @@ resource "aws_cloudwatch_log_metric_filter" "vpc_changes" {
 
   name           = "VPCChanges"
   pattern        = "{ ($.eventName = CreateVpc) || ($.eventName = DeleteVpc) || ($.eventName = ModifyVpcAttribute) || ($.eventName = AcceptVpcPeeringConnection) || ($.eventName = CreateVpcPeeringConnection) || ($.eventName = DeleteVpcPeeringConnection) || ($.eventName = RejectVpcPeeringConnection) || ($.eventName = AttachClassicLinkVpc) || ($.eventName = DetachClassicLinkVpc) || ($.eventName = DisableVpcClassicLink) || ($.eventName = EnableVpcClassicLink) }"
-  log_group_name = module.cloudtrail.log_group_name
+  log_group_name = aws_cloudwatch_log_group.default[0].name
 
   metric_transformation {
     name      = "VPCChanges"
@@ -637,7 +587,7 @@ resource "aws_cloudwatch_log_metric_filter" "aws_config_changes" {
 
   name           = "AWSConfigChanges"
   pattern        = "{ ($.eventSource = config.amazonaws.com) && (($.eventName=StopConfigurationRecorder)||($.eventName=DeleteDeliveryChannel)||($.eventName=PutDeliveryChannel)||($.eventName=PutConfigurationRecorder)) }"
-  log_group_name = module.cloudtrail.log_group_name
+  log_group_name = aws_cloudwatch_log_group.default[0].name
 
   metric_transformation {
     name      = "AWSConfigChanges"

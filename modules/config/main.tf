@@ -1,9 +1,6 @@
 ## Managed By : CloudDrove
 ## Copyright @ CloudDrove. All Right Reserved.
 
-data "aws_caller_identity" "current" {}
-data "aws_region" "current" {}
-
 #Module      : Label
 #Description : This terraform module is designed to generate consistent label names and
 #              tags for resources. You can use terraform-labels to implement a strict
@@ -23,16 +20,6 @@ resource "null_resource" "cluster" {
   count = var.enabled ? 1 : 0
   provisioner "local-exec" {
     command = format("cd %s/slack && bash build.sh", path.module)
-  }
-}
-
-data "template_file" "aws_config_acm_certificate_expiration" {
-  template = file(
-    "${path.module}/policies/acm-certificate-expiration.tpl"
-  )
-
-  vars = {
-    acm_days_to_expiration = var.acm_days_to_expiration
   }
 }
 
@@ -93,7 +80,7 @@ module "sns" {
 
   protocol        = "lambda"
   endpoint        = module.config_lambda.arn
-  delivery_policy = format("%s/_json/delivery_policy.json", path.module)
+  delivery_policy = file(format("%s/_json/delivery_policy.json", path.module))
 }
 
 # Module      : S3 BUCKET
@@ -116,79 +103,6 @@ module "s3_bucket" {
 
 }
 
-
-data "aws_iam_policy_document" "default" {
-  statement {
-    sid = "AWSConfigBucketPermissionsCheck"
-
-    principals {
-      type        = "Service"
-      identifiers = ["config.amazonaws.com"]
-    }
-
-    actions = [
-      "s3:GetBucketAcl",
-    ]
-
-    resources = [
-      format("arn:aws:s3:::%s", var.config_s3_bucket_name),
-    ]
-  }
-
-  statement {
-    sid = "AWSConfigBucketExistenceCheck"
-
-    principals {
-      type        = "Service"
-      identifiers = ["config.amazonaws.com"]
-    }
-
-    actions = [
-      "s3:ListBucket",
-    ]
-
-    resources = [
-      format("arn:aws:s3:::%s", var.config_s3_bucket_name),
-    ]
-  }
-
-  statement {
-    sid = "AWSConfigBucketDelivery"
-
-    principals {
-      type        = "Service"
-      identifiers = ["config.amazonaws.com"]
-    }
-
-    actions = [
-      "s3:PutObject",
-    ]
-
-    resources = [
-      format("arn:aws:s3:::%s/AWSLogs/%s/Config/*", var.config_s3_bucket_name, data.aws_caller_identity.current.account_id),
-    ]
-
-    condition {
-      test     = "StringEquals"
-      variable = "s3:x-amz-acl"
-
-      values = [
-        "bucket-owner-full-control",
-      ]
-    }
-  }
-}
-
-data "aws_iam_policy_document" "recorder_assume_role_policy" {
-  statement {
-    principals {
-      type        = "Service"
-      identifiers = ["config.amazonaws.com"]
-    }
-    actions = ["sts:AssumeRole"]
-  }
-}
-
 #Module      : AWS_IAM_ROLE
 #Description : Provides an IAM role.
 resource "aws_iam_role" "recorder" {
@@ -197,33 +111,6 @@ resource "aws_iam_role" "recorder" {
   assume_role_policy = data.aws_iam_policy_document.recorder_assume_role_policy.json
 
   tags = module.labels.tags
-}
-
-# See https://docs.aws.amazon.com/config/latest/developerguide/iamrole-permissions.html
-data "aws_iam_policy_document" "recorder_publish_policy" {
-  statement {
-    actions = ["s3:PutObject"]
-    resources = [
-      format("arn:aws:s3:::%s%s/config/AWSLogs/%s/*", var.config_s3_bucket_name, var.delimiter, data.aws_caller_identity.current.account_id),
-    ]
-
-    condition {
-      test     = "StringLike"
-      variable = "s3:x-amz-acl"
-      values   = ["bucket-owner-full-control"]
-    }
-  }
-
-  statement {
-    actions   = ["s3:GetBucketAcl"]
-    resources = [format("arn:aws:s3:::%s%s", var.config_s3_bucket_name, var.delimiter)]
-  }
-
-  statement {
-    actions = ["sns:Publish"]
-
-    resources = [module.sns.topic-arn]
-  }
 }
 
 #Module      : AWS_IAM_ROLE
@@ -238,12 +125,12 @@ resource "aws_iam_role_policy" "recorder_publish_policy" {
 
 #Module      : AWS_IAM_POLICY_ATTACHMENT
 #Description : Provides an IAM role policy attachment.
-resource "aws_iam_role_policy_attachment" "recorder_read_policy" {
-  count = var.enabled ? 1 : 0
+# resource "aws_iam_role_policy_attachment" "recorder_read_policy" {
+#   count = var.enabled ? 1 : 0
 
-  role       = join("", aws_iam_role.recorder.*.id)
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSConfigRole"
-}
+#   role       = join("", aws_iam_role.recorder.*.id)
+#   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSConfigRole"
+# }
 
 #Module      : AWS CONFIG CONFIGURATION
 #Description : Manages status (recording / stopped) of an AWS Config Configuration Recorder.
@@ -667,25 +554,6 @@ resource "aws_config_config_rule" "cloudwatch_log_group_encrypted" {
   tags       = module.labels.tags
 }
 
-
-# IAM password policy for config
-
-data "template_file" "aws_config_iam_password_policy" {
-
-  template = file("${path.module}/policies/password.tpl")
-
-  vars = {
-
-    password_require_uppercase = var.password_require_uppercase
-    password_require_lowercase = var.password_require_lowercase
-    password_require_symbols   = var.password_require_symbols
-    password_require_numbers   = var.password_require_numbers
-    password_min_length        = var.password_min_length
-    password_reuse_prevention  = var.password_reuse_prevention
-    password_max_age           = var.password_max_age
-  }
-
-}
 resource "aws_config_config_rule" "iam_password_policy" {
   count = var.enabled && var.iam_password_policy ? 1 : 0
 

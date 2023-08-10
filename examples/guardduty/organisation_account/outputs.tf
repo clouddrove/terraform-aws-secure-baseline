@@ -1,3 +1,6 @@
+## Managed By : CloudDrove
+## Copyright @ CloudDrove. All Right Reserved.
+
 output "detector_id" {
   value       = module.guardduty.detector_id
   description = "The ID of the GuardDuty detector"
