@@ -66,10 +66,9 @@ jobs:
       - name: Generate TF Docs
         uses: terraform-docs/gh-actions@v1.0.0
         with:
+          find-dir: "*.tf"
           working-dir: ./modules/
           recursive: true
-          output-method: print
-          output-file: README.md
           recursive-path: .
           git-push: true
           git-push-user-name: "clouddrove-ci"
