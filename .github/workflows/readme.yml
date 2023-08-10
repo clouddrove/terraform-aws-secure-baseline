@@ -60,6 +60,8 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: actions/checkout@master
+        with:
+          ref: "feat/readme"
 
       - name: Generate TF Docs
         uses: terraform-docs/gh-actions@v1.0.0
@@ -74,6 +76,10 @@ jobs:
           sudo apt install tree
           tree
           cat ./modules/alarm/README.md
+          cat ./modules/ebs/README.md
+          cat ./modules/guardduty/README.md
+          cat ./modules/iam/README.md
+          cat ./modules/shield/README.md
 
       # - name: 'Slack Notification'
       #   uses: clouddrove/action-slack@v2
