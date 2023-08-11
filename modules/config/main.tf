@@ -94,13 +94,18 @@ module "s3_bucket" {
   environment             = var.environment
   managedby               = var.managedby
   label_order             = ["name"]
-  versioning              = true
+  versioning              = var.versioning
   acl                     = "log-delivery-write"
+  logging                 = var.logging
   bucket_policy           = var.enabled
   create_bucket           = var.enabled
   aws_iam_policy_document = data.aws_iam_policy_document.default.json
   force_destroy           = true
 
+  block_public_acls       = var.block_public_acls
+  block_public_policy     = var.block_public_policy
+  ignore_public_acls      = var.ignore_public_acls
+  restrict_public_buckets = var.restrict_public_buckets
 }
 
 #Module      : AWS_IAM_ROLE
@@ -122,15 +127,6 @@ resource "aws_iam_role_policy" "recorder_publish_policy" {
   role   = join("", aws_iam_role.recorder.*.id)
   policy = data.aws_iam_policy_document.recorder_publish_policy.json
 }
-
-#Module      : AWS_IAM_POLICY_ATTACHMENT
-#Description : Provides an IAM role policy attachment.
-# resource "aws_iam_role_policy_attachment" "recorder_read_policy" {
-#   count = var.enabled ? 1 : 0
-
-#   role       = join("", aws_iam_role.recorder.*.id)
-#   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSConfigRole"
-# }
 
 #Module      : AWS CONFIG CONFIGURATION
 #Description : Manages status (recording / stopped) of an AWS Config Configuration Recorder.
