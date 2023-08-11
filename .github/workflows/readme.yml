@@ -84,13 +84,34 @@ jobs:
       #     cat ./modules/iam/README.md
       #     cat ./modules/shield/README.md
 
-      # - name: 'Slack Notification'
-      #   uses: clouddrove/action-slack@v2
-      #   with:
-      #     status: ${{ job.status }}
-      #     fields: repo,author
-      #     author_name: 'CloudDrove'
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
-      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_TERRAFORM }} # required
-      #   if: always()
+  readme-create-examlpes:
+    name: 'Examples readme-create'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@master
+        with:
+          ref: "feat/readme"
+
+      - name: Generate TF Docs
+        uses: terraform-docs/gh-actions@v1.0.0
+        with:
+          working-dir: examples/alarm/complete # examples/alarm/complete,examples/analyzer/complete,examples/analyzer/organisation_account,examples/cloudtrail/complete,examples/cloudtrail/organisation_account,examples/config/complete,examples/ebs/complete,examples/guardduty/complete,examples/guardduty/organisation_account,examples/iam/complete,examples/inspector/complete,examples/security-hub/complete,examples/security-hub/managed_security_hub,examples/security-hub/organisation_account,examples/shield/complete
+          recursive: true
+          recursive-path: ../../
+          indention: 3
+          git-push: true
+          git-push-user-name: "clouddrove-ci"
+          git-push-user-email: 84795582+clouddrove-ci@users.noreply.github.com
+          git-commit-message: "readme: Update readme"
+
+      # - name: "Run ls -la"
+      #   run: |
+      #     ls -la
+      #     sudo apt install tree
+      #     tree
+      #     cat ./modules/alarm/README.md
+      #     cat ./modules/ebs/README.md
+      #     cat ./modules/guardduty/README.md
+      #     cat ./modules/iam/README.md
+      #     cat ./modules/shield/README.md

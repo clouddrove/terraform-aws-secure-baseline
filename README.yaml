@@ -38,18 +38,19 @@ include:
 
 # How to use this project
 usage : |-
+  ## Submodules:
   There are independent submodules:
 
   - [alarm](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/alarm) - o create alarms that automatically stop, terminate, reboot, or recover your Amazon EC2 instances.
   - [analyzer](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/analyzer) - helps to identify potential resource-access risks by enabling you to identify any policies that grant access to an external principal.
   - [cloudtrail](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/cloudtrail) - to enable operational and risk auditing, governance, and compliance of your AWS account.
-  - [config](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/config) - to record configuration changes to software within EC2 instances in your AWS account and also virtual machines (VMs) or servers in your on-premises environment.
-  - [ebs] (https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/ebs) - After you enable encryption by default, the EBS volumes that you create are always encrypted, either using the default KMS key or the KMS key that you specified when you created each volume.
-  - [guardduty] (https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/guardduty) - threat detection service that continuously monitors for malicious activity and unauthorized behavior to protect your AWS accounts, Amazon Elastic Compute Cloud (EC2) workloads, container applications, Amazon Aurora databases, and data stored in Amazon Simple Storage Service (S3).
-  - [iam] (https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/iam) - web service that helps you securely control access to AWS resources.
-  - [inspector] (https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/inspector) - automated vulnerability management service that continually scans AWS workloads for software vulnerabilities and unintended network exposure
-  - [security-hub] (https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/security_hub) - provides you with a comprehensive view of your security state in AWS and helps you check your environment against security industry standards and best practices.
-  - [shield] (https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/shield) - managed distributed denial of service (DDoS) protection service that safeguards applications running on AWS.
+  - [config](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/config) - to record configuration changes to software within EC2 instances in your AWS account and also virtual machines (VMs).
+  - [ebs](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/ebs) - The EBS volumes that you create are always encrypted, either using the default KMS key or the KMS key that you specified when you created each volume.
+  - [guardduty](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/guardduty) - threat detection service that continuously monitors for malicious activity and unauthorized behavior to protect your AWS Resources.
+  - [iam](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/iam) - web service that helps you securely control access to AWS resources.
+  - [inspector](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/inspector) - automated vulnerability management service that continually scans AWS workloads for software vulnerabilities and unintended network exposure
+  - [security-hub](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/security_hub) - provides you with a comprehensive view of your security state in AWS and helps you check your environment against security industry standards and best practices.
+  - [shield](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/shield) - managed distributed denial of service (DDoS) protection service that safeguards applications running on AWS.
   
   ### Alarm
   Here is an example of how you can use this module in your inventory structure:
