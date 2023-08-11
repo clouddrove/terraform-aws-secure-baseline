@@ -17,7 +17,34 @@ $ terraform apply
 Note that this example may create resources which cost money. Run terraform destroy when you don't need these resources.
 
 <!-- BEGIN_TF_DOCS -->
+### Requirements
 
+No requirements.
+
+### Providers
+
+No providers.
+
+### Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_alarm"></a> [alarm](#module\_alarm) | ../../../modules/alarm | n/a |
+
+### Resources
+
+No resources.
+
+### Inputs
+
+No inputs.
+
+### Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_alarm_sns_arn"></a> [alarm\_sns\_arn](#output\_alarm\_sns\_arn) | The SNS topic to which CloudWatch Alarms will be sent. |
+| <a name="output_alarm_sns_id"></a> [alarm\_sns\_id](#output\_alarm\_sns\_id) | The SNS topic to which CloudWatch Alarms will be sent. |
 <!-- END_TF_DOCS -->
 
 
