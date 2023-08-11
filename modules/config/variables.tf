@@ -294,7 +294,7 @@ variable "restrict_public_buckets" {
 
 variable "versioning" {
   type        = bool
-  default     = false
+  default     = true
   description = "Enable Versioning of S3."
 }
 

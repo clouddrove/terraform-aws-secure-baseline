@@ -101,6 +101,8 @@ module "s3_bucket" {
   create_bucket           = var.enabled
   aws_iam_policy_document = data.aws_iam_policy_document.default.json
   force_destroy           = true
+  target_bucket           = module.s3_bucket.id
+  target_prefix           = "log/"
 
   block_public_acls       = var.block_public_acls
   block_public_policy     = var.block_public_policy
