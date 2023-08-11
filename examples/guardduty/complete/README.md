@@ -18,7 +18,36 @@ $ terraform apply
 Note that this example may create resources which cost money. Run terraform destroy when you don't need these resources.
 
 <!-- BEGIN_TF_DOCS -->
+### Requirements
 
+No requirements.
+
+### Providers
+
+No providers.
+
+### Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_guardduty"></a> [guardduty](#module\_guardduty) | ../../../modules/guardduty | n/a |
+
+### Resources
+
+No resources.
+
+### Inputs
+
+No inputs.
+
+### Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_account_id"></a> [account\_id](#output\_account\_id) | The AWS account ID of the GuardDuty detector |
+| <a name="output_detector_id"></a> [detector\_id](#output\_detector\_id) | The ID of the GuardDuty detector |
+| <a name="output_s3_bucket_arn"></a> [s3\_bucket\_arn](#output\_s3\_bucket\_arn) | The bucket ARN of S3 for guardduty logs. |
+| <a name="output_s3_bucket_id"></a> [s3\_bucket\_id](#output\_s3\_bucket\_id) | The bucket id of S3 for guardduty logs. |
 <!-- END_TF_DOCS -->
 
 

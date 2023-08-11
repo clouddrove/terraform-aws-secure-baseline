@@ -18,7 +18,34 @@ $ terraform apply
 Note that this example may create resources which cost money. Run terraform destroy when you don't need these resources.
 
 <!-- BEGIN_TF_DOCS -->
+### Requirements
 
+No requirements.
+
+### Providers
+
+No providers.
+
+### Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_security-hub"></a> [security-hub](#module\_security-hub) | ../../../modules/security_hub | n/a |
+
+### Resources
+
+No resources.
+
+### Inputs
+
+No inputs.
+
+### Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_arn"></a> [arn](#output\_arn) | The ID of the secuirty hub. |
+| <a name="output_id"></a> [id](#output\_id) | The ID of the secuirty hub. |
 <!-- END_TF_DOCS -->
 
 

@@ -17,7 +17,34 @@ $ terraform apply
 Note that this example may create resources which cost money. Run terraform destroy when you don't need these resources.
 
 <!-- BEGIN_TF_DOCS -->
+### Requirements
 
+No requirements.
+
+### Providers
+
+No providers.
+
+### Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_cloudtrail"></a> [cloudtrail](#module\_cloudtrail) | ../../../modules/cloudtrail | n/a |
+
+### Resources
+
+No resources.
+
+### Inputs
+
+No inputs.
+
+### Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_cloudtrail_arn"></a> [cloudtrail\_arn](#output\_cloudtrail\_arn) | The Amazon Resource Name of the trail. |
+| <a name="output_cloudtrail_s3_id"></a> [cloudtrail\_s3\_id](#output\_cloudtrail\_s3\_id) | The Name of S3 bucket for logging of Cloudtrail. |
 <!-- END_TF_DOCS -->
 
 

@@ -18,7 +18,40 @@ $ terraform apply
 Note that this example may create resources which cost money. Run terraform destroy when you don't need these resources.
 
 <!-- BEGIN_TF_DOCS -->
+### Requirements
 
+No requirements.
+
+### Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
+
+### Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_inspector"></a> [inspector](#module\_inspector) | ../../../modules/inspector | n/a |
+
+### Resources
+
+| Name | Type |
+|------|------|
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+
+### Inputs
+
+No inputs.
+
+### Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_assessment_target"></a> [assessment\_target](#output\_assessment\_target) | The target assessment ARN. |
+| <a name="output_assessment_template"></a> [assessment\_template](#output\_assessment\_template) | The template assessment ARN. |
+| <a name="output_lambda_arn"></a> [lambda\_arn](#output\_lambda\_arn) | The Amazon Resource Name (ARN) identifying your Lambda Function. |
+| <a name="output_resource_group"></a> [resource\_group](#output\_resource\_group) | The resource group ARN. |
 <!-- END_TF_DOCS -->
 
 

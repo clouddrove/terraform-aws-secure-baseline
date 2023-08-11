@@ -17,7 +17,33 @@ $ terraform apply
 Note that this example may create resources which cost money. Run terraform destroy when you don't need these resources.
 
 <!-- BEGIN_TF_DOCS -->
+### Requirements
 
+No requirements.
+
+### Providers
+
+No providers.
+
+### Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_analyzer"></a> [analyzer](#module\_analyzer) | ../../../modules/analyzer | n/a |
+
+### Resources
+
+No resources.
+
+### Inputs
+
+No inputs.
+
+### Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_analyzer_name"></a> [analyzer\_name](#output\_analyzer\_name) | IAM Access Analyzer name of. |
 <!-- END_TF_DOCS -->
 
 

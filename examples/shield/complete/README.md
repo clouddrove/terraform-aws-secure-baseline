@@ -18,7 +18,34 @@ $ terraform apply
 Note that this example may create resources which cost money. Run terraform destroy when you don't need these resources.
 
 <!-- BEGIN_TF_DOCS -->
+### Requirements
 
+No requirements.
+
+### Providers
+
+No providers.
+
+### Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_aws_shield"></a> [aws\_shield](#module\_aws\_shield) | ../../../modules/shield | n/a |
+
+### Resources
+
+No resources.
+
+### Inputs
+
+No inputs.
+
+### Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_arn"></a> [arn](#output\_arn) | The unique identifier (ID) for the Protection object that is created. |
+| <a name="output_id"></a> [id](#output\_id) | The unique identifier (ID) for the Protection object that is created. |
 <!-- END_TF_DOCS -->
 
 

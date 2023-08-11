@@ -18,7 +18,39 @@ $ terraform apply
 Note that this example may create resources which cost money. Run terraform destroy when you don't need these resources.
 
 <!-- BEGIN_TF_DOCS -->
+### Requirements
 
+No requirements.
+
+### Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
+
+### Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_iam-baseline"></a> [iam-baseline](#module\_iam-baseline) | ../../../modules/iam | n/a |
+
+### Resources
+
+| Name | Type |
+|------|------|
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+
+### Inputs
+
+No inputs.
+
+### Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_manager_iam_role"></a> [manager\_iam\_role](#output\_manager\_iam\_role) | The IAM role used for the manager user. |
+| <a name="output_master_iam_role"></a> [master\_iam\_role](#output\_master\_iam\_role) | The IAM role used for the master user. |
+| <a name="output_support_iam_role"></a> [support\_iam\_role](#output\_support\_iam\_role) | The IAM role used for the support user. |
 <!-- END_TF_DOCS -->
 
 
