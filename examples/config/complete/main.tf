@@ -14,6 +14,13 @@ module "config" {
   config_s3_bucket_name = "config-bucketssss"
   enabled               = true
 
+  # S3 Configurations
+  versioning              = true
+  logging                 = true
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 
   # roles
   restricted_ports                   = true
