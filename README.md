@@ -73,267 +73,336 @@ This module has a few dependencies:
 
 **IMPORTANT:** Since the `master` branch used in `source` varies based on new modifications, we suggest that you use the release versions [here](https://github.com/clouddrove/clouddrove/terraform-aws-secure-baseline/modules//releases).
 
+  ## Submodules
+  
+  There are independent submodules:
 
-### Simple Example
-Here is an example of how you can use this module in your inventory structure:
-```hcl
-module "secure_baseline" {
-  source        = "clouddrove/secure-baseline/aws"
-  environment = "test"
-  label_order = ["environment", "name"]
+  - [alarm](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/alarm) - o create alarms that automatically stop, terminate, reboot, or recover your Amazon EC2 instances.
+  - [analyzer](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/analyzer) - helps to identify potential resource-access risks by enabling you to identify any policies that grant access to an external principal.
+  - [cloudtrail](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/cloudtrail) - to enable operational and risk auditing, governance, and compliance of your AWS account.
+  - [config](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/config) - to record configuration changes to software within EC2 instances in your AWS account and also virtual machines (VMs).
+  - [ebs](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/ebs) - The EBS volumes that you create are always encrypted, either using the default KMS key or the KMS key that you specified when you created each volume.
+  - [guardduty](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/guardduty) - threat detection service that continuously monitors for malicious activity and unauthorized behavior to protect your AWS Resources.
+  - [iam](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/iam) - web service that helps you securely control access to AWS resources.
+  - [inspector](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/inspector) - automated vulnerability management service that continually scans AWS workloads for software vulnerabilities and unintended network exposure
+  - [security-hub](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/security_hub) - provides you with a comprehensive view of your security state in AWS and helps you check your environment against security industry standards and best practices.
+  - [shield](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/shield) - managed distributed denial of service (DDoS) protection service that safeguards applications running on AWS.
+  
+  ### Alarm
+  Here is an example of how you can use this module in your inventory structure:
+  ```hcl
+    module "alarm" {
+      source      = "clouddrove/secure-baseline/aws//modules/alarm"
+      version     = "1.4.0"
 
-  enabled       = true
-  slack_webhook = "https://hooks.slack.com/services/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uEG4TW"
-  slack_channel = "testing"
+      name        = "alarm"
+      environment = "test"
+      label_order = ["name", "environment"]
 
-  # cloudtrail
-  cloudtrail_enabled                = true
-  key_deletion_window_in_days       = 10
-  cloudwatch_logs_retention_in_days = 365
-  cloudwatch_logs_group_name        = "cloudtrail-log-group"
-  cloudtrail_bucket_name            = "cloudtrail-bucket-logs"
+      enabled                    = true
+      unauthorized_api_calls     = true
+      no_mfa_console_signin      = true
+      root_usage                 = true
+      iam_changes                = true
+      cloudtrail_cfg_changes     = true
+      console_signin_failures    = true
+      disable_or_delete_cmk      = true
+      s3_bucket_policy_changes   = true
+      security_group_changes     = true
+      nacl_changes               = true
+      network_gw_changes         = true
+      route_table_changes        = true
+      vpc_changes                = true
+      alarm_namespace            = "Alert_Alarm"
+      aws_config_changes_enabled = true
 
+      variables = {
+        SLACK_WEBHOOK = "" # Webhook for the slack notification
+        SLACK_CHANNEL = "" # Channel of the Slack where the notification will receive
+      }
+    }
+  ```
 
-  # Alarm
-  alarm_enabled            = true
-  alarm_namespace          = "Alert_Alarm"
-  unauthorized_api_calls   = true
-  no_mfa_console_signin    = true
-  root_usage               = true
-  iam_changes              = true
-  cloudtrail_cfg_changes   = true
-  console_signin_failures  = true
-  disable_or_delete_cmk    = true
-  s3_bucket_policy_changes = true
-  security_group_changes   = true
-  nacl_changes             = true
-  network_gw_changes       = true
-  route_table_changes      = true
-  vpc_changes              = true
+  ### Analyzer
+  Here is an example of how you can use this module in your inventory structure:
+  ```hcl
+    module "analyzer" {
+      source      = "clouddrove/secure-baseline/aws//modules/analyzer"
+      version     = "1.4.0"
 
+      name        = "analyzer"
+      environment = "test"
+      label_order = ["name", "environment"]
+      enabled     = true
 
-  ## Config
-  config_enabled                     = true
-  config_s3_bucket_name              = "config-bucket"
-  restricted_ports                   = true
-  iam_mfa                            = true
-  unused_credentials                 = true
-  user_no_policies                   = true
-  no_policies_with_full_admin_access = true
-  acm_certificate_expiration_check   = true
-  ec2_volume_inuse_check             = true
-  ebs_snapshot_public_restorable     = true
-  rds_instance_public_access_check   = true
-  rds_snapshots_public_prohibited    = true
-  guardduty_enabled_centralized      = true
-  s3_bucket_public_write_prohibited  = true
-  eip_attached                       = false
-  ec2_encrypted_volumes              = true
-  iam_root_access_key                = true
-  vpc_default_security_group_closed  = false
-  s3_bucket_ssl_requests_only        = false
-  multi_region_cloudtrail_enabled    = true
-  instances_in_vpc                   = true
-  cloudwatch_log_group_encrypted     = false
-  rds_storage_encrypted              = true
-  restricted_ports_list              = "{\"blockedPort1\": \"22\", \"blockedPort2\": \"3306\",\"blockedPort3\": \"6379\", \"blockedPort4\": \"5432\"}"
+      ## IAM Access Analyzer
+      type = "ACCOUNT"
 
-  # guardduty
-  guardduty_enable         = true
-  guardduty_s3_bucket_name = "guardduty-files"
-  ipset_iplist             = ["10.10.0.0/16", "172.16.0.0/16", ]
-  threatintelset_activate  = false
-  threatintelset_iplist    = ["192.168.2.0/32", "4.4.4.4", ]
+      variables = {
+        slack_webhook = "" # Webhook for the slack notification
+        slack_channel = "" # Channel of the Slack where the notification will receive
+      }
+    }
+  ```
 
+  ### Cloudtrail
+  Here is an example of how you can use this module in your inventory structure:
+  ```hcl
+    module "Cloudtrail" {
+      source  = "clouddrove/secure-baseline/aws//modules/cloudtrail"
+      version = "1.4.0"
 
-## Inspector
-  inspector_enabled = true
-  rules_package_arns = [
-    "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-ubA5XvBh",
-    "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-sJBhCr0F",
-    "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-SPzU33xe",
-    "arn:aws:inspector:eu-west-1:357557129151:rulespackage/0-SnojL3Z6",
-  ]
-  schedule_expression = "cron(0/10 * ? * * *)"
+      name        = "cloudtrail"
+      environment = "security"
+      label_order = ["name", "environment"]
 
-  # analyzer
-  analyzer_enable = true
-  type            = "ACCOUNT"
+      # Cloudtrail S3 Bucket Configuration
+      create_bucket           = true
+      bucket_versioning       = true
+      logging                 = true
+      force_destroy           = true
+      block_public_acls       = true
+      block_public_policy     = true
+      ignore_public_acls      = true
+      restrict_public_buckets = true
 
-  # Shield
-  shield_enable = true
+      # Cloudtrail Configuration
+      enabled_cloudtrail    = true
+      enable_cloudwatch     = true
+      bucket_policy         = true
+      is_multi_region_trail = true
+      kms_enabled           = true
+      enable_logging        = true
 
-  # EBS
-  default_ebs_enable = true
+      event_ignore_list = jsonencode([
+        "^Describe*",
+        "^Assume*",
+        "^List*",
+        "^Get*",
+        "^Decrypt*",
+        "^Lookup*",
+        "^BatchGet*",
+        "^CreateLogStream$",
+        "^RenewRole$",
+        "^REST.GET.OBJECT_LOCK_CONFIGURATION$",
+        "TestEventPattern",
+        "TestScheduleExpression",
+        "CreateNetworkInterface",
+        "ValidateTemplate"
+      ])
+      event_alert_list = jsonencode([
+        "DetachRolePolicy",
+        "ConsoleLogin"
+      ])
+      user_ignore_list = jsonencode([
+        "^awslambda_*",
+        "^aws-batch$",
+        "^bamboo*",
+        "^i-*",
+        "^[0-9]*$",
+        "^ecs-service-scheduler$",
+        "^AutoScaling$",
+        "^AWSCloudFormation$",
+        "^CloudTrailBot$",
+        "^SLRManagement$"
+      ])
+      source_list = jsonencode([
+        "aws-sdk-go"
+      ])
 
-  # Security Hub
-  security_hub_enable = true
+      # Slack Alerts
+      slack_webhook = "" # Webhook for the slack notification
+      slack_channel = "" # Channel of the Slack where the notification will receive
+    }
+  ```
 
-  # IAM baseline
-  ##IAM
-  enable_iam_baseline          = false
-  master_iam_role_name         = "IAM-Master"
-  master_iam_role_policy_name  = "IAM-master-Policy"
-  manager_iam_role_name        = "IAM-manager"
-  manager_iam_role_policy_name = "IAM-Manager-Policy"
-  support_iam_role_name        = "IAM-Policy"
-  support_iam_role_policy_name = "IAM-Support-Role"
+  ### Config
+  Here is an example of how you can use this module in your inventory structure:
+  ```hcl
+    module "config" {
+      source      = "clouddrove/secure-baseline/aws//modules/config"
+      version     = "1.4.0"
 
-  #Password policy
+      name                  = "config"
+      environment           = "security"
+      label_order           = ["name", "environment"]
+      config_s3_bucket_name = "config-bucketssss"
+      enabled               = true
 
-  aws_iam_account_password_policy = true
-  minimum_password_length         = 24
-  password_reuse_prevention       = 24
-  require_lowercase_characters    = true
-  require_numbers                 = true
-  require_uppercase_characters    = true
-  require_symbols                 = true
-  allow_users_to_change_password  = true
-  max_password_age                = 120
-}
+      # roles
+      restricted_ports                   = true
+      restricted_ports_list              = "{\"blockedPort1\": \"22\", \"blockedPort2\": \"3306\",\"blockedPort3\": \"6379\", \"blockedPort4\": \"5432\"}"
+      iam_mfa                            = true
+      unused_credentials                 = true
+      user_no_policies                   = true
+      no_policies_with_full_admin_access = true
+      acm_certificate_expiration_check   = true
+      ec2_volume_inuse_check             = true
+      ebs_snapshot_public_restorable     = true
+      rds_instance_public_access_check   = true
+      rds_snapshots_public_prohibited    = true
+      guardduty_enabled_centralized      = true
+      s3_bucket_public_write_prohibited  = true
+      eip_attached                       = false
+      ec2_encrypted_volumes              = true
+      iam_root_access_key                = true
+      vpc_default_security_group_closed  = false
+      s3_bucket_ssl_requests_only        = false
+      multi_region_cloudtrail_enabled    = true
+      instances_in_vpc                   = true
+      cloudwatch_log_group_encrypted     = false
+      rds_storage_encrypted              = true
 
-```
+      iam_password_policy        = false
+      password_require_uppercase = true
+      password_require_lowercase = true
+      password_require_symbols   = true
+      password_require_numbers   = true
+      password_max_age           = 90
+      slack_enabled              = false
 
+      variables = {
+        SLACK_WEBHOOK = "" # Webhook for the slack notification
+        SLACK_CHANNEL = "" # Channel of the Slack where the notification will receive
+      }
+    }
+  ```
 
+  ### EBS Default encryption
+  Here is an example of how you can use this module in your inventory structure:
+  ```hcl
+    module "ebs-encryption" {
+      source      = "clouddrove/secure-baseline/aws//modules/ebs"
+      version     = "1.4.0"
 
+      enabled                       = true
+      enable_default_ebs_encryption = true
+    }
+  ```
 
+  ### GuardDuty
+  Here is an example of how you can use this module in your inventory structure:
+  ```hcl
+    module "guardduty" {
+      source      = "clouddrove/secure-baseline/aws//modules/guardduty"
+      version     = "1.4.0"
 
+      name         = "test-guardduty"
+      label_order  = ["name"]
+      enabled      = true
+      ipset_iplist = ["10.10.0.0/16"]
 
-## Inputs
+      finding_publishing_frequency = "ONE_HOUR"
 
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| acm\_certificate\_expiration\_check | Check ACM Certificates in your account are marked for expiration within the specified number of days. | `bool` | `false` | no |
-| acm\_days\_to\_expiration | Specify the number of days before the rule flags the ACM Certificate as noncompliant. | `number` | `14` | no |
-| alarm\_enabled | The boolean flag whether alarm module is enabled or not. No resources are created when set to false. | `bool` | `true` | no |
-| alarm\_namespace | The namespace in which all alarms are set up. | `string` | `"CISBenchmark"` | no |
-| allow\_users\_to\_change\_password | Whether to allow users to change their own password. | `bool` | `true` | no |
-| analyzer\_enable | The boolean flag whether alarm module is enabled or not. No resources are created when set to false. | `bool` | `true` | no |
-| attributes | Additional attributes (e.g. `1`). | `list(any)` | `[]` | no |
-| aws\_config\_changes\_enabled | If you want to create alarm when any changes in aws config. | `bool` | `true` | no |
-| aws\_iam\_account\_password\_policy | n/a | `bool` | `true` | no |
-| cloudtrail\_bucket\_name | The name of the S3 bucket which will store configuration snapshots. | `string` | n/a | yes |
-| cloudtrail\_cfg\_changes | If you want to create alarm when any changes in cloudtrail cfg. | `bool` | `true` | no |
-| cloudtrail\_enabled | The boolean flag whether cloudtrail module is enabled or not. No resources are created when set to false. | `bool` | `true` | no |
-| cloudtrail\_s3\_policy | Policy for S3. | `string` | `""` | no |
-| cloudwatch\_log\_group\_encrypted | Ensuring that log group is encrypted | `bool` | `false` | no |
-| cloudwatch\_logs\_group\_name | The name of CloudWatch Logs group to which CloudTrail events are delivered. | `string` | `"iam_role_name"` | no |
-| cloudwatch\_logs\_retention\_in\_days | Number of days to retain logs for. CIS recommends 365 days.  Possible values are: 0, 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653. Set to 0 to keep logs indefinitely. | `number` | `365` | no |
-| config\_cloudtrail\_enabled | Ensuring that the cloudtrail is enabled. | `bool` | `false` | no |
-| config\_enabled | The boolean flag whether config module is enabled or not. No resources are created when set to false. | `bool` | `true` | no |
-| config\_s3\_bucket\_name | The name of the S3 bucket which will store logs for aws  config. | `string` | n/a | yes |
-| console\_signin\_failures | If you want to create alarm when any changes in cloudtrail cfg. | `bool` | `true` | no |
-| default\_ebs\_enable | The boolean flag whether Default EBS  module is enabled or not. No resources are created when set to false. | `bool` | `false` | no |
-| delimiter | Delimiter to be used between `organization`, `environment`, `name` and `attributes`. | `string` | `"-"` | no |
-| disable\_or\_delete\_cmk | If you want to create alarm when disable or delete in cmk. | `bool` | `true` | no |
-| ebs\_snapshot\_public\_restorable | Checks whether Amazon Elastic Block Store snapshots are not publicly restorable. | `bool` | `false` | no |
-| ec2\_encrypted\_volumes | Evaluates whether EBS volumes that are in an attached state are encrypted. Optionally, you can specify the ID of a KMS key to use to encrypt the volume. | `bool` | `false` | no |
-| ec2\_volume\_inuse\_check | Checks whether EBS volumes are attached to EC2 instances. | `bool` | `false` | no |
-| eip\_attached | Checks whether all Elastic IP addresses that are allocated to a VPC are attached to EC2 instances or in-use elastic network interfaces (ENIs). | `bool` | `false` | no |
-| enable\_aws\_foundational\_standard | Boolean whether AWS Foundations standard is enabled. | `bool` | `true` | no |
-| enable\_ccis\_standard | n/a | `bool` | `true` | no |
-| enable\_cis\_standard | Boolean whether CIS standard is enabled. | `bool` | `true` | no |
-| enable\_iam\_baseline | n/a | `bool` | `true` | no |
-| enable\_pci\_dss\_standard | Boolean whether PCI DSS standard is enabled. | `bool` | `true` | no |
-| enabled | The boolean flag whether this module is enabled or not. No resources are created when set to false. | `bool` | `true` | no |
-| environment | Environment (e.g. `prod`, `dev`, `staging`). | `string` | `""` | no |
-| event\_alert\_list | Event List which event is not ignore. | `string` | `""` | no |
-| event\_ignore\_list | Event List which event is ignore. | `string` | `""` | no |
-| event\_selector | Specifies an event selector for enabling data event logging. See: https://www.terraform.io/docs/providers/aws/r/cloudtrail.html for details on this variable | <pre>list(object({<br>    include_management_events = bool<br>    read_write_type           = string<br><br>  }))</pre> | `[]` | no |
-| guardduty\_enable | Enable monitoring and feedback reporting. Setting to false is equivalent to `suspending` GuardDuty. Defaults to true | `bool` | `true` | no |
-| guardduty\_enabled\_centralized | Checks whether Amazon GuardDuty is enabled in your AWS account and region. | `bool` | `false` | no |
-| guardduty\_s3\_bucket\_name | The name of the S3 bucket which will store guardduty files. | `string` | n/a | yes |
-| iam\_changes | If you want to create alarm when any changes in IAM. | `bool` | `true` | no |
-| iam\_mfa | Check MFA is enabled. | `bool` | `false` | no |
-| iam\_password\_policy | Ensuring that log group is encrypted | `bool` | `false` | no |
-| iam\_root\_access\_key | Checks whether the root user access key is available. The rule is COMPLIANT if the user access key does not exist. | `bool` | `false` | no |
-| inspector\_enabled | Whether Inspector is enabled or not. | `bool` | `true` | no |
-| instances\_in\_vpc | Ensuring that all the instances in VPC | `bool` | `false` | no |
-| ipset\_iplist | IPSet list of trusted IP addresses | `list(any)` | `[]` | no |
-| is\_guardduty\_member | Whether the account is a member account | `bool` | `false` | no |
-| key\_deletion\_window\_in\_days | Duration in days after which the key is deleted after destruction of the resource, must be between 7 and 30 days. Defaults to 30 days. | `number` | `10` | no |
-| label\_order | Label order, e.g. `name`,`application`. | `list(any)` | `[]` | no |
-| managedby | ManagedBy, eg 'CloudDrove' | `string` | `"hello@clouddrove.com"` | no |
-| manager\_iam\_role\_name | The name of the IAM Manager role. | `string` | `"IAM-Manager"` | no |
-| manager\_iam\_role\_policy\_name | The name of the IAM Manager role policy. | `string` | `"IAM-Manager-Policy"` | no |
-| master\_iam\_role\_name | The name of the IAM Master role. | `string` | `"IAM-Master"` | no |
-| master\_iam\_role\_policy\_name | The name of the IAM Master role policy. | `string` | `"IAM-Master-Policy"` | no |
-| max\_password\_age | The number of days that an user password is valid. | `number` | `120` | no |
-| member\_accounts | A list of IDs and emails of AWS accounts which associated as member accounts. | <pre>list(object({<br>    account_id = string<br>    email      = string<br>  }))</pre> | `[]` | no |
-| member\_list | The list of member accounts to be added. Each member list need to have values of account\_id, member\_email and invite boolean | <pre>list(object({<br>    account_id = string<br>    email      = string<br>    invite     = bool<br>  }))</pre> | `[]` | no |
-| minimum\_password\_length | Minimum length to require for user passwords. | `number` | `14` | no |
-| multi\_region\_cloudtrail\_enabled | Ensuring that the multi-region-cloud-trail is enabled | `bool` | `false` | no |
-| nacl\_changes | If you want to create alarm when any changes in nacl. | `bool` | `true` | no |
-| name | Name  (e.g. `app` or `cluster`). | `string` | `""` | no |
-| network\_gw\_changes | If you want to create alarm when any changes in network gateway. | `bool` | `true` | no |
-| no\_mfa\_console\_signin | If you want to create alarm when MFA not enabled on root user. | `bool` | `true` | no |
-| no\_policies\_with\_full\_admin\_access | Check user no policies with full admin access. | `bool` | `false` | no |
-| object\_lock\_configuration | With S3 Object Lock, you can store objects using a write-once-read-many (WORM) model. Object Lock can help prevent objects from being deleted or overwritten for a fixed amount of time or indefinitely. | <pre>object({<br>    mode  = string<br>    days  = number<br>    years = number<br>  })</pre> | `null` | no |
-| password\_max\_age | Number of days before password expiration. | `number` | `90` | no |
-| password\_min\_length | Password minimum length. | `number` | `16` | no |
-| password\_require\_lowercase | Require at least one lowercase character in password. | `bool` | `true` | no |
-| password\_require\_numbers | Require at least one number in password. | `bool` | `true` | no |
-| password\_require\_symbols | Require at least one symbol in password. | `bool` | `true` | no |
-| password\_require\_uppercase | Require at least one uppercase character in password. | `bool` | `true` | no |
-| password\_reuse\_prevention | Number of passwords before allowing reuse. | `number` | `24` | no |
-| rds\_instance\_public\_access\_check | Checks whether the Amazon Relational Database Service (RDS) instances are not publicly accessible. | `bool` | `false` | no |
-| rds\_snapshots\_public\_prohibited | Checks if Amazon Relational Database Service (Amazon RDS) snapshots are public. | `bool` | `false` | no |
-| rds\_storage\_encrypted | Checks whether storage encryption is enabled for your RDS DB instances. | `bool` | `false` | no |
-| require\_lowercase\_characters | Whether to require lowercase characters for user passwords. | `bool` | `true` | no |
-| require\_numbers | Whether to require numbers for user passwords. | `bool` | `true` | no |
-| require\_symbols | Whether to require symbols for user passwords. | `bool` | `true` | no |
-| require\_uppercase\_characters | Whether to require uppercase characters for user passwords. | `bool` | `true` | no |
-| resource\_arn | The ARN (Amazon Resource Name) of the resource to be protected. | `string` | `""` | no |
-| restricted\_ports | If you want to enable the restricted incoming port. | `bool` | `false` | no |
-| restricted\_ports\_list | This list of blocked ports. | `string` | `"{\"blockedPort1\": \"22\", \"blockedPort2\": \"3306\",\"blockedPort3\": \"6379\", \"blockedPort4\": \"5432\"}"` | no |
-| root\_usage | If you want to create alarm when sign in with root user. | `bool` | `true` | no |
-| route\_table\_changes | If you want to create alarm when any changes in network gateway. | `bool` | `true` | no |
-| rules\_package\_arns | The rules to be used during the run. | `list(string)` | `[]` | no |
-| s3\_bucket\_policy\_changes | If you want to create alarm when any changes in S3 policy. | `bool` | `true` | no |
-| s3\_bucket\_public\_write\_prohibited | Checks that your S3 buckets do not allow public write access. | `bool` | `false` | no |
-| s3\_bucket\_ssl\_requests\_only | Checks whether S3 buckets have policies that require requests to use Secure Socket Layer (SSL). | `bool` | `false` | no |
-| s3\_mfa\_delete | mfa enable for bucket. | `bool` | `false` | no |
-| schedule\_expression | AWS Schedule Expression: https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html | `string` | `"cron(0 14 ? * THU *)"` | no |
-| security\_group\_changes | If you want to create alarm when any changes on security groups. | `bool` | `true` | no |
-| security\_hub\_enable | The boolean flag whether this module is enabled or not. No resources are created when set to false. | `bool` | `true` | no |
-| shield\_enable | The boolean flag whether shield module is enabled or not. No resources are created when set to false. | `bool` | `false` | no |
-| slack\_channel | The channel of slack. | `string` | `""` | no |
-| slack\_webhook | The webhook of slack. | `string` | `""` | no |
-| sns\_topic\_name | Specifies the name of the Amazon SNS topic defined for notification of log file delivery | `string` | `null` | no |
-| source\_list | Event Source List which event is ignore. | `string` | `""` | no |
-| support\_iam\_role\_name | The name of the the support role. | `string` | `"IAM-Support"` | no |
-| support\_iam\_role\_policy\_name | The name of the support role policy. | `string` | `"IAM-Support-Role"` | no |
-| support\_iam\_role\_principal\_arn | The ARN of the IAM principal element by which the support role could be assumed. | `string` | `""` | no |
-| tags | Additional tags (e.g. map(`BusinessUnit`,`XYZ`). | `map(any)` | `{}` | no |
-| threatintelset\_activate | Specifies whether GuardDuty is to start using the uploaded ThreatIntelSet | `bool` | `true` | no |
-| threatintelset\_iplist | ThreatIntelSet list of known malicious IP addresses | `list(any)` | `[]` | no |
-| type | Type of Analyzer. Valid value is currently only ACCOUNT. Defaults to ACCOUNT. | `string` | `"ACCOUNT"` | no |
-| unauthorized\_api\_calls | If you want to create alarm for unauthorized api calls. | `bool` | `true` | no |
-| unused\_credentials | Check unused credentials in AWS account. | `bool` | `false` | no |
-| user\_ignore\_list | User List which event is ignore. | `string` | `""` | no |
-| user\_no\_policies | Check user no policies. | `bool` | `false` | no |
-| vpc\_changes | If you want to create alarm when any changes in vpc. | `bool` | `true` | no |
-| vpc\_default\_security\_group\_closed | Checks that the default security group of any Amazon Virtual Private Cloud (VPC) does not allow inbound or outbound traffic. | `bool` | `false` | no |
+      # S3
+      block_public_acls       = true
+      block_public_policy     = true
+      ignore_public_acls      = true
+      restrict_public_buckets = true
 
-## Outputs
+      organization_auto_enable = false
 
-| Name | Description |
-|------|-------------|
-| cloudtrail\_arn | The Amazon Resource Name of the trail |
-| tags | A mapping of tags to assign to the Cloudtrail. |
+      # Slack Alerts
+      slack_enabled = false # Pass true to enable lambda
+    }
+  ```
 
+  ### IAM
+  Here is an example of how you can use this module in your inventory structure:
+  ```hcl
+    module "iam" {
+      source      = "clouddrove/secure-baseline/aws//modules/iam"
+      version     = "1.4.0"
 
+      name        = "iam-baseline"
+      environment = "test"
+      label_order = ["name", "environment"]
+      enabled     = true
 
+      master_iam_role_name           = "IAM-Master"
+      master_iam_role_policy_name    = "IAM-master-Policy"
+      manager_iam_role_name          = "IAM-manager"
+      manager_iam_role_policy_name   = "IAM-Manager-Policy"
+      support_iam_role_name          = "IAM-Policy"
+      support_iam_role_policy_name   = "IAM-Support-Role"
+      support_iam_role_principal_arn = data.aws_caller_identity.current.arn
+    }
+  ```
 
-## Testing
-In this module testing is performed with [terratest](https://github.com/gruntwork-io/terratest) and it creates a small piece of infrastructure, matches the output like ARN, ID and Tags name etc and destroy infrastructure in your AWS account. This testing is written in GO, so you need a [GO environment](https://golang.org/doc/install) in your system. 
+  ### Inspector
+  Here is an example of how you can use this module in your inventory structure:
+  ```hcl
+    module "inspector" {
+      source      = "clouddrove/secure-baseline/aws//modules/inspector"
+      version     = "1.4.0"
 
-You need to run the following command in the testing folder:
-```hcl
-  go test -run Test
-```
+      name        = "inspector"
+      environment = "security"
+      label_order = ["name", "environment"]
+      enabled     = true
 
+      instance_tags = {
+        "Inspector" = true
+      }
 
+      duration            = 300
+      lambda_enabled      = true
+      schedule_expression = "cron(0/10 * ? * * *)"
+      handler             = "index.handler"
+      runtime             = "nodejs18.x"
+      statement_ids       = ["AllowExecutionFromEvents"]
+      actions             = ["lambda:InvokeFunction"]
+      principals          = ["events.amazonaws.com"]
+
+      iam_actions = [
+        "inspector:StartAssessmentRun",
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ]
+    }
+  ```
+
+  ### Security Hub
+  Here is an example of how you can use this module in your inventory structure:
+  ```hcl
+    module "security-hub" {
+      source      = "clouddrove/secure-baseline/aws//modules/security-hub"
+      version     = "1.4.0"
+
+      security_hub_enabled = true
+
+      #standards 
+      enabled_standards = [
+        "standards/aws-foundational-security-best-practices/v/1.0.0",
+        "ruleset/cis-aws-foundations-benchmark/v/1.2.0"
+      ]
+
+      #products
+      enabled_products = [
+        "product/aws/guardduty",
+        "product/aws/inspector"
+      ]
+    }
+  ```
+
+  ### Shield
+  Here is an example of how you can use this module in your inventory structure:
+  ```hcl
+    module "shield" {
+      source      = "clouddrove/secure-baseline/aws//modules/shield"
+      version     = "1.4.0"
+
+      name        = "shield"
+      environment = "security"
+      label_order = ["name", "environment"]
+      enabled     = false
+
+      ## AWS SHIELD
+      resource_arn = [] # ARN of the Resource that needs to be protect with Shield. e.g. cloudfront, ALB, EIP, Route53 etc.
+
+    }
+  ```
 
 ## Feedback 
 If you come accross a bug or have any feedback, please log it in our [issue tracker](https://github.com/clouddrove/clouddrove/terraform-aws-secure-baseline/modules//issues), or feel free to drop us an email at [hello@clouddrove.com](mailto:hello@clouddrove.com).
