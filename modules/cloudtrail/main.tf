@@ -184,7 +184,7 @@ data "aws_iam_policy_document" "cloudwatch_delivery_policy" {
 
 module "kms_key" {
   source  = "clouddrove/kms/aws"
-  version = "1.3.0"
+  version = "1.3.1"
 
   name                    = var.name
   environment             = var.environment
