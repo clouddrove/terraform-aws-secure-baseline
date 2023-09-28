@@ -1,10 +1,10 @@
 output "configuration_recorder_id" {
-  value       = join("", aws_config_configuration_recorder.recorder.*.id)
+  value       = join("", aws_config_configuration_recorder.recorder[*].id)
   description = "The ID of configuration recorder."
 }
 
 output "configuration_recorder_arn" {
-  value       = join("", aws_config_configuration_recorder.recorder.*.role_arn)
+  value       = join("", aws_config_configuration_recorder.recorder[*].role_arn)
   description = "The ARN of configuration recorder."
 }
 

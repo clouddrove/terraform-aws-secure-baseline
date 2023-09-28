@@ -19,40 +19,10 @@ variable "label_order" {
   description = "Label order, e.g. `name`,`application`."
 }
 
-variable "attributes" {
-  type        = list(any)
-  default     = []
-  description = "Additional attributes (e.g. `1`)."
-}
-
-variable "delimiter" {
-  type        = string
-  default     = "-"
-  description = "Delimiter to be used between `organization`, `environment`, `name` and `attributes`."
-}
-
-variable "tags" {
-  type        = map(any)
-  default     = {}
-  description = "Additional tags (e.g. map(`BusinessUnit`,`XYZ`)."
-}
-
 variable "enabled" {
   type        = bool
   default     = true
   description = "The boolean flag whether this module is enabled or not. No resources are created when set to false."
-}
-
-variable "lambda_enabled" {
-  type        = bool
-  default     = true
-  description = "Whether to create lambda for cloudtrail logs."
-}
-
-variable "cloudtrail_name" {
-  type        = string
-  default     = "cloudtrail-multi-region"
-  description = "The name of the trail."
 }
 
 variable "slack_webhook" {
@@ -85,12 +55,6 @@ variable "additional_member_account_id" {
   description = "Additional member account id."
 }
 
-variable "additional_s3_account_path_arn" {
-  type        = list(any)
-  default     = []
-  description = "Additional path of s3 account."
-}
-
 variable "cloudwatch_logs_group_name" {
   type        = string
   default     = "iam_role_name"
@@ -109,23 +73,10 @@ variable "iam_role_name" {
   description = "The name of the IAM Role to be used by CloudTrail to delivery logs to CloudWatch Logs group."
 }
 
-variable "filename" {
-  type        = string
-  default     = ""
-  description = "The path of directory of code."
-}
-
 variable "iam_role_policy_name" {
   type        = string
   default     = "CloudTrail-CloudWatch-Delivery-Policy"
   description = "The name of the IAM Role Policy to be used by CloudTrail to delivery logs to CloudWatch Logs group."
-}
-
-variable "key_deletion_window_in_days" {
-  type        = number
-  default     = 10
-  description = "Duration in days after which the key is deleted after destruction of the resource, must be between 7 and 30 days. Defaults to 30 days."
-
 }
 
 variable "s3_bucket_name" {
@@ -139,28 +90,10 @@ variable "key_arn" {
   description = "The arn of the KMS."
 }
 
-variable "account_ids" {
-
-  default     = {}
-  description = "The account id of the accounts."
-}
-
-variable "s3_key_prefix" {
-  type        = string
-  default     = ""
-  description = "The prefix for the specified S3 bucket."
-}
-
 variable "is_organization_trail" {
   type        = bool
   default     = false
   description = "Specifies whether the trail is an AWS Organizations trail. Organization trails log events for the master account and all member accounts. Can only be created in the organization master account."
-}
-
-variable "account_type" {
-  type        = string
-  default     = "individual"
-  description = "The type of the AWS account. The possible values are `individual`, `master` and `member` . Specify `master` and `member` to set up centalized logging for multiple accounts in AWS Organization. Use individual` otherwise."
 }
 
 variable "event_ignore_list" {
@@ -193,6 +126,7 @@ variable "s3_policy" {
 }
 
 variable "s3_mfa_delete" {
+  type        = bool
   default     = false
   description = "mfa enable for bucket."
 }

@@ -1,11 +1,5 @@
 #Module      : LABEL
 #Description : Terraform label module variables.
-variable "name" {
-  type        = string
-  default     = ""
-  description = "Name  (e.g. `app` or `cluster`)."
-}
-
 
 variable "environment" {
   type        = string
@@ -23,18 +17,6 @@ variable "managedby" {
   type        = string
   default     = "hello@clouddrove.com"
   description = "ManagedBy, eg 'CloudDrove'"
-}
-
-variable "attributes" {
-  type        = list(any)
-  default     = []
-  description = "Additional attributes (e.g. `1`)."
-}
-
-variable "delimiter" {
-  type        = string
-  default     = "-"
-  description = "Delimiter to be used between `organization`, `environment`, `name` and `attributes`."
 }
 
 variable "cloudtrail_s3_policy" {
@@ -67,15 +49,10 @@ variable "source_list" {
   description = "Event Source List which event is ignore."
 }
 
-variable "tags" {
-  type        = map(any)
-  default     = {}
-  description = "Additional tags (e.g. map(`BusinessUnit`,`XYZ`)."
-}
-
 variable "enabled" {
-  description = "The boolean flag whether this module is enabled or not. No resources are created when set to false."
+  type        = bool
   default     = true
+  description = "The boolean flag whether this module is enabled or not. No resources are created when set to false."
 }
 
 variable "slack_webhook" {
@@ -92,20 +69,15 @@ variable "slack_channel" {
 
 ## Cloudtrail
 variable "cloudtrail_enabled" {
-  description = "The boolean flag whether cloudtrail module is enabled or not. No resources are created when set to false."
+  type        = bool
   default     = true
+  description = "The boolean flag whether cloudtrail module is enabled or not. No resources are created when set to false."
 }
 
 variable "cloudwatch_logs_group_name" {
   type        = string
   default     = "iam_role_name"
   description = "The name of CloudWatch Logs group to which CloudTrail events are delivered."
-}
-
-variable "key_deletion_window_in_days" {
-  type        = number
-  default     = 10
-  description = "Duration in days after which the key is deleted after destruction of the resource, must be between 7 and 30 days. Defaults to 30 days."
 }
 
 variable "cloudwatch_logs_retention_in_days" {
@@ -135,6 +107,7 @@ variable "sns_topic_name" {
 }
 
 variable "s3_mfa_delete" {
+  type        = bool
   default     = false
   description = "mfa enable for bucket."
 }
@@ -151,8 +124,9 @@ variable "object_lock_configuration" {
 }
 # analyzer
 variable "analyzer_enable" {
-  description = "The boolean flag whether alarm module is enabled or not. No resources are created when set to false."
+  type        = bool
   default     = true
+  description = "The boolean flag whether alarm module is enabled or not. No resources are created when set to false."
 }
 
 variable "type" {
@@ -164,8 +138,9 @@ variable "type" {
 
 # Alarm
 variable "alarm_enabled" {
-  description = "The boolean flag whether alarm module is enabled or not. No resources are created when set to false."
+  type        = bool
   default     = true
+  description = "The boolean flag whether alarm module is enabled or not. No resources are created when set to false."
 }
 
 variable "unauthorized_api_calls" {
@@ -247,8 +222,9 @@ variable "vpc_changes" {
 }
 
 variable "alarm_namespace" {
-  description = "The namespace in which all alarms are set up."
+  type        = string
   default     = "CISBenchmark"
+  description = "The namespace in which all alarms are set up."
 }
 
 variable "aws_config_changes_enabled" {
@@ -305,8 +281,9 @@ variable "is_guardduty_member" {
 
 # Config
 variable "config_enabled" {
-  description = "The boolean flag whether config module is enabled or not. No resources are created when set to false."
+  type        = bool
   default     = true
+  description = "The boolean flag whether config module is enabled or not. No resources are created when set to false."
 }
 
 
@@ -351,12 +328,6 @@ variable "acm_certificate_expiration_check" {
   type        = bool
   default     = false
   description = "Check ACM Certificates in your account are marked for expiration within the specified number of days."
-}
-
-variable "acm_days_to_expiration" {
-  type        = number
-  default     = 14
-  description = "Specify the number of days before the rule flags the ACM Certificate as noncompliant."
 }
 
 variable "ec2_volume_inuse_check" {
@@ -429,12 +400,6 @@ variable "s3_bucket_ssl_requests_only" {
   type        = bool
   default     = false
   description = "Checks whether S3 buckets have policies that require requests to use Secure Socket Layer (SSL)."
-}
-
-variable "config_cloudtrail_enabled" {
-  type        = bool
-  default     = false
-  description = "Ensuring that the cloudtrail is enabled."
 }
 
 variable "multi_region_cloudtrail_enabled" {
@@ -529,8 +494,9 @@ variable "schedule_expression" {
 
 #shield
 variable "shield_enable" {
-  description = "The boolean flag whether shield module is enabled or not. No resources are created when set to false."
+  type        = bool
   default     = false
+  description = "The boolean flag whether shield module is enabled or not. No resources are created when set to false."
 }
 
 variable "resource_arn" {
@@ -541,113 +507,113 @@ variable "resource_arn" {
 
 #ebs
 variable "default_ebs_enable" {
-  description = "The boolean flag whether Default EBS  module is enabled or not. No resources are created when set to false."
+  type        = bool
   default     = false
-}
-
-#Security Hub
-variable "member_accounts" {
-  description = "A list of IDs and emails of AWS accounts which associated as member accounts."
-  type = list(object({
-    account_id = string
-    email      = string
-  }))
-  default = []
+  description = "The boolean flag whether Default EBS  module is enabled or not. No resources are created when set to false."
 }
 
 variable "security_hub_enable" {
-  description = "The boolean flag whether this module is enabled or not. No resources are created when set to false."
+  type        = bool
   default     = true
-}
-
-variable "enable_ccis_standard" {
-  default = true
+  description = "The boolean flag whether this module is enabled or not. No resources are created when set to false."
 }
 
 variable "enable_cis_standard" {
-  description = "Boolean whether CIS standard is enabled."
+  type        = bool
   default     = true
+  description = "Boolean whether CIS standard is enabled."
 }
 
 variable "enable_pci_dss_standard" {
-  description = "Boolean whether PCI DSS standard is enabled."
+  type        = bool
   default     = true
+  description = "Boolean whether PCI DSS standard is enabled."
 }
 
 variable "enable_aws_foundational_standard" {
-  description = "Boolean whether AWS Foundations standard is enabled."
+  type        = bool
   default     = true
+  description = "Boolean whether AWS Foundations standard is enabled."
 }
 
 #IAM baseline
 variable "master_iam_role_name" {
-  description = "The name of the IAM Master role."
+  type        = string
   default     = "IAM-Master"
+  description = "The name of the IAM Master role."
+
 }
 
 variable "master_iam_role_policy_name" {
-  description = "The name of the IAM Master role policy."
+  type        = string
   default     = "IAM-Master-Policy"
+  description = "The name of the IAM Master role policy."
 }
 
 variable "manager_iam_role_name" {
-  description = "The name of the IAM Manager role."
+  type        = string
   default     = "IAM-Manager"
+  description = "The name of the IAM Manager role."
 }
 
 variable "manager_iam_role_policy_name" {
-  description = "The name of the IAM Manager role policy."
+  type        = string
   default     = "IAM-Manager-Policy"
+  description = "The name of the IAM Manager role policy."
 }
 
 variable "support_iam_role_name" {
-  description = "The name of the the support role."
+  type        = string
   default     = "IAM-Support"
-}
-
-variable "support_iam_role_policy_name" {
-  description = "The name of the support role policy."
-  default     = "IAM-Support-Role"
+  description = "The name of the the support role."
 }
 
 variable "support_iam_role_principal_arn" {
+  type        = string
   default     = ""
   description = "The ARN of the IAM principal element by which the support role could be assumed."
 
 }
 
 variable "max_password_age" {
+  type        = number
   default     = 120
   description = "The number of days that an user password is valid."
 
 }
 
 variable "minimum_password_length" {
+  type        = number
   default     = 14
   description = "Minimum length to require for user passwords."
 }
 
 variable "require_lowercase_characters" {
+  type        = bool
   default     = true
   description = "Whether to require lowercase characters for user passwords."
 }
 
 variable "require_numbers" {
+  type        = bool
   default     = true
   description = "Whether to require numbers for user passwords."
 }
 
 variable "require_uppercase_characters" {
+  type        = bool
   default     = true
   description = "Whether to require uppercase characters for user passwords."
 }
 
 variable "require_symbols" {
+  type        = bool
   default     = true
   description = "Whether to require symbols for user passwords."
 }
 
 variable "allow_users_to_change_password" {
+  type        = bool
   default     = true
   description = "Whether to allow users to change their own password."
 }

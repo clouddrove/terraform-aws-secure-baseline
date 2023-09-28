@@ -42,16 +42,19 @@ variable "type" {
 ## Cloud Watch Event
 
 variable "rule_iam_role_arn" {
+  type        = string
   default     = null
   description = "The Amazon Resource Name (ARN) associated with the role that is used for target invocation."
 }
 
 variable "target_iam_role_arn" {
+  type        = string
   default     = null
   description = "The Amazon Resource Name (ARN) associated with the role that is used for target invocation."
 }
 
 variable "variables" {
+  type        = map(any)
   default     = {}
   description = "The environment variables for lambda function."
 

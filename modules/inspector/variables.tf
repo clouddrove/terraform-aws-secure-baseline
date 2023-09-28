@@ -73,6 +73,7 @@ variable "schedule_expression" {
 }
 
 variable "rule_iam_role_arn" {
+  type        = string
   default     = null
   description = "The Amazon Resource Name (ARN) associated with the role that is used for target invocation."
 }
@@ -84,6 +85,7 @@ variable "is_enabled" {
 }
 
 variable "target_iam_role_arn" {
+  type        = string
   default     = null
   description = "The Amazon Resource Name (ARN) associated with the role that is used for target invocation."
 }

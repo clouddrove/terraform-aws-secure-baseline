@@ -19,24 +19,6 @@ variable "label_order" {
   description = "Label order, e.g. `name`,`application`."
 }
 
-variable "attributes" {
-  type        = list(any)
-  default     = []
-  description = "Additional attributes (e.g. `1`)."
-}
-
-variable "delimiter" {
-  type        = string
-  default     = "-"
-  description = "Delimiter to be used between `organization`, `environment`, `name` and `attributes`."
-}
-
-variable "tags" {
-  type        = map(any)
-  default     = {}
-  description = "Additional tags (e.g. map(`BusinessUnit`,`XYZ`)."
-}
-
 variable "enabled" {
   type        = bool
   default     = true
@@ -69,9 +51,16 @@ variable "include_global_resource_types" {
 }
 
 variable "variables" {
+  type        = map(any)
   default     = {}
   description = "The environment variables for lambda function."
 
+}
+
+variable "delimiter" {
+  type        = string
+  default     = "-"
+  description = "Delimiter to be used between `organization`, `environment`, `name` and `attributes`."
 }
 
 variable "managedby" {

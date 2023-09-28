@@ -1,5 +1,5 @@
 output "analyzer_name" {
-  value       = join("", aws_accessanalyzer_analyzer.default.*.id)
+  value       = join("", aws_accessanalyzer_analyzer.default[*].id)
   description = "Analyzer name."
 }
 

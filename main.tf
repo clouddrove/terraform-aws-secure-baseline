@@ -11,8 +11,6 @@ module "cloudtrail" {
   enabled                           = var.enabled && var.cloudtrail_enabled
   iam_role_name                     = "CloudTrail-CloudWatch-Delivery-Role"
   iam_role_policy_name              = "CloudTrail-CloudWatch-Delivery-Policy"
-  account_type                      = "individual"
-  key_deletion_window_in_days       = var.key_deletion_window_in_days
   cloudwatch_logs_retention_in_days = var.cloudwatch_logs_retention_in_days
   cloudwatch_logs_group_name        = var.cloudwatch_logs_group_name
   event_ignore_list                 = var.event_ignore_list
@@ -234,7 +232,6 @@ module "aws-iam-baseline" {
   manager_iam_role_name           = var.manager_iam_role_name
   manager_iam_role_policy_name    = var.manager_iam_role_policy_name
   support_iam_role_name           = var.support_iam_role_name
-  support_iam_role_policy_name    = var.support_iam_role_policy_name
   support_iam_role_principal_arn  = var.support_iam_role_principal_arn
   minimum_password_length         = var.minimum_password_length
   password_reuse_prevention       = var.password_reuse_prevention

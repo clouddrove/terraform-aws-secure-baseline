@@ -1,15 +1,15 @@
 output "resource_group" {
-  value       = join("", aws_inspector_resource_group.default.*.arn)
+  value       = join("", aws_inspector_resource_group.default[*].arn)
   description = "The resource group ARN."
 }
 
 output "assessment_target" {
-  value       = join("", aws_inspector_assessment_target.default.*.arn)
+  value       = join("", aws_inspector_assessment_target.default[*].arn)
   description = "The target assessment ARN."
 }
 
 output "assessment_template" {
-  value       = join("", aws_inspector_assessment_template.default.*.arn)
+  value       = join("", aws_inspector_assessment_template.default[*].arn)
   description = "The template assessment ARN."
 }
 

@@ -89,7 +89,7 @@ data "aws_iam_policy_document" "master_policy" {
 resource "aws_iam_role_policy" "master_policy" {
   count  = var.enabled ? 1 : 0
   name   = var.master_iam_role_policy_name
-  role   = join("", aws_iam_role.master.*.id)
+  role   = join("", aws_iam_role.master[*].id)
   policy = data.aws_iam_policy_document.master_policy.json
 }
 
@@ -148,7 +148,7 @@ data "aws_iam_policy_document" "manager_policy" {
 resource "aws_iam_role_policy" "manager_policy" {
   count  = var.enabled ? 1 : 0
   name   = var.manager_iam_role_policy_name
-  role   = join("", aws_iam_role.manager.*.id)
+  role   = join("", aws_iam_role.manager[*].id)
   policy = data.aws_iam_policy_document.manager_policy.json
 }
 
@@ -175,6 +175,6 @@ resource "aws_iam_role" "support" {
 
 resource "aws_iam_role_policy_attachment" "support_policy" {
   count      = var.enabled ? 1 : 0
-  role       = join("", aws_iam_role.support.*.id)
+  role       = join("", aws_iam_role.support[*].id)
   policy_arn = "arn:aws:iam::aws:policy/AWSSupportAccess"
 }

@@ -26,7 +26,7 @@ resource "aws_inspector_resource_group" "default" {
 resource "aws_inspector_assessment_target" "default" {
   count              = var.enabled ? 1 : 0
   name               = format("%s-assessment-target", module.labels.id)
-  resource_group_arn = join("", aws_inspector_resource_group.default.*.arn)
+  resource_group_arn = join("", aws_inspector_resource_group.default[*].arn)
 }
 
 #Module      : INSPECTOR ASSESSMENT TEMPLATE
@@ -34,7 +34,7 @@ resource "aws_inspector_assessment_target" "default" {
 resource "aws_inspector_assessment_template" "default" {
   count              = var.enabled ? 1 : 0
   name               = format("%s-assessment-template", module.labels.id)
-  target_arn         = join("", aws_inspector_assessment_target.default.*.arn)
+  target_arn         = join("", aws_inspector_assessment_target.default[*].arn)
   duration           = var.duration
   rules_package_arns = var.rules_package_arns
   tags               = module.labels.tags
@@ -56,7 +56,7 @@ resource "aws_cloudwatch_event_rule" "default" {
 #Description : Attaching event rule and lambda function to targets.
 resource "aws_cloudwatch_event_target" "default" {
   count     = var.enabled && var.lambda_enabled ? 1 : 0
-  rule      = join("", aws_cloudwatch_event_rule.default.*.name)
+  rule      = join("", aws_cloudwatch_event_rule.default[*].name)
   target_id = "AssessmentRun"
   arn       = module.lambda.arn
   role_arn  = var.target_iam_role_arn
@@ -84,9 +84,9 @@ module "lambda" {
   statement_ids = var.statement_ids
   actions       = var.actions
   principals    = var.principals
-  source_arns   = [join("", aws_cloudwatch_event_rule.default.*.arn)]
+  source_arns   = [join("", aws_cloudwatch_event_rule.default[*].arn)]
 
   variables = {
-    assessmentTemplateArn = join("", aws_inspector_assessment_template.default.*.arn)
+    assessmentTemplateArn = join("", aws_inspector_assessment_template.default[*].arn)
   }
 }

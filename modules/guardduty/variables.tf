@@ -114,22 +114,19 @@ variable "enabled" {
 }
 
 variable "rule_iam_role_arn" {
+  type        = string
   default     = null
   description = "The Amazon Resource Name (ARN) associated with the role that is used for target invocation."
 }
 
-variable "is_enabled" {
-  type        = bool
-  default     = true
-  description = "Whether the rule should be enabled (defaults to true)."
-}
-
 variable "target_iam_role_arn" {
+  type        = string
   default     = null
   description = "The Amazon Resource Name (ARN) associated with the role that is used for target invocation."
 }
 
 variable "variables" {
+  type        = map(any)
   default     = {}
   description = "The environment variables for lambda function."
 

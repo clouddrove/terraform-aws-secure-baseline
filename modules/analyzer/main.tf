@@ -40,7 +40,7 @@ resource "aws_cloudwatch_event_rule" "default" {
 #Description : Attaching event rule and lambda function to targets.
 resource "aws_cloudwatch_event_target" "default" {
   count     = var.enabled ? 1 : 0
-  rule      = join("", aws_cloudwatch_event_rule.default.*.name)
+  rule      = join("", aws_cloudwatch_event_rule.default[*].name)
   target_id = "IAMAccessAnalyzer"
   arn       = module.slack-lambda.arn # ARN of the Lambda Function, write after including lambda function
   role_arn  = var.target_iam_role_arn
@@ -91,7 +91,7 @@ module "slack-lambda" {
   principals = [
     "events.amazonaws.com"
   ]
-  source_arns = [join("", aws_cloudwatch_event_rule.default.*.arn)]
+  source_arns = [join("", aws_cloudwatch_event_rule.default[*].arn)]
   variables   = var.variables
 }
 

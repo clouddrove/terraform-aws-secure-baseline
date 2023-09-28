@@ -1,8 +1,5 @@
 ## Managed By : CloudDrove
 ## Copyright @ CloudDrove. All Right Reserved.
-
-data "aws_caller_identity" "current" {}
-
 #Module      : Label
 #Description : This terraform module is designed to generate consistent label names and
 #              tags for resources. You can use terraform-labels to implement a strict
@@ -107,7 +104,7 @@ resource "aws_cloudwatch_metric_alarm" "unauthorized_api_calls" {
   alarm_name                = "UnauthorizedAPICalls"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "1"
-  metric_name               = join("", aws_cloudwatch_log_metric_filter.unauthorized_api_calls.*.id)
+  metric_name               = join("", aws_cloudwatch_log_metric_filter.unauthorized_api_calls[*].id)
   namespace                 = var.alarm_namespace
   period                    = "300"
   statistic                 = "Sum"
@@ -144,7 +141,7 @@ resource "aws_cloudwatch_metric_alarm" "no_mfa_console_signin" {
   alarm_name                = "NoMFAConsoleSignin"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "1"
-  metric_name               = join("", aws_cloudwatch_log_metric_filter.no_mfa_console_signin.*.id)
+  metric_name               = join("", aws_cloudwatch_log_metric_filter.no_mfa_console_signin[*].id)
   namespace                 = var.alarm_namespace
   period                    = "300"
   statistic                 = "Sum"
@@ -181,7 +178,7 @@ resource "aws_cloudwatch_metric_alarm" "root_usage" {
   alarm_name                = "RootUsage"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "1"
-  metric_name               = join("", aws_cloudwatch_log_metric_filter.root_usage.*.id)
+  metric_name               = join("", aws_cloudwatch_log_metric_filter.root_usage[*].id)
   namespace                 = var.alarm_namespace
   period                    = "300"
   statistic                 = "Sum"
@@ -218,7 +215,7 @@ resource "aws_cloudwatch_metric_alarm" "iam_changes" {
   alarm_name                = "IAMChanges"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "1"
-  metric_name               = join("", aws_cloudwatch_log_metric_filter.iam_changes.*.id)
+  metric_name               = join("", aws_cloudwatch_log_metric_filter.iam_changes[*].id)
   namespace                 = var.alarm_namespace
   period                    = "300"
   statistic                 = "Sum"
@@ -255,7 +252,7 @@ resource "aws_cloudwatch_metric_alarm" "cloudtrail_cfg_changes" {
   alarm_name                = "CloudTrailCfgChanges"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "1"
-  metric_name               = join("", aws_cloudwatch_log_metric_filter.cloudtrail_cfg_changes.*.id)
+  metric_name               = join("", aws_cloudwatch_log_metric_filter.cloudtrail_cfg_changes[*].id)
   namespace                 = var.alarm_namespace
   period                    = "300"
   statistic                 = "Sum"
@@ -293,7 +290,7 @@ resource "aws_cloudwatch_metric_alarm" "console_signin_failures" {
   alarm_name                = "ConsoleSigninFailures"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "1"
-  metric_name               = join("", aws_cloudwatch_log_metric_filter.console_signin_failures.*.id)
+  metric_name               = join("", aws_cloudwatch_log_metric_filter.console_signin_failures[*].id)
   namespace                 = var.alarm_namespace
   period                    = "300"
   statistic                 = "Sum"
@@ -330,7 +327,7 @@ resource "aws_cloudwatch_metric_alarm" "disable_or_delete_cmk" {
   alarm_name                = "DisableOrDeleteCMK"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "1"
-  metric_name               = join("", aws_cloudwatch_log_metric_filter.disable_or_delete_cmk.*.id)
+  metric_name               = join("", aws_cloudwatch_log_metric_filter.disable_or_delete_cmk[*].id)
   namespace                 = var.alarm_namespace
   period                    = "300"
   statistic                 = "Sum"
@@ -367,7 +364,7 @@ resource "aws_cloudwatch_metric_alarm" "s3_bucket_policy_changes" {
   alarm_name                = "S3BucketPolicyChanges"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "1"
-  metric_name               = join("", aws_cloudwatch_log_metric_filter.s3_bucket_policy_changes.*.id)
+  metric_name               = join("", aws_cloudwatch_log_metric_filter.s3_bucket_policy_changes[*].id)
   namespace                 = var.alarm_namespace
   period                    = "300"
   statistic                 = "Sum"
@@ -404,7 +401,7 @@ resource "aws_cloudwatch_metric_alarm" "security_group_changes" {
   alarm_name                = "SecurityGroupChanges"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "1"
-  metric_name               = join("", aws_cloudwatch_log_metric_filter.security_group_changes.*.id)
+  metric_name               = join("", aws_cloudwatch_log_metric_filter.security_group_changes[*].id)
   namespace                 = var.alarm_namespace
   period                    = "300"
   statistic                 = "Sum"
@@ -440,7 +437,7 @@ resource "aws_cloudwatch_metric_alarm" "nacl_changes" {
   alarm_name                = "NACLChanges"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "1"
-  metric_name               = join("", aws_cloudwatch_log_metric_filter.nacl_changes.*.id)
+  metric_name               = join("", aws_cloudwatch_log_metric_filter.nacl_changes[*].id)
   namespace                 = var.alarm_namespace
   period                    = "300"
   statistic                 = "Sum"
@@ -478,7 +475,7 @@ resource "aws_cloudwatch_metric_alarm" "network_gw_changes" {
   alarm_name                = "NetworkGWChanges"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "1"
-  metric_name               = join("", aws_cloudwatch_log_metric_filter.network_gw_changes.*.id)
+  metric_name               = join("", aws_cloudwatch_log_metric_filter.network_gw_changes[*].id)
   namespace                 = var.alarm_namespace
   period                    = "300"
   statistic                 = "Sum"
@@ -515,7 +512,7 @@ resource "aws_cloudwatch_metric_alarm" "route_table_changes" {
   alarm_name                = "RouteTableChanges"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "1"
-  metric_name               = join("", aws_cloudwatch_log_metric_filter.route_table_changes.*.id)
+  metric_name               = join("", aws_cloudwatch_log_metric_filter.route_table_changes[*].id)
   namespace                 = var.alarm_namespace
   period                    = "300"
   statistic                 = "Sum"
@@ -552,7 +549,7 @@ resource "aws_cloudwatch_metric_alarm" "vpc_changes" {
   alarm_name                = "VPCChanges"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "1"
-  metric_name               = join("", aws_cloudwatch_log_metric_filter.vpc_changes.*.id)
+  metric_name               = join("", aws_cloudwatch_log_metric_filter.vpc_changes[*].id)
   namespace                 = var.alarm_namespace
   period                    = "300"
   statistic                 = "Sum"
@@ -588,7 +585,7 @@ resource "aws_cloudwatch_metric_alarm" "aws_config_changes" {
   alarm_name                = "AWSConfigChanges"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "1"
-  metric_name               = join("", aws_cloudwatch_log_metric_filter.vpc_changes.*.id)
+  metric_name               = join("", aws_cloudwatch_log_metric_filter.vpc_changes[*].id)
   namespace                 = var.alarm_namespace
   period                    = "300"
   statistic                 = "Sum"

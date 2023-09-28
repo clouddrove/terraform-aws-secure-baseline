@@ -2,9 +2,6 @@ provider "aws" {
   region = "eu-west-1"
 }
 
-data "aws_caller_identity" "current" {}
-data "aws_region" "current" {}
-
 module "secure_baseline" {
   source = "./../"
 
@@ -17,7 +14,6 @@ module "secure_baseline" {
 
   # cloudtrail
   cloudtrail_enabled                = true
-  key_deletion_window_in_days       = 10
   cloudwatch_logs_retention_in_days = 365
   cloudwatch_logs_group_name        = "cloudtrail-log-group"
   cloudtrail_bucket_name            = "cloudtrail-bucket-logs123"
@@ -167,7 +163,6 @@ module "secure_baseline" {
   manager_iam_role_name        = "IAM-manager"
   manager_iam_role_policy_name = "IAM-Manager-Policy"
   support_iam_role_name        = "IAM-Policy"
-  support_iam_role_policy_name = "IAM-Support-Role"
 
   #Password policy
 

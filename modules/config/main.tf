@@ -2,7 +2,6 @@
 ## Copyright @ CloudDrove. All Right Reserved.
 
 data "aws_caller_identity" "current" {}
-data "aws_region" "current" {}
 
 #Module      : Label
 #Description : This terraform module is designed to generate consistent label names and
@@ -232,7 +231,7 @@ resource "aws_iam_role_policy" "recorder_publish_policy" {
   count = var.enabled ? 1 : 0
 
   name   = format("%s-recorder_publish_policy", module.labels.id)
-  role   = join("", aws_iam_role.recorder.*.id)
+  role   = join("", aws_iam_role.recorder[*].id)
   policy = data.aws_iam_policy_document.recorder_publish_policy.json
 }
 
@@ -241,7 +240,7 @@ resource "aws_iam_role_policy" "recorder_publish_policy" {
 resource "aws_iam_role_policy_attachment" "recorder_read_policy" {
   count = var.enabled ? 1 : 0
 
-  role       = join("", aws_iam_role.recorder.*.id)
+  role       = join("", aws_iam_role.recorder[*].id)
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSConfigRole"
 }
 
@@ -250,7 +249,7 @@ resource "aws_iam_role_policy_attachment" "recorder_read_policy" {
 resource "aws_config_configuration_recorder_status" "recorder" {
   count = var.enabled ? 1 : 0
 
-  name       = join("", aws_config_configuration_recorder.recorder.*.id)
+  name       = join("", aws_config_configuration_recorder.recorder[*].id)
   is_enabled = var.enabled
   depends_on = [aws_config_delivery_channel.bucket]
 }
@@ -261,7 +260,7 @@ resource "aws_config_configuration_recorder" "recorder" {
   count = var.enabled ? 1 : 0
 
   name     = format("%s-recorder", module.labels.id)
-  role_arn = join("", aws_iam_role.recorder.*.arn)
+  role_arn = join("", aws_iam_role.recorder[*].arn)
 
   recording_group {
     all_supported                 = true

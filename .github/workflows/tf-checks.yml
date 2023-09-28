@@ -1,0 +1,12 @@
+name: tf-checks
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+  workflow_dispatch:
+jobs:
+  tf-checks-example:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.5
+    with:
+      working_directory: './_example/'
+

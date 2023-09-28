@@ -173,12 +173,12 @@ data "aws_iam_policy_document" "cloudwatch_delivery_policy" {
   statement {
     sid       = "AWSCloudTrailCreateLogStream2014110"
     actions   = ["logs:CreateLogStream"]
-    resources = [format("arn:aws:logs:%s:%s:log-group:%s:log-stream:*", data.aws_region.current.name, data.aws_caller_identity.current.account_id, join("", aws_cloudwatch_log_group.cloudtrail_events.*.name))]
+    resources = [format("arn:aws:logs:%s:%s:log-group:%s:log-stream:*", data.aws_region.current.name, data.aws_caller_identity.current.account_id, join("", aws_cloudwatch_log_group.cloudtrail_events[*].name))]
   }
   statement {
     sid       = "AWSCloudTrailPutLogEvents20141101"
     actions   = ["logs:PutLogEvents"]
-    resources = [format("arn:aws:logs:%s:%s:log-group:%s:log-stream:*", data.aws_region.current.name, data.aws_caller_identity.current.account_id, join("", aws_cloudwatch_log_group.cloudtrail_events.*.name))]
+    resources = [format("arn:aws:logs:%s:%s:log-group:%s:log-stream:*", data.aws_region.current.name, data.aws_caller_identity.current.account_id, join("", aws_cloudwatch_log_group.cloudtrail_events[*].name))]
   }
 }
 
@@ -400,8 +400,8 @@ resource "aws_cloudtrail" "default" {
   sns_topic_name                = var.sns_topic_name
   is_organization_trail         = var.is_organization_trail
   kms_key_id                    = var.key_arn == "" ? module.kms_key.key_arn : var.key_arn
-  cloud_watch_logs_group_arn    = format("%s:*", join("", aws_cloudwatch_log_group.cloudtrail_events.*.arn))
-  cloud_watch_logs_role_arn     = join("", aws_iam_role.cloudwatch_delivery.*.arn)
+  cloud_watch_logs_group_arn    = format("%s:*", join("", aws_cloudwatch_log_group.cloudtrail_events[*].arn))
+  cloud_watch_logs_role_arn     = join("", aws_iam_role.cloudwatch_delivery[*].arn)
   tags                          = module.labels.tags
   depends_on = [
     aws_s3_bucket_policy.this
