@@ -121,7 +121,8 @@ variable "source_list" {
 }
 
 variable "s3_policy" {
-  default     = []
+  type = string
+  default     = ""
   description = "Policy of s3."
 }
 
