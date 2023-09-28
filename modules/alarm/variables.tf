@@ -122,7 +122,7 @@ variable "alarm_namespace" {
 
 variable "cloudtrail_log_group_name" {
   type        = string
-  default     = ""
+  default     = null
   description = "The name of the CloudWatch Logs group to which CloudTrail events are delivered."
 }
 
