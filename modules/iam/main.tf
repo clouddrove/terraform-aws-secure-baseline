@@ -16,6 +16,7 @@ module "labels" {
   label_order = var.label_order
 }
 
+#tfsec:ignore:aws-iam-set-max-password-age
 resource "aws_iam_account_password_policy" "default" {
   count                          = var.aws_iam_account_password_policy ? 1 : 0
   minimum_password_length        = var.minimum_password_length

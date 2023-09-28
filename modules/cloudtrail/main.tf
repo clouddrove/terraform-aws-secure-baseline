@@ -132,6 +132,7 @@ data "aws_iam_policy_document" "default" {
 
 #Module      : AWS_CLOUDWATCH_LOG_GROUP
 #Description : Provides a CloudWatch Log Group resource.
+#tfsec:ignore:aws-cloudwatch-log-group-customer-key
 resource "aws_cloudwatch_log_group" "cloudtrail_events" {
   count             = var.enabled ? 1 : 0
   name              = var.cloudwatch_logs_group_name

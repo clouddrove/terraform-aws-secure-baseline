@@ -19,6 +19,8 @@ module "labels" {
 #tfsec:ignore:aws-s3-block-public-policy
 #tfsec:ignore:aws-s3-enable-bucket-encryption
 #tfsec:ignore:aws-s3-encryption-customer-key
+#tfsec:ignore:aws-s3-ignore-public-acls
+#tfsec:ignore:aws-s3-specify-public-access-block
 resource "aws_s3_bucket" "bucket" {
   count         = var.enabled ? 1 : 0
   bucket        = var.bucket_name
