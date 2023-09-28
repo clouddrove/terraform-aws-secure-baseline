@@ -2,7 +2,7 @@
 #Description : Terraform label module variables.
 variable "name" {
   type        = string
-  default     = ""
+  default     = "test"
   description = "Name  (e.g. `app` or `cluster`)."
 }
 
@@ -116,7 +116,7 @@ variable "aws_config_changes_enabled" {
 
 variable "alarm_namespace" {
   type        = string
-  default     = ""
+  default     = null
   description = "The namespace in which all alarms are set up."
 }
 
