@@ -1,43 +1,55 @@
-data "aws_region" "current" {}
+data "aws_partition" "security_hub" {}
+data "aws_region" "security_hub" {}
 
-# Enable SecurityHub
-resource "aws_securityhub_account" "main" {
-  count = var.enabled ? 1 : 0
+locals {
+  enabled_standards_arns = var.security_hub_enabled ? toset([
+    for standard in var.enabled_standards :
+    format("arn:%s:securityhub:%s::%s", data.aws_partition.security_hub.partition, length(regexall("ruleset", standard)) == 0 ? data.aws_region.security_hub.name : "", standard)
+  ]) : []
+
+  enabled_products_arns = var.security_hub_enabled ? toset([
+    for product in var.enabled_products :
+    format("arn:%s:securityhub:%s::%s", data.aws_partition.security_hub.partition, length(regexall("ruleset", product)) == 0 ? data.aws_region.security_hub.name : "", product)
+  ]) : []
 }
 
-# Add member accounts
-resource "aws_securityhub_member" "members" {
-  count = var.enabled ? length(var.member_accounts) : 0
-
-  depends_on = [aws_securityhub_account.main]
-  account_id = var.member_accounts[count.index].account_id
-  email      = var.member_accounts[count.index].email
-  invite     = true
+resource "aws_securityhub_account" "security_hub" {
+  count                     = var.security_hub_enabled ? 1 : 0
+  enable_default_standards  = var.enable_default_standards
+  control_finding_generator = var.control_finding_generator
+  auto_enable_controls      = var.auto_enable_controls
 }
 
-# Subscribe CIS benchmark
-resource "aws_securityhub_standards_subscription" "cis" {
-  count = var.enabled && var.enable_cis_standard ? 1 : 0
-
-  standards_arn = "arn:aws:securityhub:::ruleset/cis-aws-foundations-benchmark/v/1.2.0"
-
-  depends_on = [aws_securityhub_account.main]
+resource "aws_securityhub_standards_subscription" "standards" {
+  for_each      = local.enabled_standards_arns
+  depends_on    = [aws_securityhub_account.security_hub]
+  standards_arn = each.key
 }
 
-# Subscribe AWS foundational security best practices standard
-resource "aws_securityhub_standards_subscription" "aws_foundational" {
-  count = var.enabled && var.enable_aws_foundational_standard ? 1 : 0
-
-  standards_arn = "arn:aws:securityhub:${data.aws_region.current.name}::standards/aws-foundational-security-best-practices/v/1.0.0"
-
-  depends_on = [aws_securityhub_account.main]
+resource "aws_securityhub_product_subscription" "products" {
+  for_each    = local.enabled_products_arns
+  depends_on  = [aws_securityhub_account.security_hub]
+  product_arn = each.key
 }
 
-# Subscribe PCI DSS standard
-resource "aws_securityhub_standards_subscription" "pci_dss" {
-  count = var.enabled && var.enable_pci_dss_standard ? 1 : 0
+# To enable add member account to security-hub. 
+resource "aws_securityhub_member" "example" {
+  for_each   = { for member in var.member_details : member.account_id => member }
+  account_id = each.value.account_id
+  email      = each.value.mail_id
+  invite     = each.value.invite
 
-  standards_arn = "arn:aws:securityhub:${data.aws_region.current.name}::standards/pci-dss/v/3.2.1"
+  depends_on = [
+    aws_securityhub_account.security_hub
+  ]
+}
 
-  depends_on = [aws_securityhub_account.main]
+# To inivitation from another security-hub account to current account.
+resource "aws_securityhub_invite_accepter" "invitee" {
+  count     = var.security_hub_enabled && var.master_account_id == "" ? 0 : 1
+  master_id = var.master_account_id # Master id of the root security hub account. e.g. aws_securityhub_account.security_hub[0].master_id
+
+  depends_on = [
+    aws_securityhub_account.security_hub
+  ]
 }

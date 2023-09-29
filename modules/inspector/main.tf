@@ -1,6 +1,8 @@
 ## Managed By : CloudDrove
 ## Copyright @ CloudDrove. All Right Reserved.
 
+data "aws_inspector_rules_packages" "rules" {}
+
 #Module      : labels
 #Description : Terraform module to create consistent naming for multiple names.
 module "labels" {
@@ -36,7 +38,7 @@ resource "aws_inspector_assessment_template" "default" {
   name               = format("%s-assessment-template", module.labels.id)
   target_arn         = join("", aws_inspector_assessment_target.default.*.arn)
   duration           = var.duration
-  rules_package_arns = var.rules_package_arns
+  rules_package_arns = data.aws_inspector_rules_packages.rules.arns
   tags               = module.labels.tags
 }
 

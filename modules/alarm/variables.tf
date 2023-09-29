@@ -24,24 +24,6 @@ variable "label_order" {
   description = "Label order, e.g. `name`,`application`."
 }
 
-variable "attributes" {
-  type        = list(any)
-  default     = []
-  description = "Additional attributes (e.g. `1`)."
-}
-
-variable "delimiter" {
-  type        = string
-  default     = "-"
-  description = "Delimiter to be used between `organization`, `environment`, `name` and `attributes`."
-}
-
-variable "tags" {
-  type        = map(any)
-  default     = {}
-  description = "Additional tags (e.g. map(`BusinessUnit`,`XYZ`)."
-}
-
 variable "enabled" {
   type        = bool
   default     = true
@@ -138,13 +120,19 @@ variable "alarm_namespace" {
   description = "The namespace in which all alarms are set up."
 }
 
-variable "cloudtrail_log_group_name" {
-  type        = string
-  default     = ""
-  description = "The name of the CloudWatch Logs group to which CloudTrail events are delivered."
-}
-
 variable "variables" {
   default     = {}
   description = "The environment variables for lambda function."
+}
+
+variable "key_deletion_window_in_days" {
+  type        = number
+  default     = 10
+  description = "Duration in days after which the key is deleted after destruction of the resource, must be between 7 and 30 days. Defaults to 30 days."
+}
+
+variable "log_retention_days" {
+  description = "Number of days to keep AWS logs around in specific log group."
+  default     = 90
+  type        = string
 }

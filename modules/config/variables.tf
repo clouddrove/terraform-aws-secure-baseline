@@ -19,22 +19,10 @@ variable "label_order" {
   description = "Label order, e.g. `name`,`application`."
 }
 
-variable "attributes" {
-  type        = list(any)
-  default     = []
-  description = "Additional attributes (e.g. `1`)."
-}
-
 variable "delimiter" {
   type        = string
   default     = "-"
   description = "Delimiter to be used between `organization`, `environment`, `name` and `attributes`."
-}
-
-variable "tags" {
-  type        = map(any)
-  default     = {}
-  description = "Additional tags (e.g. map(`BusinessUnit`,`XYZ`)."
 }
 
 variable "enabled" {
@@ -264,7 +252,7 @@ variable "password_require_numbers" {
 
 variable "password_min_length" {
   type        = number
-  default     = 14
+  default     = 16
   description = "Password minimum length."
 }
 
@@ -278,4 +266,40 @@ variable "password_max_age" {
   type        = number
   default     = 90
   description = "Number of days before password expiration."
+}
+
+variable "block_public_acls" {
+  description = "Whether Amazon S3 should block public ACLs for this bucket."
+  type        = bool
+  default     = true
+}
+
+variable "block_public_policy" {
+  description = "Whether Amazon S3 should block public bucket policies for this bucket."
+  type        = bool
+  default     = true
+}
+
+variable "ignore_public_acls" {
+  description = "Whether Amazon S3 should ignore public ACLs for this bucket."
+  type        = bool
+  default     = true
+}
+
+variable "restrict_public_buckets" {
+  description = "Whether Amazon S3 should restrict public bucket policies for this bucket."
+  type        = bool
+  default     = true
+}
+
+variable "versioning" {
+  type        = bool
+  default     = true
+  description = "Enable Versioning of S3."
+}
+
+variable "logging" {
+  type        = bool
+  default     = true
+  description = "Logging Object to enable and disable logging"
 }

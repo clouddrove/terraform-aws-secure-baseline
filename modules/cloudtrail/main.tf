@@ -1,419 +1,132 @@
-## Managed By : CloudDrove
-## Copyright @ CloudDrove. All Right Reserved.
+# Managed By : CloudDrove
+# Description : This Script is used to create CloudTrail.
+# Copyright @ CloudDrove. All Right Reserved.
 
+locals {
+  bucket_name = coalesce(var.s3_bucket_name, module.s3_logs.id)
+  bucket_id   = coalesce(join("", data.aws_s3_bucket.bucket.*.arn), module.s3_logs.arn)
+}
 
-data "aws_caller_identity" "current" {}
-data "aws_region" "current" {}
-
-#Module      : Label
-#Description : This terraform module is designed to generate consistent label names and
-#              tags for resources. You can use terraform-labels to implement a strict
-#              naming convention
+#Module      : Labels
+#Description : This terraform module is designed to generate consistent label names and tags
+#              for resources. You can use terraform-labels to implement a strict naming
+#              convention.
 module "labels" {
   source  = "clouddrove/labels/aws"
   version = "1.3.0"
 
   name        = var.name
+  repository  = var.repository
   environment = var.environment
-  label_order = var.label_order
   managedby   = var.managedby
+  label_order = var.label_order
 }
 
+###---------------------------------------------------------------------------------------
+#Module      : S3 BUCKET
+#Description : Terraform module to create default S3 bucket with logging and encryption.
+## A public cloud storage resource available in Amazon Web Services (AWS) Simple Storage Service (S3) platform.
+###--------------------------------------------------------------------------------------------
+locals {
+  bucket_environment = coalesce(var.bucket_environment, var.environment)
+  create_bucket      = var.create_bucket && var.enabled_cloudtrail
+}
 
-# Module      : S3 BUCKET
-# Description : Terraform module to create default S3 bucket with logging and encryption
-#               type specific features.
-module "s3_bucket" {
+module "s3_logs" {
   source  = "clouddrove/s3/aws"
   version = "1.3.0"
 
-  name                      = var.s3_bucket_name
-  environment               = var.environment
-  label_order               = ["name"]
-  managedby                 = var.managedby
-  create_bucket             = var.enabled
-  versioning                = true
-  mfa_delete                = var.s3_mfa_delete
-  acl                       = "log-delivery-write"
-  force_destroy             = true
-  object_lock_configuration = var.object_lock_configuration
-
-
-
+  name                         = var.name
+  create_bucket                = local.create_bucket
+  environment                  = local.bucket_environment
+  label_order                  = var.label_order
+  logging                      = var.logging
+  versioning                   = var.bucket_versioning
+  acl                          = "log-delivery-write"
+  block_public_acls            = var.block_public_acls
+  block_public_policy          = var.block_public_policy
+  ignore_public_acls           = var.ignore_public_acls
+  restrict_public_buckets      = var.restrict_public_buckets
+  bucket_policy                = var.bucket_policy
+  aws_iam_policy_document      = data.aws_iam_policy_document.default.json
+  lifecycle_expiration_enabled = var.lifecycle_expiration_enabled
+  lifecycle_days_to_expiration = var.lifecycle_days_to_expiration
+  force_destroy                = var.force_destroy
 }
 
-module "s3_bucket_logging" {
-  source  = "clouddrove/s3/aws"
-  version = "1.3.0"
-
-  name        = format("%s-logging-bucket", var.s3_bucket_name)
-  environment = var.environment
-  label_order = ["name", ]
-
-  versioning    = true
-  create_bucket = var.enabled
-  acl           = "private"
-  sse_algorithm = "AES256"
-
-  depends_on = [module.s3_bucket]
+###---------------------------------------------------------------------------------------
+#Resource    : CloudWatch
+#Description : Terraform resource to create cloudwatch log with logging and encryption for cloudtrail. ( This role is used by CloudTrail to send logs to CloudWatch. )
+## CloudWatch enables you to monitor your complete stack (applications, infrastructure, network, and services).
+###--------------------------------------------------------------------------------------------
+resource "aws_iam_role" "cloudtrail_cloudwatch_role" {
+  count              = var.enable_cloudwatch && var.enabled_cloudtrail ? 1 : 0
+  name               = "${var.name}-${var.iam_role_name}"
+  assume_role_policy = data.aws_iam_policy_document.cloudtrail_assume_role.json
+  tags               = module.labels.tags
 }
-
-resource "aws_s3_bucket_public_access_block" "s3_bucket_logging" {
-  count                   = var.enabled ? 1 : 0
-  bucket                  = module.s3_bucket_logging.id
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
-
-resource "aws_s3_bucket_public_access_block" "s3_bucket" {
-  count                   = var.enabled ? 1 : 0
-  bucket                  = module.s3_bucket.id
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
-
-resource "aws_s3_bucket_policy" "this" {
-  count = var.enabled ? 1 : 0
-
-  bucket = module.s3_bucket.id
-  policy = var.s3_policy == "" ? data.aws_iam_policy_document.default.json : var.s3_policy
-}
-data "aws_iam_policy_document" "default" {
-  statement {
-    sid = "AWSCloudTrailAclCheck"
-
-    principals {
-      type        = "Service"
-      identifiers = ["cloudtrail.amazonaws.com"]
-    }
-
-    actions = [
-      "s3:GetBucketAcl",
-    ]
-
-    resources = compact(
-      concat([format("arn:aws:s3:::%s", module.s3_bucket.id)]
-      )
-    )
-  }
-
-  statement {
-    sid = "AWSCloudTrailWrite"
-
-    principals {
-      type        = "Service"
-      identifiers = ["cloudtrail.amazonaws.com"]
-    }
-
-    actions = [
-      "s3:PutObject",
-    ]
-
-    resources = compact(
-      concat(
-        [format("arn:aws:s3:::%s/AWSLogs/%s/*", module.s3_bucket.id, data.aws_caller_identity.current.account_id)]
-      )
-    )
-
-    condition {
-      test     = "StringEquals"
-      variable = "s3:x-amz-acl"
-
-      values = [
-        "bucket-owner-full-control",
-      ]
-    }
-  }
-}
-
-#Module      : AWS_CLOUDWATCH_LOG_GROUP
-#Description : Provides a CloudWatch Log Group resource.
-resource "aws_cloudwatch_log_group" "cloudtrail_events" {
-  count             = var.enabled ? 1 : 0
-  name              = var.cloudwatch_logs_group_name
-  retention_in_days = var.cloudwatch_logs_retention_in_days
-  tags              = module.labels.tags
-}
-
-data "aws_iam_policy_document" "cloudwatch_delivery_assume_policy" {
-  statement {
-    principals {
-      type        = "Service"
-      identifiers = ["cloudtrail.amazonaws.com"]
-    }
-    actions = ["sts:AssumeRole"]
-  }
-}
-
-#Module      : AWS_IAM_ROLE
-#Description : Provides an IAM role.
-resource "aws_iam_role" "cloudwatch_delivery" {
-  count              = var.enabled ? 1 : 0
-  name               = var.iam_role_name
-  assume_role_policy = data.aws_iam_policy_document.cloudwatch_delivery_assume_policy.json
-
-  tags = module.labels.tags
-}
-
-#Module      : AWS_IAM_ROLE
-#Description : Provides an IAM role policy.
 resource "aws_iam_role_policy" "cloudwatch_delivery_policy" {
-  count  = var.enabled ? 1 : 0
-  name   = var.iam_role_policy_name
-  role   = aws_iam_role.cloudwatch_delivery[0].id
+  count  = var.enable_cloudwatch && var.enabled_cloudtrail ? 1 : 0
+  name   = format("%s-cloudwatch-delivery-policy", module.labels.id)
+  role   = aws_iam_role.cloudtrail_cloudwatch_role[0].id
   policy = data.aws_iam_policy_document.cloudwatch_delivery_policy[0].json
 }
-
-data "aws_iam_policy_document" "cloudwatch_delivery_policy" {
-  count = var.enabled ? 1 : 0
-  statement {
-    sid       = "AWSCloudTrailCreateLogStream2014110"
-    actions   = ["logs:CreateLogStream"]
-    resources = [format("arn:aws:logs:%s:%s:log-group:%s:log-stream:*", data.aws_region.current.name, data.aws_caller_identity.current.account_id, join("", aws_cloudwatch_log_group.cloudtrail_events.*.name))]
-  }
-  statement {
-    sid       = "AWSCloudTrailPutLogEvents20141101"
-    actions   = ["logs:PutLogEvents"]
-    resources = [format("arn:aws:logs:%s:%s:log-group:%s:log-stream:*", data.aws_region.current.name, data.aws_caller_identity.current.account_id, join("", aws_cloudwatch_log_group.cloudtrail_events.*.name))]
-  }
+resource "aws_cloudwatch_log_group" "cloudtrail" {
+  count             = var.enable_cloudwatch && var.enabled_cloudtrail ? 1 : 0
+  name              = "${var.name}-${var.cloudwatch_log_group_name}"
+  retention_in_days = var.log_retention_days
+  kms_key_id        = join("", aws_kms_key.cloudtrail.*.arn)
 }
 
-module "kms_key" {
-  source  = "clouddrove/kms/aws"
-  version = "1.3.0"
-
-  name                    = var.name
-  environment             = var.environment
-  label_order             = var.label_order
-  managedby               = var.managedby
-  is_enabled              = true
-  enabled                 = var.enabled
-  description             = "KMS key for cloudtrail"
-  deletion_window_in_days = 7
-  enable_key_rotation     = true
-  alias                   = "alias/cloudtrail"
-  policy                  = data.aws_iam_policy_document.cloudtrail_key_policy.json
+resource "aws_iam_policy" "cloudtrail_cloudwatch_logs" {
+  count  = var.enable_cloudwatch && var.enabled_cloudtrail ? 1 : 0
+  name   = format("%s-cloudwatch-logs-policy", var.name)
+  policy = data.aws_iam_policy_document.cloudtrail_cloudwatch_logs.json
+}
+resource "aws_iam_policy_attachment" "main" {
+  count      = var.enable_cloudwatch && var.enabled_cloudtrail ? 1 : 0
+  name       = format("%s-cloudwatch-logs-policy-attachment", var.name)
+  policy_arn = aws_iam_policy.cloudtrail_cloudwatch_logs[0].arn
+  roles      = [aws_iam_role.cloudtrail_cloudwatch_role[0].name]
 }
 
-data "aws_iam_policy_document" "cloudtrail_key_policy" {
-  policy_id = "Key policy created for CloudTrail"
-
-  statement {
-    sid = "Enable IAM User Permissions"
-
-    principals {
-      type = "AWS"
-      identifiers = compact(
-        concat(
-          [format("arn:aws:iam::%s:root", data.aws_caller_identity.current.account_id)],
-          var.additional_member_root_arn
-        )
-      )
-    }
-    actions   = ["kms:*"]
-    resources = ["*"]
-  }
-
-  statement {
-    sid = "Allow CloudTrail to encrypt logs"
-    principals {
-      type        = "Service"
-      identifiers = ["cloudtrail.amazonaws.com"]
-    }
-    actions   = ["kms:GenerateDataKey*"]
-    resources = ["*"]
-    condition {
-      test     = "StringLike"
-      variable = "kms:EncryptionContext:aws:cloudtrail:arn"
-      values = compact(
-        concat(
-          [format("arn:aws:cloudtrail:*:%s:trail/*", data.aws_caller_identity.current.account_id)],
-          var.additional_member_trail
-        )
-      )
-    }
-  }
-
-  statement {
-    sid = "Allow CloudTrail to describe key"
-    principals {
-      type        = "Service"
-      identifiers = ["cloudtrail.amazonaws.com"]
-    }
-    actions   = ["kms:DescribeKey"]
-    resources = ["*"]
-  }
-
-  statement {
-    sid = "Allow principals in the account to decrypt log files"
-    principals {
-      type        = "AWS"
-      identifiers = ["*"]
-    }
-    actions = [
-      "kms:Decrypt",
-      "kms:ReEncryptFrom"
-    ]
-    resources = ["*"]
-    condition {
-      test     = "StringEquals"
-      variable = "kms:CallerAccount"
-      values = compact(
-        concat(
-          [data.aws_caller_identity.current.account_id],
-          var.additional_member_account_id
-        )
-      )
-    }
-    condition {
-      test     = "StringLike"
-      variable = "kms:EncryptionContext:aws:cloudtrail:arn"
-      values = compact(
-        concat(
-          [format("arn:aws:cloudtrail:*:%s:trail/*", data.aws_caller_identity.current.account_id)],
-          var.additional_member_trail
-        )
-      )
-    }
-  }
-  statement {
-    sid = "Allow alias creation during setup"
-    principals {
-      type        = "AWS"
-      identifiers = ["*"]
-    }
-    actions   = ["kms:CreateAlias"]
-    resources = ["*"]
-    condition {
-      test     = "StringEquals"
-      variable = "kms:ViaService"
-      values   = ["ec2.${data.aws_region.current.name}.amazonaws.com"]
-    }
-    condition {
-      test     = "StringEquals"
-      variable = "kms:CallerAccount"
-      values = compact(
-        concat(
-          [
-          data.aws_caller_identity.current.account_id],
-          var.additional_member_account_id
-        )
-      )
-    }
-  }
-  statement {
-    sid = "Enable cross account log decryption"
-    principals {
-      type        = "AWS"
-      identifiers = ["*"]
-    }
-    actions = [
-      "kms:Decrypt",
-      "kms:ReEncryptFrom"
-    ]
-    resources = ["*"]
-    condition {
-      test     = "StringEquals"
-      variable = "kms:CallerAccount"
-      values = compact(
-        concat(
-          [data.aws_caller_identity.current.account_id],
-          var.additional_member_account_id
-        )
-      )
-    }
-    condition {
-      test     = "StringLike"
-      variable = "kms:EncryptionContext:aws:cloudtrail:arn"
-      values = compact(
-        concat(
-          [format("arn:aws:cloudtrail:*:%s:trail/*", data.aws_caller_identity.current.account_id)],
-          var.additional_member_trail
-        )
-      )
-    }
-  }
-
-  statement {
-    sid = "Allow use of the key"
-    principals {
-      type = "AWS"
-      identifiers = compact(
-        concat(
-          [format("arn:aws:iam::%s:root", data.aws_caller_identity.current.account_id)],
-          var.additional_member_root_arn
-        )
-      )
-    }
-    actions = [
-      "kms:Encrypt",
-      "kms:Decrypt",
-      "kms:ReEncrypt*",
-      "kms:GenerateDataKey*",
-      "kms:DescribeKey"
-    ]
-    resources = ["*"]
-  }
-
-  statement {
-    sid = "Allow attachment of persistent resources"
-    principals {
-      type = "AWS"
-      identifiers = compact(
-        concat(
-          [format("arn:aws:iam::%s:root", data.aws_caller_identity.current.account_id)],
-          var.additional_member_root_arn
-        )
-      )
-    }
-    actions = [
-      "kms:CreateGrant",
-      "kms:ListGrants",
-      "kms:RevokeGrant"
-    ]
-    resources = ["*"]
-    condition {
-      test     = "Bool"
-      variable = "kms:GrantIsForAWSResource"
-      values   = [true]
-    }
-  }
+## Note: Supports only for single account cloudtrail.
+resource "aws_kms_key" "cloudtrail" {
+  count                   = var.kms_enabled && var.enabled_cloudtrail ? 1 : 0
+  description             = "A KMS key used to encrypt CloudTrail log files stored in S3."
+  deletion_window_in_days = var.key_deletion_window_in_days
+  enable_key_rotation     = var.enable_key_rotation
+  policy                  = data.aws_iam_policy_document.kms.json
+  tags                    = module.labels.tags
 }
 
-#Module      : CLOUDTRAIL
+
+###---------------------------------------------------------------------------------------
+#Resource    : CloudTrail
 #Description : Terraform module to provision an AWS CloudTrail with encrypted S3 bucket.
-#              This bucket is used to store CloudTrail logs.
+## An AWS service that helps you enable operational and risk auditing, governance, and compliance of your AWS account.
+###--------------------------------------------------------------------------------------------
 resource "aws_cloudtrail" "default" {
-  count = var.enabled ? 1 : 0
-
+  count = var.enabled_cloudtrail == true ? 1 : 0
 
   name                          = module.labels.id
-  s3_bucket_name                = format("%s", var.s3_bucket_name)
-  enable_logging                = true
-  enable_log_file_validation    = true
-  include_global_service_events = true
-  is_multi_region_trail         = true
-  sns_topic_name                = var.sns_topic_name
+  enable_logging                = var.enable_logging
+  s3_bucket_name                = local.bucket_name
+  enable_log_file_validation    = var.enable_log_file_validation
+  is_multi_region_trail         = var.is_multi_region_trail
+  include_global_service_events = var.include_global_service_events
+  cloud_watch_logs_role_arn     = coalesce(var.cloud_watch_logs_role_arn, try(aws_iam_role.cloudtrail_cloudwatch_role[0].arn, ""))
+  cloud_watch_logs_group_arn    = coalesce(var.cloud_watch_logs_group_arn, try("${aws_cloudwatch_log_group.cloudtrail[0].arn}:*", ""))
+  kms_key_id                    = try(aws_kms_key.cloudtrail[0].arn, null) # aws_kms_key.cloudtrail[0].arn != null ? aws_kms_key.cloudtrail[0].arn : null
   is_organization_trail         = var.is_organization_trail
-  kms_key_id                    = var.key_arn == "" ? module.kms_key.key_arn : var.key_arn
-  cloud_watch_logs_group_arn    = format("%s:*", join("", aws_cloudwatch_log_group.cloudtrail_events.*.arn))
-  cloud_watch_logs_role_arn     = join("", aws_iam_role.cloudwatch_delivery.*.arn)
   tags                          = module.labels.tags
-  depends_on = [
-    aws_s3_bucket_policy.this
-  ]
+  sns_topic_name                = var.sns_topic_name
 
   dynamic "event_selector" {
     for_each = var.event_selector
     content {
       include_management_events = lookup(event_selector.value, "include_management_events", null)
       read_write_type           = lookup(event_selector.value, "read_write_type", null)
-
-
       dynamic "data_resource" {
         for_each = lookup(event_selector.value, "data_resource", [])
         content {
@@ -423,20 +136,40 @@ resource "aws_cloudtrail" "default" {
       }
     }
   }
+
+  dynamic "insight_selector" {
+    for_each = var.insight_selector
+    content {
+      insight_type = insight_selector.value.insight_type
+    }
+  }
+
+  lifecycle {
+    ignore_changes = [event_selector]
+  }
+
+  depends_on = [
+    aws_kms_key.cloudtrail,
+    module.s3_logs
+  ]
 }
 
-
+###---------------------------------------------------------------------------------------
+#Resource    : Slack Notification Service
+#Description : Terraform module to create Lambda resource on AWS for sending notification when anything done from console in AWS.
+## Allows author to deliver notification on slack channels for alerts, warnings and errors.
+###--------------------------------------------------------------------------------------------
 module "cloudtrail-slack-notification" {
   source  = "clouddrove/cloudtrail-slack-notification/aws"
   version = "1.0.1"
 
-  name        = "cloudtrail-slack-notification"
+  name        = format("%s-cloudtrail-slack-notification", var.name)
   environment = var.environment
   managedby   = var.managedby
   label_order = var.label_order
-  enabled     = var.slack_webhook != "" && var.enabled
-  bucket_arn  = format("arn:aws:s3:::%s", var.s3_bucket_name)
-  bucket_name = var.s3_bucket_name
+  enabled     = var.slack_webhook != "" && var.enabled_cloudtrail
+  bucket_arn  = format("arn:aws:s3:::%s", local.bucket_id)
+  bucket_name = local.bucket_name
   variables = {
     slack_webhook     = var.slack_webhook
     slack_channel     = var.slack_channel

@@ -31,7 +31,21 @@ jobs:
           - ${{ needs.versionExtract.outputs.minVersion }}
           - ${{ needs.versionExtract.outputs.maxVersion }}
         directory:
-          - _example/
+          # All submodule Examples
+          - examples/cloudtrail/complete                     
+          - examples/cloudtrail/organisation_account       
+          - examples/guardduty/complete                      
+          - examples/guardduty/organisation_account     
+          - examples/security-hub/complete                   
+          - examples/security-hub/organisation_account     
+          - examples/ebs/complete                        
+          - examples/analyzer/complete
+          - examples/analyzer/organisation_account
+          - examples/alarm/complete
+          - examples/config/complete
+          - examples/iam/complete
+          - examples/inspector/complete
+          - examples/shield/complete
 
     steps:
       - name: Checkout
@@ -49,7 +63,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.TEST_AWS_ACCESS_SECRET_KEY }}
           aws-region: us-east-2
 
-      - name: Init & validate v${{ matrix.version }}
+      - name: Init & validate v${{ matrix.version }} for ${{ matrix.directory }} Path 
         run: |
           cd ${{ matrix.directory }}
           terraform init

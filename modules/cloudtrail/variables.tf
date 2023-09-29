@@ -1,4 +1,4 @@
-#Module      : LABEL
+#Variable    : LABEL
 #Description : Terraform label module variables.
 variable "name" {
   type        = string
@@ -6,11 +6,16 @@ variable "name" {
   description = "Name  (e.g. `app` or `cluster`)."
 }
 
-
 variable "environment" {
   type        = string
   default     = ""
-  description = "Environment (e.g. `prod`, `dev`, `staging`)."
+  description = "Environment (e.g. `prod`, `dev`, `staging`, `test`)."
+}
+
+variable "repository" {
+  type        = string
+  default     = "https://github.com/clouddrove/terraform-aws-secure-baseline"
+  description = "Terraform current module repo"
 }
 
 variable "label_order" {
@@ -19,40 +24,63 @@ variable "label_order" {
   description = "Label order, e.g. `name`,`application`."
 }
 
-variable "attributes" {
-  type        = list(any)
-  default     = []
-  description = "Additional attributes (e.g. `1`)."
-}
-
-variable "delimiter" {
+variable "managedby" {
   type        = string
-  default     = "-"
-  description = "Delimiter to be used between `organization`, `environment`, `name` and `attributes`."
+  default     = "hello@clouddrove.com"
+  description = "ManagedBy, eg 'CloudDrove'"
 }
 
-variable "tags" {
-  type        = map(any)
-  default     = {}
-  description = "Additional tags (e.g. map(`BusinessUnit`,`XYZ`)."
+#Variable    : CloudTrail
+#Description : Terraform cloudtrail module variables.
+
+variable "is_organization_trail" {
+  type        = bool
+  default     = false
+  description = "Specifies whether the trail is an AWS Organizations trail. Organization trails log events for the master account and all member accounts. Can only be created in the organization master account."
 }
 
-variable "enabled" {
+variable "enable_logging" {
   type        = bool
   default     = true
+  description = "Enable logging for the trail."
+}
+
+variable "enable_log_file_validation" {
+  type        = bool
+  default     = true
+  description = "Specifies whether log file integrity validation is enabled. Creates signed digest for validated contents of logs."
+}
+
+variable "is_multi_region_trail" {
+  type        = bool
+  default     = false
+  description = "Specifies whether the trail is created in the current region or in all regions"
+}
+
+variable "include_global_service_events" {
+  type        = bool
+  default     = true
+  description = "Specifies whether the trail is publishing events from global services such as IAM to the log files."
+}
+
+variable "enabled_cloudtrail" {
+  type        = bool
+  default     = false
   description = "The boolean flag whether this module is enabled or not. No resources are created when set to false."
 }
 
-variable "lambda_enabled" {
-  type        = bool
-  default     = true
-  description = "Whether to create lambda for cloudtrail logs."
+variable "cloud_watch_logs_role_arn" {
+  type        = string
+  default     = ""
+  description = "Specifies the role for the CloudWatch Logs endpoint to assume to write to a user’s log group."
+  sensitive   = true
 }
 
-variable "cloudtrail_name" {
+variable "cloud_watch_logs_group_arn" {
   type        = string
-  default     = "cloudtrail-multi-region"
-  description = "The name of the trail."
+  default     = ""
+  description = "Specifies a log group name using an Amazon Resource Name (ARN), that represents the log group to which CloudTrail logs will be delivered."
+  sensitive   = true
 }
 
 variable "slack_webhook" {
@@ -67,100 +95,43 @@ variable "slack_channel" {
   description = "Channel of slack."
 }
 
-variable "additional_member_root_arn" {
-  type        = list(any)
-  default     = []
-  description = "Additional member root user arn."
-}
-
-variable "additional_member_trail" {
-  type        = list(any)
-  default     = []
-  description = "Additional member trails."
-}
-
-variable "additional_member_account_id" {
-  type        = list(any)
-  default     = []
-  description = "Additional member account id."
-}
-
-variable "additional_s3_account_path_arn" {
-  type        = list(any)
-  default     = []
-  description = "Additional path of s3 account."
-}
-
-variable "cloudwatch_logs_group_name" {
-  type        = string
-  default     = "iam_role_name"
-  description = "The name of CloudWatch Logs group to which CloudTrail events are delivered."
-}
-
-variable "cloudwatch_logs_retention_in_days" {
-  type        = number
-  default     = 365
-  description = "Number of days to retain logs for. CIS recommends 365 days.  Possible values are: 0, 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653. Set to 0 to keep logs indefinitely."
-}
-
 variable "iam_role_name" {
   type        = string
-  default     = "CloudTrail-CloudWatch-Delivery-Role-prakash"
+  default     = "CloudTrail-CloudWatch-Delivery-Role"
   description = "The name of the IAM Role to be used by CloudTrail to delivery logs to CloudWatch Logs group."
 }
 
-variable "filename" {
+variable "enable_cloudwatch" {
+  type        = bool
+  default     = true
+  description = "If true, deploy the resources for cloudwatch in the module."
+}
+
+variable "cloudwatch_log_group_name" {
+  description = "The name of the CloudWatch Log Group that receives CloudTrail events."
+  default     = "cloudtrail-log-group"
+  type        = string
+}
+
+variable "log_retention_days" {
+  description = "Number of days to keep AWS logs around in specific log group."
+  default     = 90
+  type        = string
+}
+
+#Variable    : S3 Bucket
+#Description : Terraform variables for s3 bucket.
+
+variable "bucket_environment" {
   type        = string
   default     = ""
-  description = "The path of directory of code."
-}
-
-variable "iam_role_policy_name" {
-  type        = string
-  default     = "CloudTrail-CloudWatch-Delivery-Policy"
-  description = "The name of the IAM Role Policy to be used by CloudTrail to delivery logs to CloudWatch Logs group."
-}
-
-variable "key_deletion_window_in_days" {
-  type        = number
-  default     = 10
-  description = "Duration in days after which the key is deleted after destruction of the resource, must be between 7 and 30 days. Defaults to 30 days."
-
+  description = "Environment (e.g. `prod`, `dev`, `staging`, `test`)."
 }
 
 variable "s3_bucket_name" {
   type        = string
+  default     = ""
   description = "The name of the S3 bucket which will store configuration snapshots."
-}
-
-variable "key_arn" {
-  type        = string
-  default     = ""
-  description = "The arn of the KMS."
-}
-
-variable "account_ids" {
-
-  default     = {}
-  description = "The account id of the accounts."
-}
-
-variable "s3_key_prefix" {
-  type        = string
-  default     = ""
-  description = "The prefix for the specified S3 bucket."
-}
-
-variable "is_organization_trail" {
-  type        = bool
-  default     = false
-  description = "Specifies whether the trail is an AWS Organizations trail. Organization trails log events for the master account and all member accounts. Can only be created in the organization master account."
-}
-
-variable "account_type" {
-  type        = string
-  default     = "individual"
-  description = "The type of the AWS account. The possible values are `individual`, `master` and `member` . Specify `master` and `member` to set up centalized logging for multiple accounts in AWS Organization. Use individual` otherwise."
 }
 
 variable "event_ignore_list" {
@@ -187,41 +158,22 @@ variable "source_list" {
   description = "Event Source List which event is ignore."
 }
 
-variable "s3_policy" {
-  default     = []
-  description = "Policy of s3."
-}
-
-variable "s3_mfa_delete" {
-  default     = false
-  description = "mfa enable for bucket."
-}
-
-variable "object_lock_configuration" {
-  type = object({
-    mode  = string
-    days  = number
-    years = number
-  })
-  default     = null
-  description = "With S3 Object Lock, you can store objects using a write-once-read-many (WORM) model. Object Lock can help prevent objects from being deleted or overwritten for a fixed amount of time or indefinitely."
-
-}
-variable "managedby" {
-  type        = string
-  default     = "hello@clouddrove.com"
-  description = "ManagedBy, eg 'CloudDrove'"
-}
-
 variable "event_selector" {
   type = list(object({
     include_management_events = bool
     read_write_type           = string
-
-
   }))
 
   description = "Specifies an event selector for enabling data event logging. See: https://www.terraform.io/docs/providers/aws/r/cloudtrail.html for details on this variable"
+  default     = []
+}
+
+variable "insight_selector" {
+  type = list(object({
+    insight_type = string
+  }))
+
+  description = "Specifies an insight selector for type of insights to log on a trail"
   default     = []
 }
 
@@ -229,4 +181,104 @@ variable "sns_topic_name" {
   type        = string
   default     = null
   description = "Specifies the name of the Amazon SNS topic defined for notification of log file delivery"
+}
+
+variable "create_bucket" {
+  type        = bool
+  default     = true
+  description = "Conditionally create S3 bucket."
+}
+
+variable "bucket_versioning" {
+  type        = bool
+  default     = true
+  description = "Enable Versioning of S3."
+}
+
+variable "bucket_policy" {
+  type        = bool
+  default     = false
+  description = "Conditionally create S3 bucket policy."
+}
+
+variable "logging" {
+  type        = bool
+  default     = true
+  description = "Logging Object to enable and disable logging"
+}
+
+variable "lifecycle_expiration_enabled" {
+  type        = bool
+  default     = true
+  description = "Specifies expiration lifecycle rule status."
+}
+
+variable "lifecycle_days_to_expiration" {
+  type        = number
+  default     = 30
+  description = "Specifies the number of days after object creation when the object expires."
+}
+
+variable "force_destroy" {
+  type        = bool
+  default     = true
+  description = "A boolean that indicates all objects should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable."
+}
+
+variable "block_public_acls" {
+  type        = bool
+  default     = true
+  description = <<EOF
+    Whether Amazon S3 should block public ACLs for this bucket. Defaults to false. Enabling this setting does not affect existing policies or ACLs. When set to true causes the following behavior:
+    - PUT Bucket acl and PUT Object acl calls will fail if the specified ACL allows public access.
+    - PUT Object calls will fail if the request includes an object ACL. 
+  EOF
+}
+
+variable "block_public_policy" {
+  type        = bool
+  default     = true
+  description = <<EOF
+    Whether Amazon S3 should block public bucket policies for this bucket. Defaults to false. Enabling this setting does not affect the existing bucket policy. When set to true causes Amazon S3 to:
+    - Reject calls to PUT Bucket policy if the specified bucket policy allows public access.
+  EOF
+}
+
+variable "ignore_public_acls" {
+  type        = bool
+  default     = true
+  description = <<EOF
+    Whether Amazon S3 should ignore public ACLs for this bucket. Defaults to false. Enabling this setting does not affect the persistence of any existing ACLs and doesn't prevent new public ACLs from being set. When set to true causes Amazon S3 to:
+    - Ignore public ACLs on this bucket and any objects that it contains.
+  EOF
+}
+
+variable "restrict_public_buckets" {
+  type        = bool
+  default     = true
+  description = <<EOF
+    Whether Amazon S3 should restrict public bucket policies for this bucket. Defaults to false. Enabling this setting does not affect the previously stored bucket policy, except that public and cross-account access within the public bucket policy, including non-public delegation to specific accounts, is blocked. When set to true:
+    - Only the bucket owner and AWS Services can access this buckets if it has a public policy.
+  EOF
+}
+
+#Variable    : KMS
+#Description : Terraform KMS resource variables.
+
+variable "kms_enabled" {
+  type        = bool
+  default     = false
+  description = "If true, deploy the resources for kms in the module. Note: Supports in only single cloudtrail management."
+}
+
+variable "enable_key_rotation" {
+  type        = string
+  default     = true
+  description = "Specifies whether key rotation is enabled."
+}
+
+variable "key_deletion_window_in_days" {
+  type        = number
+  default     = 10
+  description = "Duration in days after which the key is deleted after destruction of the resource, must be between 7 and 30 days. Defaults to 30 days."
 }

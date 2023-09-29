@@ -52,12 +52,6 @@ variable "duration" {
   description = "The duration of the inspector run."
 }
 
-variable "rules_package_arns" {
-  type        = list(string)
-  default     = []
-  description = "The rules to be used during the run."
-}
-
 ## Lambda
 
 variable "lambda_enabled" {
@@ -102,7 +96,7 @@ variable "handler" {
 
 variable "runtime" {
   type        = string
-  default     = ""
+  default     = "nodejs18.x"
   description = "Runtimes."
 }
 

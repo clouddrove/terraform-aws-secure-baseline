@@ -15,22 +15,17 @@ output "cloudtrail_home_region" {
 }
 
 output "log_group_name" {
-  value       = join("", aws_cloudwatch_log_group.cloudtrail_events.*.name)
+  value       = join("", aws_cloudwatch_log_group.cloudtrail.*.name)
   description = "The CloudWatch Logs log group which stores CloudTrail events."
 }
 
 output "s3_id" {
-  value       = module.s3_bucket.id
+  value       = coalesce(join("", data.aws_s3_bucket.bucket.*.arn), module.s3_logs.arn)
   description = "The Name of S3 bucket."
 }
 
-output "s3_arn" {
-  value       = module.s3_bucket.arn
-  description = "The ARN of S3 bucket."
-}
-
 output "kms_arn" {
-  value       = module.kms_key.key_arn
+  value       = join("", aws_kms_key.cloudtrail.*.id)
   description = "The ARN of KMS key."
 }
 
