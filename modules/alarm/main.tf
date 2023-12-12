@@ -52,7 +52,7 @@ module "alarm-lambda" {
 
   filename = format("%s/slack/src", path.module)
   handler  = "index.lambda_handler"
-  runtime  = "python3.8"
+  runtime  = "python3.11"
   iam_actions = [
     "logs:CreateLogStream",
     "logs:CreateLogGroup",

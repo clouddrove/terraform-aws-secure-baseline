@@ -1,7 +1,7 @@
 ## Managed By : CloudDrove
 ## Copyright @ CloudDrove. All Right Reserved.
 provider "aws" {
-  region = "us-east-1"
+  region = "us-west-1"
 }
 
 #Module      : ALARM
