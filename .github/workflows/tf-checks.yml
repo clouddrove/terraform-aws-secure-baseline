@@ -8,40 +8,60 @@ jobs:
   alarm:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
     with:
-      working_directory: './example/alarm/'
-  analyzer:
+      working_directory: './examples/alarm/complete/'
+  analyzer-complete:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
     with:
-      working_directory: './example/analyzer/'
-  cloudtrail:
+      working_directory: './examples/analyzer/complete/'
+  analyzer-organisation_account:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
     with:
-      working_directory: './example/cloudtrail/'
+      working_directory: './examples/analyzer/organisation_account/'
+  cloudtrail-complete:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
+    with:
+      working_directory: './examples/complete/'
+  cloudtrail-organisation_account:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
+    with:
+      working_directory: './examples/organisation_account/'
   config:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
     with:
-      working_directory: './example/config/'
+      working_directory: './examples/complete/'
   ebs:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
     with:
-      working_directory: './example/ebs/'
-  guardduty:
+      working_directory: './examples/complete/'
+  guardduty-complete:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
     with:
-      working_directory: './example/guardduty/'
+      working_directory: './examples/complete/'
+  guardduty-organisation_account:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
+    with:
+      working_directory: './examples/organisation_account/'
   iam:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
     with:
-      working_directory: './example/iam/'
+      working_directory: './examples/complete/'
   inspector:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
     with:
-      working_directory: './example/inspector/'
-  security-hub:
+      working_directory: './examples/complete/'
+  security-hub-complete:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
     with:
-      working_directory: './example/security-hub/'
+      working_directory: './examples/complete/'
+  security-hub-managed_security_hub:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
+    with:
+      working_directory: './examples/managed_security_hub/'
+  security-hub-organisation_account:
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
+    with:
+      working_directory: './examples/organisation_account/'
   shield:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
     with:
-      working_directory: './example/shield/'
+      working_directory: './examples/complete/'
