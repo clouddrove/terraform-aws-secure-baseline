@@ -64,4 +64,4 @@ jobs:
   shield:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
     with:
-      working_directory: './examples/complete/'
+      working_directory: './examples/shield/complete/'
