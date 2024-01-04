@@ -1,4 +1,4 @@
-name: 'Create README.md files'
+name: 'Create README.md file'
 on:
   push:
     branches:
@@ -13,34 +13,33 @@ jobs:
         uses: actions/checkout@master
 
       - name: 'Set up Python 3.7'
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
       - name: 'create readme'
-        uses: 'clouddrove/github-actions@v9.0.2'
+        uses: 'clouddrove/github-actions@9.0.3'
         with:
           actions_subcommand: 'readme'
-          github_token: '${{ secrets.GITHUB}}'
+          github_token: '${{ secrets.GITHUB }}'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
-
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 'pre-commit check errors'
-        uses: pre-commit/action@v2.0.0
+        uses: pre-commit/action@v3.0.0
         continue-on-error: true
 
       - name: 'pre-commit fix erros'
-        uses: pre-commit/action@v2.0.0
+        uses: pre-commit/action@v3.0.0
         continue-on-error: true
 
       - name: 'push readme'
-        uses: 'clouddrove/github-actions@v9.0.2'
+        uses: 'clouddrove/github-actions@9.0.3'
         continue-on-error: true
         with:
           actions_subcommand: 'push'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 'Slack Notification'
         uses: clouddrove/action-slack@v2
@@ -52,42 +51,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_TERRAFORM }} # required
         if: always()
-
-  # Create README for each Submodules
-  readme-create-submodule:
-    name: 'Submodule readme-create'
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'Checkout'
-        uses: actions/checkout@master
-        with:
-          ref: "master"
-
-      - name: Generate TF Docs
-        uses: terraform-docs/gh-actions@v1.0.0
-        with:
-          working-dir: modules/alarm,modules/analyzer,modules/cloudtrail,modules/ebs,modules/iam,modules/security_hub,modules/shield,modules/config,modules/guardduty,modules/inspector
-          git-push: true
-          git-push-user-name: "clouddrove-ci"
-          git-push-user-email: 84795582+clouddrove-ci@users.noreply.github.com
-          git-commit-message: "readme: Update modules readme files"
-
-  # Create README for each Examples
-  readme-create-examlpes:
-    name: 'Examples readme-create'
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'Checkout'
-        uses: actions/checkout@master
-        with:
-          ref: "master"
-
-      - name: Generate TF Docs
-        uses: terraform-docs/gh-actions@v1.0.0
-        with:
-          working-dir: examples/alarm/complete,examples/analyzer/complete,examples/analyzer/organisation_account,examples/cloudtrail/complete,examples/cloudtrail/organisation_account,examples/config/complete,examples/ebs/complete,examples/guardduty/complete,examples/guardduty/organisation_account,examples/iam/complete,examples/inspector/complete,examples/security-hub/complete,examples/security-hub/managed_security_hub,examples/security-hub/organisation_account,examples/shield/complete
-          indention: 3
-          git-push: true
-          git-push-user-name: "clouddrove-ci"
-          git-push-user-email: 84795582+clouddrove-ci@users.noreply.github.com
-          git-commit-message: "readme: Update Examples readme files"
