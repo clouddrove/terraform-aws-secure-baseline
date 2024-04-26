@@ -15,26 +15,24 @@ github_repo: clouddrove/clouddrove/terraform-aws-secure-baseline/modules/
 
 # Badges to display
 badges:
-  - name: "Terraform"
-    image: "https://img.shields.io/badge/Terraform-v1.1.7-green"
-    url: "https://www.terraform.io"
-  - name: "Licence"
-    image: "https://img.shields.io/badge/License-APACHE-blue.svg"
-    url: "LICENSE.md"
+  - name: "Latest Release"
+    image: "https://img.shields.io/github/release/clouddrove/terraform-aws-secure-baseline.svg"
+    url: "https://github.com/clouddrove/terraform-aws-secure-baseline/releases/latest"
   - name: "tfsec"
     image: "https://github.com/clouddrove/terraform-aws-secure-baseline/actions/workflows/tfsec.yml/badge.svg"
     url: "https://github.com/clouddrove/terraform-aws-secure-baseline/actions/workflows/tfsec.yml"
-  - name: "static-checks"
-    image: "https://github.com/clouddrove/terraform-aws-secure-baseline/actions/workflows/terraform.yml/badge.svg"
-    url: "https://github.com/clouddrove/terraform-aws-secure-baseline/actions/workflows/terraform.yml"
+  - name: "Licence"
+    image: "https://img.shields.io/badge/License-APACHE-blue.svg"
+    url: "LICENSE.md"
+  - name: "Changelog"
+    image: "https://img.shields.io/badge/Changelog-blue"
+    url: "CHANGELOG.md"
+
+
 
 #  description of this project
 description: |-
   Terraform module to create an Secure Basline, inclued module is alarm baseline, config baseline, and clouddtrail baseline.
-
-# extra content
-include:
-  - "terraform.md"
 
 # How to use this project
 usage : |-
