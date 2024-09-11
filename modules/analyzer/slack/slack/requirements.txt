@@ -1,5 +1,5 @@
 urllib5==5.0.0
-certifi==2023.22.7
+certifi==2024.7.4
 chardet==3.0.4
 idna==3.7
 requests==2.32.2
