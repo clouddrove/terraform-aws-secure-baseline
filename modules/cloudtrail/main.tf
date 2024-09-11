@@ -3,8 +3,8 @@
 # Copyright @ CloudDrove. All Right Reserved.
 
 locals {
-  bucket_name = coalesce(var.s3_bucket_name, module.s3_logs.id)
-  bucket_id   = coalesce(join("", data.aws_s3_bucket.bucket.*.arn), module.s3_logs.arn)
+  bucket_name = coalesce(var.bucket_name, module.s3_logs.id)
+  # bucket_id   = coalesce(join("", data.aws_s3_bucket.bucket.*.arn), module.s3_logs.arn)
 }
 
 #Module      : Labels
@@ -34,10 +34,11 @@ locals {
 
 module "s3_logs" {
   source  = "clouddrove/s3/aws"
-  version = "1.3.0"
-
+  version = "2.0.0"
+  
+  enabled                      = var.create_bucket
   name                         = var.name
-  create_bucket                = local.create_bucket
+  s3_name                      = var.bucket_name
   environment                  = local.bucket_environment
   label_order                  = var.label_order
   logging                      = var.logging
@@ -47,12 +48,18 @@ module "s3_logs" {
   block_public_policy          = var.block_public_policy
   ignore_public_acls           = var.ignore_public_acls
   restrict_public_buckets      = var.restrict_public_buckets
-  bucket_policy                = var.bucket_policy
+  bucket_policy                = var.bucket_policy && var.create_bucket
   aws_iam_policy_document      = data.aws_iam_policy_document.default.json
-  lifecycle_expiration_enabled = var.lifecycle_expiration_enabled
-  lifecycle_days_to_expiration = var.lifecycle_days_to_expiration
   force_destroy                = var.force_destroy
+  only_https_traffic           = var.only_https_traffic
 }
+
+resource "aws_s3_bucket_policy" "s3_default" {
+  count  = var.bucket_policy && !var.create_bucket ? 1 : 0
+  bucket = local.bucket_name
+  policy = data.aws_iam_policy_document.default.json
+}
+
 
 ###---------------------------------------------------------------------------------------
 #Resource    : CloudWatch
@@ -127,6 +134,7 @@ resource "aws_cloudtrail" "default" {
     content {
       include_management_events = lookup(event_selector.value, "include_management_events", null)
       read_write_type           = lookup(event_selector.value, "read_write_type", null)
+      exclude_management_event_sources = event_selector.value.exclude_management_event_sources
       dynamic "data_resource" {
         for_each = lookup(event_selector.value, "data_resource", [])
         content {
@@ -168,7 +176,7 @@ module "cloudtrail-slack-notification" {
   managedby   = var.managedby
   label_order = var.label_order
   enabled     = var.slack_webhook != "" && var.enabled_cloudtrail
-  bucket_arn  = format("arn:aws:s3:::%s", local.bucket_id)
+  bucket_arn  = format("arn:aws:s3:::%s", local.bucket_name)
   bucket_name = local.bucket_name
   variables = {
     slack_webhook     = var.slack_webhook

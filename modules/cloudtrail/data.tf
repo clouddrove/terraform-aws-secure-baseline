@@ -4,10 +4,10 @@ data "aws_region" "current" {}
 
 #Data        : S3 bucket
 #Description : Terraform Data block to get an AWS S3 bucket information.
-data "aws_s3_bucket" "bucket" {
-  count  = var.s3_bucket_name != "" ? 1 : 0
-  bucket = var.s3_bucket_name
-}
+# data "aws_s3_bucket" "bucket" {
+#   count  = var.s3_bucket_name != "" ? 1 : 0
+#   bucket = var.s3_bucket_name
+# }
 
 
 #Data        : KMS
@@ -144,7 +144,7 @@ data "aws_iam_policy_document" "default" {
       identifiers = ["cloudtrail.amazonaws.com"]
     }
     actions   = ["s3:GetBucketAcl"]
-    resources = ["arn:aws:s3:::${local.bucket_name}"]
+    resources = ["arn:aws:s3:::${var.bucket_name}"]
   }
 
   statement {
@@ -155,11 +155,27 @@ data "aws_iam_policy_document" "default" {
       identifiers = ["cloudtrail.amazonaws.com"]
     }
     actions   = ["s3:PutObject"]
-    resources = ["arn:aws:s3:::${local.bucket_name}/AWSLogs/*"]
+    resources = ["arn:aws:s3:::${var.bucket_name}/AWSLogs/*"]
     condition {
       test     = "StringEquals"
       variable = "s3:x-amz-acl"
       values   = ["bucket-owner-full-control"]
     }
   }
+
+  # statement {
+  #   sid    = "allow-cloudtrail-encrypt-logs"
+  #   effect = "Allow"
+  #   principals {
+  #     type        = "Service"
+  #     identifiers = ["cloudtrail.amazonaws.com"]
+  #   }
+  #   actions   = ["kms:GenerateDataKey*"]
+  #   resources = ["*"]
+  #   condition {
+  #     test     = "StringEquals"
+  #     variable = "AWS:SourceArn"
+  #     values   = ["arn:aws:cloudtrail:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:trail/*"]
+  #   }
+  # }
 }

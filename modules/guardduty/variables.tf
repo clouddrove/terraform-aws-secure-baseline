@@ -85,9 +85,15 @@ variable "finding_publishing_frequency" {
   description = "Valid values for standalone and master accounts: `FIFTEEN_MINUTES`, `ONE_HOUR`, `SIX_HOURS`"
 }
 
+variable "create_bucket" {
+  type        = bool
+  default     = true
+  description = "Conditionally create S3 bucket."
+}
+
 variable "bucket_name" {
   type        = string
-  default     = "secure-baseline-guardduty"
+  default     = ""
   description = "Name of the S3 bucket to use"
 }
 
@@ -148,6 +154,24 @@ variable "datasources" {
     kubernetes_audit_logs  = true,
     malware_protection_ebs = true
   }
+}
+
+variable "enable_s3_protection" {
+  description = "Configure and enable S3 protection. Defaults to `true`."
+  type        = bool
+  default     = true
+}
+
+variable "enable_kubernetes_protection" {
+  description = "Configure and enable Kubernetes audit logs as a data source for Kubernetes protection. Defaults to `true`."
+  type        = bool
+  default     = true
+}
+
+variable "enable_malware_protection" {
+  description = "Configure and enable Malware Protection as data source for EC2 instances with findings for the detector. Defaults to `true`."
+  type        = bool
+  default     = true
 }
 
 
