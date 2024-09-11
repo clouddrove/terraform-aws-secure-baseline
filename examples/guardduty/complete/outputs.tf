@@ -15,8 +15,3 @@ output "s3_bucket_id" {
   value       = module.guardduty.bucket_id
   description = "The bucket id of S3 for guardduty logs."
 }
-
-output "s3_bucket_arn" {
-  value       = module.guardduty.bucket_arn
-  description = "The bucket ARN of S3 for guardduty logs."
-}
