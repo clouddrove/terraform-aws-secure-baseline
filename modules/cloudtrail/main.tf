@@ -35,23 +35,23 @@ locals {
 module "s3_logs" {
   source  = "clouddrove/s3/aws"
   version = "2.0.0"
-  
-  enabled                      = var.create_bucket
-  name                         = var.name
-  s3_name                      = var.bucket_name
-  environment                  = local.bucket_environment
-  label_order                  = var.label_order
-  logging                      = var.logging
-  versioning                   = var.bucket_versioning
-  acl                          = "log-delivery-write"
-  block_public_acls            = var.block_public_acls
-  block_public_policy          = var.block_public_policy
-  ignore_public_acls           = var.ignore_public_acls
-  restrict_public_buckets      = var.restrict_public_buckets
-  bucket_policy                = var.bucket_policy && var.create_bucket
-  aws_iam_policy_document      = data.aws_iam_policy_document.default.json
-  force_destroy                = var.force_destroy
-  only_https_traffic           = var.only_https_traffic
+
+  enabled                 = var.create_bucket
+  name                    = var.name
+  s3_name                 = var.bucket_name
+  environment             = local.bucket_environment
+  label_order             = var.label_order
+  logging                 = var.logging
+  versioning              = var.bucket_versioning
+  acl                     = "log-delivery-write"
+  block_public_acls       = var.block_public_acls
+  block_public_policy     = var.block_public_policy
+  ignore_public_acls      = var.ignore_public_acls
+  restrict_public_buckets = var.restrict_public_buckets
+  bucket_policy           = var.bucket_policy && var.create_bucket
+  aws_iam_policy_document = data.aws_iam_policy_document.default.json
+  force_destroy           = var.force_destroy
+  only_https_traffic      = var.only_https_traffic
 }
 
 resource "aws_s3_bucket_policy" "s3_default" {
@@ -132,8 +132,8 @@ resource "aws_cloudtrail" "default" {
   dynamic "event_selector" {
     for_each = var.event_selector
     content {
-      include_management_events = lookup(event_selector.value, "include_management_events", null)
-      read_write_type           = lookup(event_selector.value, "read_write_type", null)
+      include_management_events        = lookup(event_selector.value, "include_management_events", null)
+      read_write_type                  = lookup(event_selector.value, "read_write_type", null)
       exclude_management_event_sources = event_selector.value.exclude_management_event_sources
       dynamic "data_resource" {
         for_each = lookup(event_selector.value, "data_resource", [])
