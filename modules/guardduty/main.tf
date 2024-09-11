@@ -1,6 +1,7 @@
 locals {
   ipset_key          = "ipset.txt"
   threatintelset_key = "threatintelset.txt"
+  bucket_name        = coalesce(var.bucket_name, try(aws_s3_bucket.bucket[0].id, ""))
 }
 
 data "aws_caller_identity" "current" {}
@@ -20,8 +21,8 @@ module "labels" {
 #tfsec:ignore:aws-s3-enable-bucket-encryption
 #tfsec:ignore:aws-s3-encryption-customer-key
 resource "aws_s3_bucket" "bucket" {
-  count         = var.enabled ? 1 : 0
-  bucket        = var.bucket_name
+  count         = var.enabled && var.create_bucket ? 1 : 0
+  bucket        = coalesce(var.bucket_name, "secure-baseline-guardduty")
   force_destroy = true
 }
 
@@ -29,6 +30,23 @@ resource "aws_guardduty_detector" "detector" {
   count                        = var.enabled ? 1 : 0
   enable                       = var.guardduty_enable
   finding_publishing_frequency = var.finding_publishing_frequency
+  datasources {
+    s3_logs {
+      enable = var.enable_s3_protection
+    }
+    kubernetes {
+      audit_logs {
+        enable = var.enable_kubernetes_protection
+      }
+    }
+    malware_protection {
+      scan_ec2_instance_with_findings {
+        ebs_volumes {
+          enable = var.enable_malware_protection
+        }
+      }
+    }
+  }
 }
 
 resource "aws_guardduty_invite_accepter" "member_accepter" {
@@ -42,14 +60,14 @@ resource "aws_s3_bucket_object" "ipset" {
   acl   = "private"
   content = templatefile("${path.module}/templates/ipset.txt.tpl",
   { ipset_iplist = var.ipset_iplist })
-  bucket        = join("", aws_s3_bucket.bucket.*.id)
+  bucket        = local.bucket_name
   key           = local.ipset_key
   force_destroy = true
   tags          = module.labels.tags
 }
 
 resource "aws_s3_bucket_public_access_block" "this" {
-  count = var.enabled ? 1 : 0
+  count = var.enabled && var.create_bucket ? 1 : 0
 
   bucket = aws_s3_bucket.bucket[0].id
 
@@ -74,7 +92,7 @@ resource "aws_s3_bucket_object" "threatintelset" {
   acl   = "private"
   content = templatefile("${path.module}/templates/threatintelset.txt.tpl",
   { threatintelset_iplist = var.threatintelset_iplist })
-  bucket        = join("", aws_s3_bucket.bucket.*.id)
+  bucket        = local.bucket_name
   key           = local.threatintelset_key
   force_destroy = true
   tags          = module.labels.tags

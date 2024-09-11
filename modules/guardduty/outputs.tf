@@ -17,11 +17,6 @@ output "tags" {
 # S3 Bucket
 
 output "bucket_id" {
-  value       = aws_s3_bucket.bucket[0].id
+  value       = local.bucket_name
   description = "The bucket id of S3 for guardduty logs."
-}
-
-output "bucket_arn" {
-  value       = aws_s3_bucket.bucket[0].arn
-  description = "The bucket ARN of S3 for guardduty logs."
 }

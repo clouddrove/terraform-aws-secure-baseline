@@ -2,14 +2,6 @@ data "aws_caller_identity" "current" {}
 data "aws_partition" "current" {}
 data "aws_region" "current" {}
 
-#Data        : S3 bucket
-#Description : Terraform Data block to get an AWS S3 bucket information.
-data "aws_s3_bucket" "bucket" {
-  count  = var.s3_bucket_name != "" ? 1 : 0
-  bucket = var.s3_bucket_name
-}
-
-
 #Data        : KMS
 #Description : Terraform Data block to read an AWS IAM policy document for kms.
 data "aws_iam_policy_document" "kms" {
@@ -144,7 +136,7 @@ data "aws_iam_policy_document" "default" {
       identifiers = ["cloudtrail.amazonaws.com"]
     }
     actions   = ["s3:GetBucketAcl"]
-    resources = ["arn:aws:s3:::${local.bucket_name}"]
+    resources = ["arn:aws:s3:::${var.bucket_name}"]
   }
 
   statement {
@@ -155,7 +147,7 @@ data "aws_iam_policy_document" "default" {
       identifiers = ["cloudtrail.amazonaws.com"]
     }
     actions   = ["s3:PutObject"]
-    resources = ["arn:aws:s3:::${local.bucket_name}/AWSLogs/*"]
+    resources = ["arn:aws:s3:::${var.bucket_name}/AWSLogs/*"]
     condition {
       test     = "StringEquals"
       variable = "s3:x-amz-acl"

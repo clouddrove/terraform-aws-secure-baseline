@@ -128,7 +128,7 @@ variable "bucket_environment" {
   description = "Environment (e.g. `prod`, `dev`, `staging`, `test`)."
 }
 
-variable "s3_bucket_name" {
+variable "bucket_name" {
   type        = string
   default     = ""
   description = "The name of the S3 bucket which will store configuration snapshots."
@@ -160,8 +160,13 @@ variable "source_list" {
 
 variable "event_selector" {
   type = list(object({
-    include_management_events = bool
-    read_write_type           = string
+    include_management_events        = bool
+    read_write_type                  = string
+    exclude_management_event_sources = optional(set(string))
+    data_resource = list(object({
+      type   = string
+      values = list(string)
+    }))
   }))
 
   description = "Specifies an event selector for enabling data event logging. See: https://www.terraform.io/docs/providers/aws/r/cloudtrail.html for details on this variable"
@@ -203,7 +208,7 @@ variable "bucket_policy" {
 
 variable "logging" {
   type        = bool
-  default     = true
+  default     = false
   description = "Logging Object to enable and disable logging"
 }
 
@@ -233,6 +238,11 @@ variable "block_public_acls" {
     - PUT Bucket acl and PUT Object acl calls will fail if the specified ACL allows public access.
     - PUT Object calls will fail if the request includes an object ACL. 
   EOF
+}
+
+variable "only_https_traffic" {
+  default = false
+  type    = bool
 }
 
 variable "block_public_policy" {

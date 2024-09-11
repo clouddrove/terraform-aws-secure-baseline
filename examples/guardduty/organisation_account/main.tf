@@ -32,11 +32,11 @@ module "guardduty" {
       invite     = true,
       email      = "email@example.com"
     },
-    {
-      account_id = "222222222222" # Member account id of the organization member account
-      invite     = true,
-      email      = "email@example.com"
-    }
+    # {
+    #   account_id = "222222222222" # Member account id of the organization member account
+    #   invite     = true,
+    #   email      = "email@example.com"
+    # }
   ]
 
   # Slack Alerts
