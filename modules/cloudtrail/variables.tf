@@ -236,7 +236,7 @@ variable "block_public_acls" {
   description = <<EOF
     Whether Amazon S3 should block public ACLs for this bucket. Defaults to false. Enabling this setting does not affect existing policies or ACLs. When set to true causes the following behavior:
     - PUT Bucket acl and PUT Object acl calls will fail if the specified ACL allows public access.
-    - PUT Object calls will fail if the request includes an object ACL. 
+    - PUT Object calls will fail if the request includes an object ACL.
   EOF
 }
 

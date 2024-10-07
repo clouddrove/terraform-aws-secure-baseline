@@ -12,7 +12,7 @@ This Terraform module is designed to facilitate the creation of AWS Security Hub
 
     security_hub_enabled = true
 
-    #standards 
+    #standards
     enabled_standards = [
       "standards/aws-foundational-security-best-practices/v/1.0.0",
       "ruleset/cis-aws-foundations-benchmark/v/1.2.0"
