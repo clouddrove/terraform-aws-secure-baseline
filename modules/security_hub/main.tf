@@ -32,7 +32,7 @@ resource "aws_securityhub_product_subscription" "products" {
   product_arn = each.key
 }
 
-# To enable add member account to security-hub. 
+# To enable add member account to security-hub.
 resource "aws_securityhub_member" "example" {
   for_each   = { for member in var.member_details : member.account_id => member }
   account_id = each.value.account_id

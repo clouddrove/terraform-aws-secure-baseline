@@ -2,7 +2,7 @@
 
 # AWS Analyzer Terraform Module for Organization Account Example
 
-This module creates an AWS Access Analyzer Analyzer for an organization account. AWS Access Analyzer is a service that helps you identify resource-based policies that allow access to your resources from outside your AWS account. 
+This module creates an AWS Access Analyzer Analyzer for an organization account. AWS Access Analyzer is a service that helps you identify resource-based policies that allow access to your resources from outside your AWS account.
 
 
 ## Usage

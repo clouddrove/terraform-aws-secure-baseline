@@ -49,7 +49,7 @@ usage : |-
   - [inspector](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/inspector) - automated vulnerability management service that continually scans AWS workloads for software vulnerabilities and unintended network exposure
   - [security-hub](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/security_hub) - provides you with a comprehensive view of your security state in AWS and helps you check your environment against security industry standards and best practices.
   - [shield](https://github.com/clouddrove/terraform-aws-secure-baseline/tree/master/modules/shield) - managed distributed denial of service (DDoS) protection service that safeguards applications running on AWS.
-  
+
   ### Alarm
   Here is an example of how you can use this module in your inventory structure:
   ```hcl
@@ -334,7 +334,7 @@ usage : |-
 
       security_hub_enabled = true
 
-      #standards 
+      #standards
       enabled_standards = [
         "standards/aws-foundational-security-best-practices/v/1.0.0",
         "ruleset/cis-aws-foundations-benchmark/v/1.2.0"
