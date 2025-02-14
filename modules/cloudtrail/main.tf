@@ -4,7 +4,6 @@
 
 locals {
   bucket_name = coalesce(var.bucket_name, module.s3_logs.id)
-  # bucket_id   = coalesce(join("", data.aws_s3_bucket.bucket.*.arn), module.s3_logs.arn)
 }
 
 #Module      : Labels
@@ -122,9 +121,9 @@ resource "aws_cloudtrail" "default" {
   enable_log_file_validation    = var.enable_log_file_validation
   is_multi_region_trail         = var.is_multi_region_trail
   include_global_service_events = var.include_global_service_events
-  cloud_watch_logs_role_arn     = coalesce(var.cloud_watch_logs_role_arn, try(aws_iam_role.cloudtrail_cloudwatch_role[0].arn, ""))
-  cloud_watch_logs_group_arn    = coalesce(var.cloud_watch_logs_group_arn, try("${aws_cloudwatch_log_group.cloudtrail[0].arn}:*", ""))
-  kms_key_id                    = try(aws_kms_key.cloudtrail[0].arn, null) # aws_kms_key.cloudtrail[0].arn != null ? aws_kms_key.cloudtrail[0].arn : null
+  cloud_watch_logs_role_arn     = length(var.cloud_watch_logs_role_arn) > 0 ? var.cloud_watch_logs_role_arn : try(aws_iam_role.cloudtrail_cloudwatch_role[0].arn, null)
+  cloud_watch_logs_group_arn    = length(var.cloud_watch_logs_group_arn) > 0 ? var.cloud_watch_logs_group_arn : try("${aws_cloudwatch_log_group.cloudtrail[0].arn}:*", null)
+  kms_key_id                    = try(aws_kms_key.cloudtrail[0].arn, null)
   is_organization_trail         = var.is_organization_trail
   tags                          = module.labels.tags
   sns_topic_name                = var.sns_topic_name
