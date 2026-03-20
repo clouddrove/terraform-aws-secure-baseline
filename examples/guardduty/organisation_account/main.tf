@@ -17,7 +17,7 @@ module "guardduty" {
 
   is_guardduty_member      = false
   organization_auto_enable = true
-  guardduty_admin_id       = "112233445566" # Delegated account id that will be centralised guardduty administrator for all guardduty accounts 
+  guardduty_admin_id       = "112233445566" # Delegated account id that will be centralised guardduty administrator for all guardduty accounts
 
   datasources = {
     s3_logs                = false,
