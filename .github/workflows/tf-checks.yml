@@ -1,82 +1,157 @@
 name: tf-checks
 on:
-  push:
-    branches: [ master ]
   pull_request:
-  workflow_dispatch:
+    paths:
+      - '**/*.tf'
+      - '*.tf'
 jobs:
   alarm:
+    if: github.actor != 'dependabot[bot]'
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/alarm/complete/'
-      provider: none
+      provider: aws
+      enable_plan: true
+      show_plan: false
+    secrets:
+      BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   analyzer-complete:
+    if: github.actor != 'dependabot[bot]'
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/analyzer/complete/'
-      provider: none
+      provider: aws
+      enable_plan: true
+      show_plan: false
+    secrets:
+      BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   analyzer-organisation_account:
+    if: github.actor != 'dependabot[bot]'
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/analyzer/organisation_account/'
-      provider: none
+      provider: aws
+      enable_plan: true
+      show_plan: false
+    secrets:
+      BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   cloudtrail-complete:
+    if: github.actor != 'dependabot[bot]'
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/cloudtrail/complete/'
-      provider: none
+      provider: aws
+      enable_plan: true
+      show_plan: false
+    secrets:
+      BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   cloudtrail-organisation_account:
+    if: github.actor != 'dependabot[bot]'
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/cloudtrail/organisation_account/'
-      provider: none
+      provider: aws
+      enable_plan: true
+      show_plan: false
+    secrets:
+      BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   config:
+    if: github.actor != 'dependabot[bot]'
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/config/complete/'
-      provider: none
+      provider: aws
+      enable_plan: true
+      show_plan: false
+    secrets:
+      BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   ebs:
+    if: github.actor != 'dependabot[bot]'
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/ebs/complete/'
-      provider: none
+      provider: aws
+      enable_plan: true
+      show_plan: false
+    secrets:
+      BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   guardduty-complete:
+    if: github.actor != 'dependabot[bot]'
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/guardduty/complete/'
-      provider: none
+      provider: aws
+      enable_plan: true
+      show_plan: false
+    secrets:
+      BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   guardduty-organisation_account:
+    if: github.actor != 'dependabot[bot]'
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/guardduty/organisation_account/'
-      provider: none
+      provider: aws
+      enable_plan: true
+      show_plan: false
+    secrets:
+      BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   iam:
+    if: github.actor != 'dependabot[bot]'
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/iam/complete/'
-      provider: none
+      provider: aws
+      enable_plan: true
+      show_plan: false
+    secrets:
+      BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   inspector:
+    if: github.actor != 'dependabot[bot]'
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/inspector/complete/'
-      provider: none
+      provider: aws
+      enable_plan: true
+      show_plan: false
+    secrets:
+      BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   security-hub-complete:
+    if: github.actor != 'dependabot[bot]'
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/security-hub/complete/'
-      provider: none
+      provider: aws
+      enable_plan: true
+      show_plan: false
+    secrets:
+      BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   security-hub-managed_security_hub:
+    if: github.actor != 'dependabot[bot]'
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/security-hub/managed_security_hub/'
-      provider: none
+      provider: aws
+      enable_plan: true
+      show_plan: false
+    secrets:
+      BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   security-hub-organisation_account:
+    if: github.actor != 'dependabot[bot]'
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/security-hub/organisation_account/'
-      provider: none
+      provider: aws
+      enable_plan: true
+      show_plan: false
+    secrets:
+      BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   shield:
+    if: github.actor != 'dependabot[bot]'
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/shield/complete/'
-      provider: none
+      provider: aws
+      enable_plan: true
+      show_plan: false
+    secrets:
+      BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
