@@ -1,3 +1,4 @@
+---
 name: tf-checks
 permissions:
   id-token: write
@@ -10,7 +11,7 @@ on:
 jobs:
   alarm:
     if: github.actor != 'dependabot[bot]'
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@v2
     with:
       working_directory: './examples/alarm/complete/'
       provider: aws
@@ -20,7 +21,7 @@ jobs:
       BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   analyzer-complete:
     if: github.actor != 'dependabot[bot]'
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@v2
     with:
       working_directory: './examples/analyzer/complete/'
       provider: aws
@@ -30,7 +31,7 @@ jobs:
       BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
   analyzer-organisation_account:
     if: github.actor != 'dependabot[bot]'
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@v2
     with:
       working_directory: './examples/analyzer/organisation_account/'
       provider: aws
@@ -158,3 +159,4 @@ jobs:
       show_plan: false
     secrets:
       BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
+...
