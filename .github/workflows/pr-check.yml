@@ -1,0 +1,26 @@
+---
+
+name: 🔍 PR Checks
+
+permissions:
+  contents: read
+  pull-requests: read
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+
+jobs:
+  pr-validation:
+    if: github.actor != 'dependabot[bot]'
+
+    permissions:
+      contents: read
+      pull-requests: read
+
+    uses: clouddrove/github-shared-workflows/.github/workflows/pr-checks.yml@v2
+...

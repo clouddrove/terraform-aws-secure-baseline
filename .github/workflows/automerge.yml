@@ -1,3 +1,4 @@
+---
 name: Auto merge
 
 on:
@@ -17,3 +18,4 @@ jobs:
       tfchecks_azure: '["tf-lint / tflint"]'
     secrets:
       GITHUB: ${{ secrets.GITHUB }}
+...
